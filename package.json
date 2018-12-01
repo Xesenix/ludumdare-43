@@ -1,0 +1,93 @@
+{
+  "name": "Ludumdare-43",
+  "description": "Project for ludumdare 43 gamejam",
+  "version": "0.0.0",
+  "author": "Xesenix",
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json --diagnostics --pretty",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "analyze": "cross-env ANALYZE=true npm run build:prod",
+    "tdd": "cross-env BABEL_ENV=test ENV=test karma start",
+    "test": "cross-env BABEL_ENV=test ENV=test karma start --single-run",
+    "start": "http-server ./dist",
+    "serve": "cross-env ENV=development HMR=true webpack-dev-server --config webpack.config.js",
+    "build:dev": "cross-env ENV=development parallel-webpack --config webpack.config.js",
+    "build:prod": "cross-env ENV=production webpack --config webpack.config.js",
+    "xi18n": "ts-node ./scripts/extract.ts",
+    "lint": "tslint -p ./",
+    "lint:fix": "npm run prettier && tslint -p ./ --fix",
+    "lint:ec:fix": "eclint fix",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
+    "pre-commit": "lint:fix",
+    "game:analyze": "cross-env APP=game npm run analyze",
+    "game:tdd": "cross-env APP=game npm run tdd",
+    "game:test": "cross-env APP=game npm run test",
+    "game:start": "http-server ./dist/game",
+    "game:serve": "cross-env APP=game npm run serve",
+    "game:build:dev": "cross-env APP=game npm run build:dev",
+    "game:build:prod": "cross-env APP=game npm run build:prod",
+    "game:xi18n": "cross-env APP=game ts-node ./scripts/extract.ts"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "eclint": "^2.8.1",
+    "eslint": "^5.9.0",
+    "husky": "^1.1.1",
+    "node-gettext": "^2.0.0",
+    "po-gettext-loader": "^0.1.1",
+    "prettier": "^1.15.2",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.1.6",
+    "xes-webpack-core": "^0.8.1"
+  },
+  "dependencies": {
+    "@material-ui/core": "^1.4.3",
+    "@material-ui/icons": "^2.0.1",
+    "@material-ui/lab": "^1.0.0-alpha.9",
+    "@types/inversify": "^2.0.33",
+    "eventemitter3": "^3.1.0",
+    "fscreen": "^1.0.2",
+    "inversify": "^4.13.0",
+    "inversify-vanillajs-helpers": "^2.0.0",
+    "phaser": "^3.12.0",
+    "react-hot-loader": "^4.3.12",
+    "react-loadable": "^5.5.0",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "reflect-metadata": "^0.1.12"
+  },
+  "apps": {
+    "game": {
+      "rootDir": "game",
+      "outDir": "dist/game",
+      "main": [
+        "main.ts"
+      ],
+      "moduleImportPaths": [
+        "src"
+      ],
+      "test": "main.test.ts",
+      "templateData": {
+        "title": "Ludumdare 43",
+        "author": "Xesenix"
+      },
+      "assets": [
+        "assets"
+      ],
+      "template": "templates/index.html",
+      "styles": [
+        "styles/main.scss"
+      ],
+      "stylesImportPaths": [
+        "game/styles",
+        "styles"
+      ],
+      "vendor": []
+    }
+  }
+}

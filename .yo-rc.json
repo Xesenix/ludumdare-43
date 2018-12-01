@@ -1,0 +1,20 @@
+{
+  "generator-xes-bdf": {
+    "promptValues": {
+      "name": "Ludumdare-43",
+      "description": "Project for ludumdare 43 gamejam",
+      "author": "Xesenix",
+      "typescript": "yes",
+      "styles": "jss",
+      "usePhaser": "yes",
+      "indentStyle": "tab",
+      "indentSize": "2",
+      "quote": "single",
+      "initGit": "yes",
+      "initGitIgnore": "yes",
+      "npmInstall": "yes",
+      "appName": "game",
+      "title": "Ludumdare 43"
+    }
+  }
+}

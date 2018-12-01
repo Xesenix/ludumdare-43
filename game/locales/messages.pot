@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: game/app/app.tsx:103
+msgid "Ancient maze of Epla"
+msgstr ""
+
+#: game/src/phaser/scene/intro.scene.ts:133
+msgid "audio time"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:114
+msgid "Back"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:120
+msgid "Configuration"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:179
+msgid "dark"
+msgstr ""
+
+#: game/src/phaser/scene/intro.scene.ts:132
+msgid "delta time"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:171
+msgid "english"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:125
+msgid "Fullscreen"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:127
+msgid "fx mute"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:169
+msgid "language"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:178
+msgid "light"
+msgstr ""
+
+#: game/app/app.tsx:94
+msgid "loading"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:113
+msgid "master mute"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:133
+msgid "master volume"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:120
+msgid "music mute"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:143
+msgid "music volume"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:133
+msgid "Mute"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:129
+msgid "Pause"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:172
+msgid "polish"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:107
+msgid "Sound configuration"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:155
+msgid "sound volume"
+msgstr ""
+
+#: game/app/app.tsx:91
+msgid "Start"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:176
+msgid "theme"
+msgstr ""
+
+#: game/src/phaser/scene/intro.scene.ts:131
+msgid "total time"
+msgstr ""
+
+#: game/components/configuration-view/configuration-view.tsx:165
+msgid "User interface configuration"
+msgstr ""
