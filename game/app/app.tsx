@@ -99,8 +99,8 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 				<CssBaseline />
 				<Paper className={classes.root} elevation={1}>
 					{loading ? <LinearProgress /> : null}
-					<Typography className={classes.headline} variant="headline" component="h1">
-						Ludumdare 43
+					<Typography className={classes.headline} variant="display1" component="h1">
+						The greatest sacrafice
 					</Typography>
 					{gameView}
 				</Paper>
