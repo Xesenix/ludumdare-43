@@ -9,6 +9,7 @@ import { IUIState } from 'lib/ui';
 
 import { IPhaserGameProvider } from '../../src/phaser/game.provider';
 
+import GameDecision from '../game-decision/game-decision';
 import { styles } from './phaser-view.styles';
 
 let game: Phaser.Game | null;
@@ -64,7 +65,10 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & WithSty
 	public render(): any {
 		const { classes } = this.props;
 
-		return <div className={classes.root} ref={this.bindContainer} />;
+		return (<>
+			<div className={classes.root} ref={this.bindContainer} />
+			<GameDecision></GameDecision>
+		</>);
 	}
 
 	private bindToStore(): void {

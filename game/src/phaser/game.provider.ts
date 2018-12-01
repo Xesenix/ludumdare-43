@@ -25,12 +25,12 @@ export function PhaserGameProvider(context: interfaces.Context) {
 		// TODO: convert to observable so it can return progress on loading
 		return phaserProvider().then(() =>
 			Promise.all([
-				import('lib/phaser/store.plugin'),
+				import('lib/phaser/di.plugin'),
 				import('lib/phaser/ui-manager.plugin'),
 				import('./scene/intro.scene'),
 				context.container.get<interfaces.Factory<IAudioManagerPlugin<any>>>('audio-manager-plugin:provider')(),
 				context.container.get<interfaces.Factory<Phaser.Plugins.BasePlugin>>('soundtrack-manager-plugin:provider')(),
-			]).then(([{ createStorePlugin }, { createUIManagerPlugin }, { IntroScene }, AudioManagerPluginClass, SoundtrackManagerPluginClass]) =>
+			]).then(([{ createDIPlugin }, { createUIManagerPlugin }, { IntroScene }, AudioManagerPluginClass, SoundtrackManagerPluginClass]) =>
 				storeProvider().then((store: Store) => {
 					if (!forceNew && game !== null) {
 						console.debug('PhaserGameProvider:swap parent', game);
@@ -72,7 +72,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 							noAudio: true,
 						},
 						width: 800,
-						height: 600,
+						height: 400,
 						type: Phaser.CANVAS, // AUTO, CANVAS, WEBGL, HEADLESS
 						parent,
 						disableContextMenu: true,
@@ -95,8 +95,8 @@ export function PhaserGameProvider(context: interfaces.Context) {
 						plugins: {
 							global: [
 								{
-									key: 'ui:store',
-									plugin: createStorePlugin(store),
+									key: 'di',
+									plugin: createDIPlugin(context.container),
 									start: true,
 								},
 								{

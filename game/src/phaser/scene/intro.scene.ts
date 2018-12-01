@@ -1,3 +1,6 @@
+import { EventEmitter } from 'events';
+import { Container } from 'inversify';
+
 import { __ } from 'lib/i18n';
 import { IAudioManager } from 'lib/sound';
 import { ISoundtrackManager } from 'lib/sound-scape';
@@ -10,13 +13,13 @@ const ambient: ISoundtrack = {
 	name: 'ambient',
 	intro: {
 		start: note140 * 0,
-		end: note140 * 8,
-		duration: note140 * 8,
+		end: note140 * 0,
+		duration: note140 * 0,
 	},
 	loop: {
-		start: note140 * 8,
-		end: note140 * 56,
-		duration: note140 * 48,
+		start: note140 * 0,
+		end: note140 * 28,
+		duration: note140 * 28,
 		interruptionStep: note140 * 2,
 	},
 	outro: {
@@ -30,19 +33,19 @@ const action: ISoundtrack = {
 	key: 'soundtrack',
 	name: 'action',
 	intro: {
-		start: note140 * 84,
-		end: note140 * 88,
+		start: note140 * 56,
+		end: note140 * 60,
 		duration: note140 * 4,
 	},
 	loop: {
-		start: note140 * 56,
-		end: note140 * 84,
+		start: note140 * 60,
+		end: note140 * 88,
 		duration: note140 * 28,
 		interruptionStep: note140 * 4,
 	},
 	outro: {
-		start: note140 * 84,
-		end: note140 * 88,
+		start: note140 * 88,
+		end: note140 * 92,
 		duration: note140 * 4,
 	},
 };
@@ -54,6 +57,11 @@ export class IntroScene extends Phaser.Scene {
 	private mode: 'idle' | 'action' = 'idle';
 	private idleTimeout: number = 0;
 
+	private di: Container;
+	private em: EventEmitter;
+	private sm: IAudioManager;
+	private stm: ISoundtrackManager;
+
 	constructor() {
 		super({
 			key: 'intro',
@@ -61,46 +69,36 @@ export class IntroScene extends Phaser.Scene {
 	}
 
 	public preload(): void {
-		const sm: IAudioManager = this.sys.plugins.get('audio-manager') as any;
+		this.sm = this.sys.plugins.get('audio-manager') as any;
+		this.stm = this.sys.plugins.get('soundtrack-manager') as any;
 		console.log('IntroScene:preload');
 		// TODO: use scene plugin
-		if (!!(sm as any).setLoader) {
-			(sm as any).setLoader(this.load);
+		if (!!(this.sm as any).setLoader) {
+			(this.sm as any).setLoader(this.load);
 		}
 
-		sm.preloadAudioAsset('soundtrack', 'assets/soundtrack.ogg');
+		this.sm.preloadAudioAsset('soundtrack', 'assets/soundtrack.ogg');
 
 		this.load.image('sprite', 'assets/sprite.png');
 	}
 
 	public create(): void {
-		this.input.setDefaultCursor('assets/sprite.png', 'pointer');
-		this.input.on('pointerdown', (pointer) => {
-			// console.log('down', pointer);
-			emitter.explode(100, pointer.x, pointer.y);
-			emitter.flow(
-				1,
-				1,
-			);
-		});
-
-		this.input.on('pointermove', (pointer) => {
-			// console.log('move', pointer);
-			emitter.setPosition(pointer.x, pointer.y);
-		});
-
 		this.setupSoundTrack();
 
 		this.label = this.add.text(400, 300, '', { font: '24px Consolas', fill: '#ffffff' });
 		this.label.setOrigin(0.5, 0.5);
 
-		const particles = this.add.particles('sprite');
+		this.di = (this.sys.plugins.get('di') as any).di;
+		this.em = this.di.get<EventEmitter>('event-manager');
 
-		const emitter = particles.createEmitter({
-			speed: { min: 10, max: 80 },
-			scale: { start: 1, end: 0 },
-			rotate: { start: 0, end: 90 },
-			blendMode: Phaser.BlendModes.ADD,
+		this.em.on('mode:change', (mode) => {
+			if (mode !== this.mode) {
+				if (mode === 'action') {
+					this.enterActionMode();
+				} else {
+					this.enterIdleMode();
+				}
+			}
 		});
 	}
 
@@ -112,9 +110,7 @@ export class IntroScene extends Phaser.Scene {
 
 	public update(time: number, delta: number): void {
 		if (this.label) {
-			const sm: IAudioManager = this.sys.plugins.get('audio-manager') as any;
-			const stm: ISoundtrackManager = this.sys.plugins.get('soundtrack-manager') as any;
-			const currentSoundtrack = stm.soundtrackPlayer
+			const currentSoundtrack = this.stm.soundtrackPlayer
 				.getCurrentScheduledSoundtrack()
 				.map(({ soundtrack: { name }, state, start, end }) => `${name}-${state}[${start.toFixed(2)}-${(end && end.toFixed(2)) || 'inf'}]`)
 				.join(', ');
@@ -122,51 +118,45 @@ export class IntroScene extends Phaser.Scene {
 			this.label.setText(
 				`${__('total time')}: ${(time / 1000).toFixed(0)}s\n
 ${__('delta time')}: ${delta.toFixed(2)}ms\n
-${__('audio time')}: ${sm.context.currentTime.toFixed(2)}s\n
+${__('audio time')}: ${this.sm.context.currentTime.toFixed(2)}s\n
 current sound: ${currentSoundtrack}`,
 			);
 		}
 
-		this.checkIdleMode();
+		// this.checkIdleMode();
 	}
 
 	private checkIdleMode() {
-		const sm: IAudioManager = this.sys.plugins.get('audio-manager') as any;
-		if (this.mode !== 'idle' && this.idleTimeout < sm.context.currentTime) {
+		if (this.mode !== 'idle' && this.idleTimeout < this.sm.context.currentTime) {
 			this.enterIdleMode();
 		}
 	}
 
 	private enterIdleMode() {
-		const stm: ISoundtrackManager = this.sys.plugins.get('soundtrack-manager') as any;
-		stm.soundtrackPlayer.scheduleNext(ambient, 0);
+		this.stm.soundtrackPlayer.scheduleNext(ambient, 0);
 		this.mode = 'idle';
 	}
 
 	private enterActionMode() {
-		const sm: IAudioManager = this.sys.plugins.get('audio-manager') as any;
-		const stm: ISoundtrackManager = this.sys.plugins.get('soundtrack-manager') as any;
-		stm.soundtrackPlayer.scheduleNext(action, 0);
-		this.idleTimeout = sm.context.currentTime + note140 * 16;
+		this.stm.soundtrackPlayer.scheduleNext(action, note140 * 16);
+		this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
+		this.idleTimeout = this.sm.context.currentTime + note140 * 16;
 		this.mode = 'action';
 	}
 
 	private setupSoundTrack() {
-		const sm: IAudioManager = this.sys.plugins.get('audio-manager') as any;
-		const stm: ISoundtrackManager = this.sys.plugins.get('soundtrack-manager') as any;
+		this.idleTimeout = this.sm.context.currentTime;
 
-		this.idleTimeout = sm.context.currentTime;
+		// this.input.on('pointerdown', (pointer) => {
+		// 	if (pointer.buttons === 1) {
+		// 		this.enterActionMode();
+		// 	} else {
+		// 		this.enterIdleMode();
+		// 	}
+		// });
 
-		this.input.on('pointerdown', (pointer) => {
-			if (pointer.buttons === 1) {
-				this.enterActionMode();
-			} else {
-				this.enterIdleMode();
-			}
-		});
-
-		sm.preload().then(() => {
-			stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
+		this.sm.preload().then(() => {
+			this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
 		});
 	}
 }

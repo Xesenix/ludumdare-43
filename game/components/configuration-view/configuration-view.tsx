@@ -172,13 +172,6 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationPr
 							<MenuItem value={'pl'}>{__('polish')}</MenuItem>
 						</Select>
 					</FormControl>
-					<FormControl className={classes.formControl}>
-						<InputLabel>{__('theme')}</InputLabel>
-						<Select value={theme} onChange={dispatchSetThemeAction}>
-							<MenuItem value={'light'}>{__('light')}</MenuItem>
-							<MenuItem value={'dark'}>{__('dark')}</MenuItem>
-						</Select>
-					</FormControl>
 				</Grid>
 			</form>
 		);
