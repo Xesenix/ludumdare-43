@@ -8,8 +8,8 @@ import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
 
 import { IPhaserGameProvider } from '../../src/phaser/game.provider';
+import GameUIComponent from '../game-ui/game-ui';
 
-import GameDecision from '../game-decision/game-decision';
 import { styles } from './phaser-view.styles';
 
 let game: Phaser.Game | null;
@@ -67,7 +67,7 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & WithSty
 
 		return (<>
 			<div className={classes.root} ref={this.bindContainer} />
-			<GameDecision></GameDecision>
+			<GameUIComponent></GameUIComponent>
 		</>);
 	}
 

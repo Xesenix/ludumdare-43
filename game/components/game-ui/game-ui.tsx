@@ -1,7 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { EventEmitter } from 'events';
 import { Container } from 'inversify';
-import pipeline from 'pipeline-operator';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -29,18 +28,20 @@ import MuteOnIcon from '@material-ui/icons/VolumeOff';
 import MuteOffIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
-import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
+import { IUIState } from 'lib/ui';
 
-import { styles } from './game-decision.styles';
+import { GameEngine } from '../../src/engine';
 
-export interface IGameDecisionProps {
+import { styles } from './game-ui.styles';
+
+export interface IGameUIProps {
 	di?: Container;
 	em?: EventEmitter;
 	store?: Store<any, any>;
 	__: (key: string) => string;
 }
 
-const diDecorator = connectToInjector<IGameDecisionProps>({
+const diDecorator = connectToInjector<IGameUIProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -52,7 +53,7 @@ const diDecorator = connectToInjector<IGameDecisionProps>({
 	},
 });
 
-export interface IGameDecisionState {
+export interface IGameUIState {
 	people: number;
 	maxPopulation: number;
 	babies: number;
@@ -75,7 +76,7 @@ export interface IGameDecisionState {
 	homesCount: number;
 }
 
-class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & WithStyles<typeof styles>, IGameDecisionState & IUIState> {
+class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState & IUIState> {
 	private unsubscribe?: any;
 	private initialState = {
 		idleKilled: 0,
@@ -110,9 +111,12 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 		immunity: false,
 	};
 
+	private engine: GameEngine;
+
 	constructor(props) {
 		super(props);
 		this.state = this.initialState;
+		this.engine = new GameEngine(this.initialState, () => this.state, (data) => this.setState(data));
 	}
 
 	public componentDidMount(): void {
@@ -150,7 +154,7 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 			homesCount = 0,
 			weakness = 0,
 		} = this.state;
-		const consequences = this.calculateConsequences();
+		const consequences = this.engine.calculateConsequences();
 
 		return people ? (<Paper className={classes.root} elevation={2}>
 				<Grid container spacing={0} alignItems="center">
@@ -165,7 +169,7 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 						</Typography>
 					</Grid>
 					<Grid className={classes.resource} item xs={3}>
-						Villagers {people} / {this.getMaxPopulation()}
+						Villagers {people} / {this.engine.getMaxPopulation()}
 					</Grid>
 					<Grid className={classes.resource} item xs={3}>
 						Workers {workers} ({trainedWorkers})
@@ -174,16 +178,16 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 						<Button
 							color="primary"
 							variant="outlined"
-							disabled={blockNextTurn || !this.canTrainMoreWorkers()}
-							onClick={this.scheduleWorkerTraining}
+							disabled={blockNextTurn || !this.engine.canTrainMoreWorkers()}
+							onClick={this.engine.scheduleWorkerTraining}
 						>
 							+
 						</Button>
 						<Button
 							color="primary"
 							variant="outlined"
-							disabled={blockNextTurn || !this.canRealeseMoreWorkers()}
-							onClick={this.releaseWorker}
+							disabled={blockNextTurn || !this.engine.canRealeseMoreWorkers()}
+							onClick={this.engine.releaseWorker}
 						>
 							-
 						</Button>
@@ -197,16 +201,16 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 						<Button
 							color="primary"
 							variant="outlined"
-							disabled={blockNextTurn || !this.canTrainMoreGuards()}
-							onClick={this.scheduleGuardsTraining}
+							disabled={blockNextTurn || !this.engine.canTrainMoreGuards()}
+							onClick={this.engine.scheduleGuardsTraining}
 						>
 							+
 						</Button>
 						<Button
 							color="primary"
 							variant="outlined"
-							disabled={blockNextTurn || !this.canRealeseMoreGuards()}
-							onClick={this.releaseGuard}
+							disabled={blockNextTurn || !this.engine.canRealeseMoreGuards()}
+							onClick={this.engine.releaseGuard}
 						>
 							-
 						</Button>
@@ -229,7 +233,7 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 							<Grid className={classes.consequences} container spacing={0} alignItems="center">
 								<Grid className={classes.resource} item xs={12}>
 									<Typography variant="headline" component="h3">Event</Typography>
-									<Typography variant="subheading" component="p">{event} power {consequences.attackPower} (weakness reduced it by { ((1 - Math.pow(0.5, weakness)) * 100).toFixed(0) }% wall reduced it by {wallPower})</Typography>
+									<Typography variant="subheading" component="p">{event} power {consequences.attackPower} (weakness reduced it by { ((1 - Math.pow(0.5, weakness)) * 100).toFixed(2) }% wall reduced it by {wallPower})</Typography>
 									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.totallKilled})</Typography>
 									<Typography className={classes.negative} variant="caption" component="p">(stolen: {consequences.resourcesStolen})</Typography>
 								</Grid>
@@ -272,16 +276,16 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 							<Button
 								color="secondary"
 								variant="extendedFab"
-								disabled={blockNextTurn || !this.canMakeSacraficeForImmunity()}
-								onClick={this.sacraficeResourcesForImmunity}
+								disabled={blockNextTurn || !this.engine.canMakeSacraficeForImmunity()}
+								onClick={this.engine.sacraficeResourcesForImmunity}
 							>
 								Make sacrafice for one turn immunity ({ sacraficeCost } resources)
 							</Button>
 							<Button
 								color="secondary"
 								variant="extendedFab"
-								disabled={blockNextTurn || !this.canMakeSacraficeForWeakness()}
-								onClick={this.sacraficeResourcesForEnemyWeakness}
+								disabled={blockNextTurn || !this.engine.canMakeSacraficeForWeakness()}
+								onClick={this.engine.sacraficeResourcesForEnemyWeakness}
 							>
 								Make sacrafice for permament enemy weakness -50% multiplicative ({ sacraficeCost } idle)
 							</Button>
@@ -303,18 +307,18 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 							<Button
 								color="secondary"
 								variant="extendedFab"
-								disabled={blockNextTurn || !this.canBuildWall()}
-								onClick={this.buildWall}
+								disabled={blockNextTurn || !this.engine.canBuildWall()}
+								onClick={this.engine.buildWall}
 							>
-								Build wall (current reduction: { wallPower }) (+30 enemy power reduction cost { this.wallCost() } resources)
+								Build wall (current reduction: { wallPower }) (+30 enemy power reduction cost { this.engine.wallCost() } resources)
 							</Button>
 							<Button
 								color="secondary"
 								variant="extendedFab"
-								disabled={blockNextTurn || !this.canBuildHome()}
-								onClick={this.buildHome}
+								disabled={blockNextTurn || !this.engine.canBuildHome()}
+								onClick={this.engine.buildHome}
 							>
-								Build home ({ homesCount }) (+20 max population cost { this.homeCost() } resources)
+								Build home ({ homesCount }) (+20 max population cost { this.engine.homeCost() } resources)
 							</Button>
 						</Paper>
 					</Grid>
@@ -323,7 +327,7 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 							color="secondary"
 							variant="extendedFab"
 							disabled={blockNextTurn}
-							onClick={this.reset}
+							onClick={this.engine.reset}
 						>
 							Restart
 						</Button>
@@ -343,7 +347,7 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 					color="secondary"
 					variant="extendedFab"
 					disabled={blockNextTurn}
-					onClick={this.reset}
+					onClick={this.engine.reset}
 				>
 					Restart
 				</Button>
@@ -351,313 +355,11 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 		</Paper>);
 	}
 
-	private reset = () => {
-		this.setState(this.initialState);
-	}
-
-	private getMaxPopulation() {
-		const { homesCount, maxPopulation } = this.state;
-		return homesCount * 20 + maxPopulation;
-	}
-
-	private homeCost() {
-		const { homesCount } = this.state;
-		return Math.floor((5 + homesCount * 10) * 1.5);
-	}
-
-	private canBuildHome() {
-		const { resources } = this.state;
-		return resources >= this.homeCost();
-	}
-
-	private buildHome = () => {
-		const { homesCount, resources } = this.state;
-		this.setState({
-			homesCount: homesCount + 1,
-			resources: resources - this.homeCost(),
-		});
-	}
-
-	private wallCost() {
-		const { wallPower } = this.state;
-		return Math.floor((wallPower + 5) * 1.25);
-	}
-
-	private canBuildWall() {
-		const { resources } = this.state;
-		return resources >= this.wallCost();
-	}
-
-	private buildWall = () => {
-		const { wallPower, resources } = this.state;
-		this.setState({
-			wallPower: wallPower + 30,
-			resources: resources - this.wallCost(),
-		});
-	}
-
-	private canMakeSacraficeForWeakness() {
-		const { idle, sacraficeCost } = this.state;
-		return idle >= sacraficeCost;
-	}
-
-	private sacraficeResourcesForEnemyWeakness = () => {
-		const { weakness, idle, sacraficedIdle, sacraficeCost, turn, sacraficeCount } = this.state;
-
-		this.setState({
-			weakness: weakness + 1,
-			sacrafice: 'idle',
-			sacraficeCount: sacraficeCount + 1,
-			sacraficeCost: 1 + 5 * turn + 3 * sacraficeCount,
-			idle: idle - sacraficeCost,
-			sacraficedIdle: sacraficedIdle + sacraficeCost,
-		});
-	}
-
-	private canMakeSacraficeForImmunity() {
-		const { resources, sacraficeCost, immunity } = this.state;
-		return resources >= sacraficeCost && !immunity;
-	}
-
-	private sacraficeResourcesForImmunity = () => {
-		const { immunity, resources, sacraficedResources, sacraficeCost, turn, sacraficeCount } = this.state;
-
-		if (!immunity) {
-			this.setState({
-				immunity: true,
-				sacrafice: 'resources',
-				sacraficeCount: sacraficeCount + 1,
-				sacraficeCost: 1 + 5 * turn + 3 * sacraficeCount,
-				resources: resources - sacraficeCost,
-				sacraficedResources: sacraficedResources + sacraficeCost,
-			});
-		}
-	}
-
-	private canRealeseMoreWorkers() {
-		const { trainedWorkers, workers } = this.state;
-		return workers > -trainedWorkers;
-	}
-
-	private releaseWorker = () => {
-		const { trainedWorkers } = this.state;
-		this.setState({ trainedWorkers: trainedWorkers - 1 });
-	}
-
-	private canTrainMoreWorkers() {
-		const { idle, trainedWorkers, trainedGuards } = this.state;
-		return trainedWorkers + trainedGuards < idle;
-	}
-
-	private scheduleWorkerTraining = () => {
-		const { trainedWorkers } = this.state;
-		this.setState({ trainedWorkers: trainedWorkers + 1 });
-	}
-
-	private canRealeseMoreGuards() {
-		const { trainedGuards, guards } = this.state;
-		return guards > -trainedGuards;
-	}
-
-	private releaseGuard = () => {
-		const { trainedGuards } = this.state;
-		this.setState({ trainedGuards: trainedGuards - 1 });
-	}
-
-	private canTrainMoreGuards() {
-		const { idle, trainedWorkers, guards, trainedGuards, resources } = this.state;
-		return guards + trainedGuards < resources && trainedWorkers + trainedGuards < idle;
-	}
-
-	private scheduleGuardsTraining = () => {
-		const { trainedGuards } = this.state;
-		this.setState({ trainedGuards: trainedGuards + 1 });
-	}
-
-	private handleEvent = (state) => {
-		console.log('handleEvent', state.event);
-
-		if (!state.immunity) {
-			switch (state.event) {
-				case 'orcs':
-					return this.handleOrcAttack(state);
-			}
-		}
-
-		return state;
-	}
-
-	private handleOrcAttack = (state) => {
-		const { babies, workers, guards, idle, attackPower, resources } = state;
-		let power = Math.floor(attackPower);
-		const guardsKilled = Math.min(guards, Math.floor(power / 16));
-		power = Math.max(0, power - guards * 16);
-		const babiesKilled = Math.ceil(Math.min(babies, power * 2));
-		power = Math.max(0, power - babiesKilled / 2);
-		const resourcesStolen = Math.ceil(Math.min(resources, power * 2));
-		power = Math.max(0, power - resourcesStolen / 2);
-		const idleKilled = Math.ceil(Math.min(idle, power));
-		power = Math.max(0, power - idleKilled);
-		const workersKilled = Math.ceil(Math.min(workers, power));
-		power = Math.max(0, power - workersKilled);
-
-		const totallKilled = babiesKilled + workersKilled + idleKilled + guardsKilled;
-
-		return {
-			...state,
-			idle: idle - idleKilled,
-			resources: resources - resourcesStolen,
-			workers: workers - workersKilled,
-			guards: guards - guardsKilled,
-			babies: babies - babiesKilled,
-			idleKilled,
-			workersKilled,
-			babiesKilled,
-			guardsKilled,
-			resourcesStolen,
-			totallKilled,
-		};
-	}
-
-	private makeNewPeople = (state) => {
-		const newChildren = Math.floor(state.idle / 2);
-		const newAdults = state.babies;
-
-		return {
-			...state,
-			idle: state.idle + newAdults,
-			babies: newChildren,
-			newChildren,
-			newAdults,
-		};
-	}
-
-	private payGuards = (state) => {
-		const guardsPaid = Math.min(state.guards, state.resources);
-
-		return {
-			...state,
-			guards: guardsPaid,
-			idle: state.idle + state.guards - guardsPaid,
-			resources: state.resources - guardsPaid,
-			guardsPaid,
-		};
-	}
-
-	private gatherResources = (state) => {
-		const resourceGathered = state.workers;
-
-		return {
-			...state,
-			resources: state.resources + resourceGathered,
-			resourceGathered,
-		};
-	}
-
-	private trainUnits = (state) => {
-		const { idle, workers, trainedWorkers, guards, trainedGuards } = state;
-
-		return {
-			...state,
-			idle: idle - trainedWorkers - trainedGuards,
-			workers: workers + trainedWorkers,
-			guards: guards + trainedGuards,
-		};
-	}
-
-	private wallModifier = (state) => {
-		const { attackPower, wallPower } = state;
-
-		return {
-			...state,
-			attackPower: Math.max(0, attackPower - wallPower),
-		};
-	}
-
-	private homes = (state) => {
-		const { maxPopulation, homesCount } = state;
-
-		return {
-			...state,
-			maxPopulation: maxPopulation + homesCount * 20,
-		};
-	}
-
-	private populationLimit = (state) => {
-		const { maxPopulation, workers, guards, idle, babies } = state;
-		const maxIdle = Math.min(maxPopulation - workers - guards - babies, idle);
-
-		return {
-			...state,
-			idle: maxIdle,
-			babies: Math.min(maxPopulation - workers - guards - maxIdle, babies),
-		};
-	}
-
-	private weakness = (state) => {
-		const { attackPower, weakness } = state;
-
-		return {
-			...state,
-			attackPower: attackPower * Math.pow(0.5, weakness),
-		};
-	}
-
-	private calculateConsequences() {
-		const { turn } = this.state;
-
-		const newState = pipeline({
-				...this.state,
-				turn: turn + 1,
-			},
-			this.weakness,
-			this.wallModifier,
-			this.gatherResources,
-			this.trainUnits,
-			this.payGuards,
-			// this.handleSacrafice,
-			this.handleEvent,
-			this.makeNewPeople,
-			this.homes,
-			this.populationLimit,
-		);
-
-		return {
-			...newState,
-			people: newState.babies + newState.idle + newState.workers + newState.guards,
-		};
-	}
-
 	private progressToNextTurn = () => {
 		const { em } = this.props;
 		em.emit('mode:change', 'action');
 
-		this.setState(this.calculateConsequences(), () => {
-			const { turn, sacraficeCount } = this.state;
-			console.log('state', this.state);
-			this.setState({
-				attackPower: (2 + 2 * turn * Math.ceil(turn / 2) + Math.floor(turn / 5) * 20),
-				babiesKilled: 0,
-				blockNextTurn: true,
-				event: 'orcs',
-				guardsKilled: 0,
-				idleKilled: 0,
-				immunity: false,
-				maxPopulation: 40,
-				resourcesStolen: 0,
-				sacrafice: '',
-				sacraficeCost: 1 + 5 * turn + 3 * sacraficeCount,
-				sacraficedChildren: 0,
-				sacraficedGuards: 0,
-				sacraficedIdle: 0,
-				sacraficedResources: 0,
-				sacraficedWorkers: 0,
-				totallKilled: 0,
-				trainedGuards: 0,
-				trainedWorkers: 0,
-				workersKilled: 0,
-			});
-		});
+		this.setState(this.engine.calculateConsequences(), this.engine.startNewTurn);
 
 		setTimeout(this.waitForDecisions, 5000);
 	}
@@ -692,4 +394,4 @@ class GameDecisionComponent extends React.PureComponent<IGameDecisionProps & Wit
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(GameDecisionComponent)));
+export default hot(module)(diDecorator(withStyles(styles)(GameUIComponent)));
