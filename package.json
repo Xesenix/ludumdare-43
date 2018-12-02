@@ -1,7 +1,7 @@
 {
   "name": "Ludumdare-43",
   "description": "Project for ludumdare 43 gamejam",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Xesenix",
   "scripts": {
     "tsc": "tsc -p tsconfig.json --diagnostics --pretty",
