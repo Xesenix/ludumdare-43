@@ -25,7 +25,7 @@ export class GameEngine {
 	}
 
 	public getAttackPower({ turn }) {
-		return 2 + 2 * turn * Math.ceil(turn / 2) + Math.floor(turn / 5) * 20;
+		return (2 + 2 * turn * Math.ceil(turn / 2) + Math.floor(turn / 5) * 20) * Math.pow(1.5, Math.floor(turn / 50));
 	}
 
 	public getMaxPopulation() {
@@ -76,14 +76,17 @@ export class GameEngine {
 	}
 
 	public makeUltimateSacrifice = () => {
-		const { turn, sacrificeCount, sacrificedIdle, sacrificedResources } = this.getState();
+		const { turn, sacrificeCount, sacrificedIdle, totalSacrificedIdle, sacrificedResources, totalSacrificedResources } = this.getState();
 
 		this.setState({
 			win: true,
 			sacrificeCount: sacrificeCount + 1,
 			sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
 			sacrificedIdle: sacrificedIdle + 1000,
+			totalSacrificedIdle: totalSacrificedIdle + 1000,
 			sacrificedResources: sacrificedResources + 1000,
+			totalSacrificedResources: totalSacrificedResources + 1000,
+
 		});
 	}
 
@@ -97,7 +100,7 @@ export class GameEngine {
 	}
 
 	public sacrificeResourcesForEnemyWeakness = () => {
-		const { weakness, idle, sacrificedIdle, sacrificeCost, turn, sacrificeCount } = this.getState();
+		const { weakness, idle, sacrificedIdle, totalSacrificedIdle, sacrificeCost, turn, sacrificeCount } = this.getState();
 
 		this.setState({
 			weakness: weakness + 1,
@@ -106,6 +109,7 @@ export class GameEngine {
 			sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
 			idle: idle - sacrificeCost,
 			sacrificedIdle: sacrificedIdle + sacrificeCost,
+			totalSacrificedIdle: totalSacrificedIdle + sacrificeCost,
 		});
 	}
 
@@ -115,7 +119,7 @@ export class GameEngine {
 	}
 
 	public sacrificeResourcesForImmunity = () => {
-		const { immunity, resources, sacrificedResources, sacrificeCost, turn, sacrificeCount } = this.getState();
+		const { immunity, resources, sacrificedResources, totalSacrificedResources, sacrificeCost, turn, sacrificeCount } = this.getState();
 
 		if (!immunity) {
 			this.setState({
@@ -125,6 +129,7 @@ export class GameEngine {
 				sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
 				resources: resources - sacrificeCost,
 				sacrificedResources: sacrificedResources + sacrificeCost,
+				totalSacrificedResources: totalSacrificedResources + sacrificeCost,
 			});
 		}
 	}

@@ -51,7 +51,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Wall
+						Wall lvl {wallPower / 30}
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
@@ -70,7 +70,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Cottage
+						Cottage lvl {homesCount}
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">

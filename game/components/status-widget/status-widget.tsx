@@ -46,11 +46,11 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & Wit
 				<Grid container>
 					<Grid className={classes.resources} item xs={6} sm={4}>
 						<Typography variant="headline">Resources</Typography>
-						<Typography className={classes.resourcesAmountLabel} variant="display2">
+						<Typography className={classes.resourcesAmountLabel} variant="display1">
 							{resources.current}
 							<Typography
 								className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-								variant="display1"
+								variant="headline"
 								component="span"
 							>
 								({resources.income > 0 ? '+' : ''}{resources.income})
@@ -63,15 +63,15 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & Wit
 						)}
 					</Grid>
 					<Grid className={classes.year} item xs={12} sm={4}>
-						<Typography variant="display2">Year { turn }</Typography>
+						<Typography variant="display1">Year { turn }</Typography>
 					</Grid>
 					<Grid className={classes.population} item xs={6} sm={4}>
 						<Typography variant="headline">Population</Typography>
-						<Typography className={classes.populationAmountLabel} variant="display2">
+						<Typography className={classes.populationAmountLabel} variant="display1">
 							{population.current}
 							<Typography
 								className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-								variant="display1"
+								variant="headline"
 								component="span"
 							>
 								{population.change ? `(${population.change > 0 ? '+' : ''}${population.change})` : null}

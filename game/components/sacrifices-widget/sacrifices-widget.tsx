@@ -72,20 +72,22 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 						onClick={engine.sacrificeResourcesForImmunity}
 						size="small"
 					>
-						Sacrafice { sacrificeCost }&nbsp;resources
+						Sacrifice { sacrificeCost }&nbsp;resources
 					</Button>
 				</Grid>
 
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Weakness
+						Weakness lvl {weakness}
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
-							Make sacrifice for permament enemy weakness -{(weaknessReduction * 100).toFixed(2)}% multiplicative ({ sacrificeCost }&nbsp;idle population)
-							Current reduction <strong>{engine.getWeaknessDamageReduction({ weaknessReduction, weakness })}%</strong>
+							This sacrifice permanently weakness enemies by -{(weaknessReduction * 100).toFixed(2)}% multiplicative for every level.
 						</Typography>
 					)}
+					<Typography variant="caption" component="p">
+						Current enemy power reduction <strong>{engine.getWeaknessDamageReduction({ weaknessReduction, weakness })}%</strong>
+					</Typography>
 					<Button
 						color="secondary"
 						variant="raised"
@@ -93,7 +95,7 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 						onClick={engine.sacrificeResourcesForEnemyWeakness}
 						size="small"
 					>
-						Sacrafice { sacrificeCost }&nbsp;idle population (next level {engine.getWeaknessDamageReduction({ weaknessReduction, weakness: weakness + 1 })}%)
+						Sacrifice { sacrificeCost }&nbsp;idle population (next level {engine.getWeaknessDamageReduction({ weaknessReduction, weakness: weakness + 1 })}%)
 					</Button>
 				</Grid>
 			</Grid>

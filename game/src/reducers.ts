@@ -107,12 +107,13 @@ export const reduceHomes = (state) => {
 
 export const reducePopulationLimit = (state) => {
 	const { maxPopulation, workers, guards, idle, babies } = state;
-	const maxIdle = Math.min(maxPopulation - workers - guards - babies, idle);
+	const maxBabies = Math.min(maxPopulation - workers - guards - idle, babies);
+	const maxIdle = Math.min(maxPopulation - workers - guards - maxBabies, idle);
 
 	return {
 		...state,
 		idle: maxIdle,
-		babies: Math.min(maxPopulation - workers - guards - maxIdle, babies),
+		babies: maxBabies,
 	};
 };
 

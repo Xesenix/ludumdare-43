@@ -88,10 +88,15 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		resourcesStolen: 0,
 		totallKilled: 0,
 		sacrificedResources: 0,
+		totalSacrificedResources: 0,
 		sacrificedChildren: 0,
+		totalSacrificedChildren: 0,
 		sacrificedIdle: 0,
+		totalSacrificedIdle: 0,
 		sacrificedGuards: 0,
+		totalSacrificedGuards: 0,
 		sacrificedWorkers: 0,
+		totalSacrificedWorkers: 0,
 		population: 20,
 		maxPopulation: 40,
 		idle: 20,
@@ -173,7 +178,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 				</Button>
 			</Grid>);
 
-		const { sacrificeCount, sacrificedIdle, sacrificedResources } = this.state;
+		const { sacrificeCount, totalSacrificedIdle, totalSacrificedResources } = this.state;
 		const winBlock = (
 			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={0} alignItems="center">
@@ -185,7 +190,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							Your village is safe everybody are in heaven now.
 						</Typography>
 						<Typography variant="subheading" component="p" align="center">
-							Victory achieved in year {turn}. You have sacraficed {sacrificedResources} resources and {sacrificedIdle} people in {sacrificeCount} sacrafices.
+							Victory achieved in year {turn}. You have sacrificed {totalSacrificedResources} resources and {totalSacrificedIdle} people in {sacrificeCount} sacrifices.
 						</Typography>
 					</Grid>
 				</Grid>
