@@ -33,7 +33,7 @@ import { styles } from './game-view.styles';
 const Loader = () => <LinearProgress />;
 
 const ConfigurationViewComponent = Loadable({ loading: Loader, loader: () => import('../configuration-view/configuration-view') });
-const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import('../phaser-view/phaser-view') });
+const GameUIComponent = Loadable({ loading: Loader, loader: () => import('../game-ui/game-ui') });
 
 export interface IGameViewProps {
 	di?: Container;
@@ -154,7 +154,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 							{menu}
 						</Drawer>
 						{tab === 'configuration' ? <ConfigurationViewComponent /> : null}
-						{tab === 'game' ? <PhaserViewComponent keepInstanceOnRemove /> : null}
+						{tab === 'game' ? <GameUIComponent /> : null}
 					</Paper>
 				</Grid>
 			</Grid>

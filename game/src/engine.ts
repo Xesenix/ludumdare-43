@@ -111,44 +111,44 @@ export class GameEngine {
 		return 1 + 2 * turn + 5 * (sacraficeCount + 1);
 	}
 
-	public canRealeseMoreWorkers() {
+	public canRealeseMoreWorkers = (amount = 1) => {
 		const { trainedWorkers, workers } = this.getState();
-		return workers > -trainedWorkers;
+		return workers + trainedWorkers >= amount;
 	}
 
-	public releaseWorker = () => {
+	public releaseWorker = (amount = 1) => {
 		const { trainedWorkers } = this.getState();
-		this.setState({ trainedWorkers: trainedWorkers - 1 });
+		this.setState({ trainedWorkers: Math.max(0, trainedWorkers - amount) });
 	}
 
-	public canTrainMoreWorkers() {
+	public canTrainMoreWorkers = (amount = 1) => {
 		const { idle, trainedWorkers, trainedGuards } = this.getState();
-		return trainedWorkers + trainedGuards < idle;
+		return trainedWorkers + trainedGuards + amount <= idle;
 	}
 
-	public scheduleWorkerTraining = () => {
+	public scheduleWorkerTraining = (amount = 1) => {
 		const { trainedWorkers } = this.getState();
-		this.setState({ trainedWorkers: trainedWorkers + 1 });
+		this.setState({ trainedWorkers: trainedWorkers + amount });
 	}
 
-	public canRealeseMoreGuards() {
+	public canRealeseMoreGuards = (amount = 1) => {
 		const { trainedGuards, guards } = this.getState();
-		return guards > -trainedGuards;
+		return guards + trainedGuards >= amount;
 	}
 
-	public releaseGuard = () => {
+	public releaseGuard = (amount = 1) => {
 		const { trainedGuards } = this.getState();
-		this.setState({ trainedGuards: trainedGuards - 1 });
+		this.setState({ trainedGuards: Math.max(0, trainedGuards - amount) });
 	}
 
-	public canTrainMoreGuards() {
+	public canTrainMoreGuards = (amount = 1) => {
 		const { idle, trainedWorkers, guards, trainedGuards, resources } = this.getState();
 		return guards + trainedGuards < resources && trainedWorkers + trainedGuards < idle;
 	}
 
-	public scheduleGuardsTraining = () => {
+	public scheduleGuardsTraining = (amount = 1) => {
 		const { trainedGuards } = this.getState();
-		this.setState({ trainedGuards: trainedGuards + 1 });
+		this.setState({ trainedGuards: trainedGuards + amount });
 	}
 
 	public startNewTurn = () => {

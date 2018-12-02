@@ -4,7 +4,7 @@ import { createStyles } from '@material-ui/core/styles';
 export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
-			minHeight: '400px',
+			minHeight: '300px',
 			padding: '0',
 			display: 'flex',
 			justifyContent: 'center',

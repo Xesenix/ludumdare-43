@@ -30,9 +30,16 @@ import MuteOffIcon from '@material-ui/icons/VolumeUp';
 import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
 
+import StatusWidgetComponent from '../status-widget/status-widget';
+import UnitsWidgetComponent from '../units-widget/units-widget';
+
 import { GameEngine } from '../../src/engine';
 
 import { styles } from './game-ui.styles';
+
+const Loader = () => <LinearProgress />;
+
+const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import('../phaser-view/phaser-view') });
 
 export interface IGameUIProps {
 	di?: Container;
@@ -157,74 +164,78 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		const consequences = this.engine.calculateConsequences();
 
 		return people ? (<Paper className={classes.root} elevation={2}>
+				<Grid container spacing={0}>
+					<Grid item xs={12} sm={12}>
+						<StatusWidgetComponent
+							population={{ current: people, max: this.engine.getMaxPopulation() }}
+							resources={{ current: resources, income: workers }}
+							turn={turn}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
+						<PhaserViewComponent keepInstanceOnRemove />
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<UnitsWidgetComponent
+							disabled={blockNextTurn}
+							label="Idlers"
+							amount={idle}
+							hideActionBar={true}
+							change={consequences.idle - idle}
+							height={180}
+						>
+							Population without occupation will produce children in rate 1 child per every 2 idle persons.
+						</UnitsWidgetComponent>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<UnitsWidgetComponent
+							disabled={blockNextTurn}
+							label="Children"
+							amount={babies}
+							hideActionBar={true}
+							change={consequences.babies - babies}
+							height={180}
+						>
+							Those young villagers will become idle population in next year.
+							They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.
+						</UnitsWidgetComponent>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<UnitsWidgetComponent
+							disabled={blockNextTurn}
+							label="Workers"
+							canHire={this.engine.canTrainMoreWorkers}
+							hire={this.engine.scheduleWorkerTraining}
+							canRelease={this.engine.canRealeseMoreWorkers}
+							release={this.engine.releaseWorker}
+							amount={workers}
+							trained={trainedWorkers}
+							change={consequences.workers - workers}
+							height={180}
+						>
+							Each one will collect 1 resource per turn.
+							Newly trained workers will start collecting resources in next year.
+						</UnitsWidgetComponent>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<UnitsWidgetComponent
+							disabled={blockNextTurn}
+							label="Guards"
+							canHire={this.engine.canTrainMoreGuards}
+							hire={this.engine.scheduleGuardsTraining}
+							canRelease={this.engine.canRealeseMoreGuards}
+							release={this.engine.releaseGuard}
+							amount={guards}
+							trained={trainedGuards}
+							change={consequences.guards - guards}
+							height={180}
+						>
+							They will protect other units from being attacked and resources from being stolen.
+							Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.
+						</UnitsWidgetComponent>
+					</Grid>
+				</Grid>
 				<Grid container spacing={0} alignItems="center">
-					<Grid item xs={12}>
-						<Typography variant="display1" component="h1">
-							Years survived: {turn}
-						</Typography>
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="headline" component="h2">
-							Units
-						</Typography>
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Villagers {people} / {this.engine.getMaxPopulation()}
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Workers {workers} ({trainedWorkers})
-						<Typography variant="caption" component="p">(generates 1 resources)</Typography>
-						<Typography variant="caption" component="p">(new workers will start gathering resources in next year)</Typography>
-						<Button
-							color="primary"
-							variant="outlined"
-							disabled={blockNextTurn || !this.engine.canTrainMoreWorkers()}
-							onClick={this.engine.scheduleWorkerTraining}
-						>
-							+
-						</Button>
-						<Button
-							color="primary"
-							variant="outlined"
-							disabled={blockNextTurn || !this.engine.canRealeseMoreWorkers()}
-							onClick={this.engine.releaseWorker}
-						>
-							-
-						</Button>
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Guards {guards} ({trainedGuards})
-						<Typography variant="caption" component="p">
-							(1 guard dies instead of any other 2 units that would be killed in fight)
-							(requires 1 resource per turn or will be demoted to idle)
-						</Typography>
-						<Button
-							color="primary"
-							variant="outlined"
-							disabled={blockNextTurn || !this.engine.canTrainMoreGuards()}
-							onClick={this.engine.scheduleGuardsTraining}
-						>
-							+
-						</Button>
-						<Button
-							color="primary"
-							variant="outlined"
-							disabled={blockNextTurn || !this.engine.canRealeseMoreGuards()}
-							onClick={this.engine.releaseGuard}
-						>
-							-
-						</Button>
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Idle {idle}
-						<Typography variant="caption" component="p">(gives +1 villager per 2 idle persons)</Typography>
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Babies {babies}
-					</Grid>
-					<Grid className={classes.resource} item xs={3}>
-						Resources {resources}
-					</Grid>
 					<Grid item xs={12}>
 						<Paper className={classes.actionbar} elevation={2}>
 							<Typography variant="headline" component="h3">

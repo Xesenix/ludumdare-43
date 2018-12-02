@@ -67,7 +67,6 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & WithSty
 
 		return (<>
 			<div className={classes.root} ref={this.bindContainer} />
-			<GameUIComponent></GameUIComponent>
 		</>);
 	}
 

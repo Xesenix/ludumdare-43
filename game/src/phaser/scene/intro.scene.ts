@@ -79,14 +79,17 @@ export class IntroScene extends Phaser.Scene {
 
 		this.sm.preloadAudioAsset('soundtrack', 'assets/soundtrack.ogg');
 
-		this.load.image('sprite', 'assets/sprite.png');
+		this.load.image('bg', 'assets/bg.png');
 	}
 
 	public create(): void {
 		this.setupSoundTrack();
 
-		this.label = this.add.text(400, 300, '', { font: '24px Consolas', fill: '#ffffff' });
-		this.label.setOrigin(0.5, 0.5);
+		const bg = this.add.image(400, 150, 'bg');
+		bg.setOrigin(0.5, 0.5);
+
+		// this.label = this.add.text(400, 20, '', { font: '24px Consolas', fill: '#ffffff' });
+		// this.label.setOrigin(0.5, 0.0);
 
 		this.di = (this.sys.plugins.get('di') as any).di;
 		this.em = this.di.get<EventEmitter>('event-manager');
