@@ -100,7 +100,7 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 				<Paper className={classes.root} elevation={1}>
 					{loading ? <LinearProgress /> : null}
 					<Typography className={classes.headline} variant="display4" component="h1" align="center">
-						The greatest sacrafice
+						The greatest sacrifice
 					</Typography>
 					<Typography className={classes.headline} variant="display1" component="h2" align="center">
 						Ludumdare 43 edition

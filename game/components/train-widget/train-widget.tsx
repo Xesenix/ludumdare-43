@@ -55,7 +55,7 @@ export interface ITrainUnitsWidgetState {
 	step: number;
 }
 
-class TrainUnitsWidgetComponent extends React.PureComponent<ITrainUnitsWidgetProps & WithStyles<typeof styles>, ITrainUnitsWidgetState> {
+class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps & WithStyles<typeof styles>, ITrainUnitsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {

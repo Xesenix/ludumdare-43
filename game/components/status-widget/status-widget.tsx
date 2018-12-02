@@ -64,7 +64,7 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & Wit
 					<Grid className={classes.resources} item xs={6} sm={4}>
 						<Typography variant="headline">Resources</Typography>
 						<Typography className={classes.resourcesAmountLabel} variant="display2">
-							{resources.current }
+							{resources.current}
 							<Typography
 								className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
 								variant="display1"

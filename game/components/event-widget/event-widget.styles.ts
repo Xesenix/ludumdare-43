@@ -1,15 +1,24 @@
 import { Theme } from '@material-ui/core';
 import { createStyles } from '@material-ui/core/styles';
 
+const title = {
+	padding: '12px',
+	borderRadius: '0',
+	textAlign: 'center',
+};
+
 export const styles = (theme: Theme) =>
 	createStyles({
 		attackTitle: {
-			padding: '12px',
-			borderRadius: '0',
+			...title,
+			textTransform: 'capitalize',
 			color: theme.palette.primary.contrastText,
 			backgroundColor: theme.palette.primary.dark,
-			textTransform: 'capitalize',
-			textAlign: 'center',
+		},
+		sacrificeTitle: {
+			...title,
+			color: theme.palette.secondary.contrastText,
+			backgroundColor: theme.palette.secondary.dark,
 		},
 		attackContainer: {
 			padding: '12px',
@@ -38,7 +47,7 @@ export const styles = (theme: Theme) =>
 		powerDescription: {
 			color: theme.palette.primary.contrastText,
 		},
-		sacrafice: {
+		sacrifice: {
 			color: theme.palette.secondary.contrastText,
 			backgroundColor: theme.palette.secondary.main,
 		},

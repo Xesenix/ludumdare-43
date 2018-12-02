@@ -56,54 +56,53 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & WithS
 	public render(): any {
 		const { } = this.state;
 		const { classes, currentState, consequences } = this.props;
-		const { event, weakness, weaknessReduction, wallPower, attackPower } = currentState;
+		const { event, immunity, weakness, weaknessReduction, wallPower, attackPower } = currentState;
 		let description;
 
-		switch (event) {
-			case 'orcs':
-				description = (
-					<Paper elevation={0}>
-						<Typography className={classes.attackTitle} variant="display1" component="p">
-							{event} attack power {Math.floor(consequences.attackPower)}
-						</Typography>
-						<Paper className={classes.attackContainer} elevation={0}>
-							<Grid container>
-								<Grid className={classes.powerContainer} item xs={12} sm={4}>
-									<Typography className={classes.powerDescription} variant="subheading" component="p">
-										Original power {attackPower}
-									</Typography>
-									<Typography className={classes.powerDescription} variant="caption" component="span">
-										weakness lvl {weakness} reduced it by { ((1 - Math.pow(1 - weaknessReduction, weakness)) * 100).toFixed(2) }%
-									</Typography>
-									<Typography className={classes.powerDescription} variant="caption" component="span">
-										wall lvl {wallPower / 30} reduced it by {wallPower})
-									</Typography>
+		if (immunity) {
+			description = (
+				<Paper className={classes.sacrifice}>
+					<Typography className={classes.sacrificeTitle} variant="display1" component="p">
+						You have prevented attack with resource sacrifice.
+					</Typography>
+				</Paper>
+			);
+		} else {
+			description = (
+				<Paper elevation={0}>
+					<Typography className={classes.attackTitle} variant="display1" component="p">
+						{event} attack power {Math.floor(consequences.attackPower)}
+					</Typography>
+					<Paper className={classes.attackContainer} elevation={0}>
+						<Grid container>
+							<Grid className={classes.powerContainer} item xs={12} sm={4}>
+								<Typography className={classes.powerDescription} variant="subheading" component="p">
+									Original power {attackPower}
+								</Typography>
+								<Typography className={classes.powerDescription} variant="caption" component="span">
+									weakness lvl {weakness} reduced it by { ((1 - Math.pow(1 - weaknessReduction, weakness)) * 100).toFixed(2) }%
+								</Typography>
+								<Typography className={classes.powerDescription} variant="caption" component="span">
+									wall lvl {wallPower / 30} reduced it by {wallPower})
+								</Typography>
+							</Grid>
+							<Grid className={classes.consequencesContainer} container item xs={12} sm={8}>
+								<Grid item xs={12}>
+									<Typography className={classes.label} variant="headline" component="p">Attack consequences</Typography>
 								</Grid>
-								<Grid className={classes.consequencesContainer} container item xs={12} sm={8}>
-									<Grid item xs={12}>
-										<Typography className={classes.label} variant="headline" component="p">Attack consequences</Typography>
-									</Grid>
-									<Grid item xs={6}>
-										<Typography className={classes.amountDescription} variant="headline" component="p">{consequences.totallKilled}</Typography>
-										<Typography className={classes.label} variant="caption" component="p">casualties</Typography>
-									</Grid>
-									<Grid item xs={6}>
-										<Typography className={classes.amountDescription} variant="headline" component="p">{consequences.resourcesStolen}</Typography>
-										<Typography className={classes.label} variant="caption" component="p">resources stolen</Typography>
-									</Grid>
+								<Grid item xs={6}>
+									<Typography className={classes.amountDescription} variant="headline" component="p">{consequences.totallKilled}</Typography>
+									<Typography className={classes.label} variant="caption" component="p">casualties</Typography>
+								</Grid>
+								<Grid item xs={6}>
+									<Typography className={classes.amountDescription} variant="headline" component="p">{consequences.resourcesStolen}</Typography>
+									<Typography className={classes.label} variant="caption" component="p">resources stolen</Typography>
 								</Grid>
 							</Grid>
-						</Paper>
+						</Grid>
 					</Paper>
-				);
-				break;
-			case 'orcs':
-				description = (
-					<Paper className={classes.sacrafice}>
-						{ event }
-					</Paper>
-				);
-				break;
+				</Paper>
+			);
 		}
 
 		return description;

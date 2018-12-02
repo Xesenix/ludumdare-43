@@ -69,46 +69,64 @@ export class GameEngine {
 		});
 	}
 
-	public canMakeSacraficeForWeakness() {
-		const { idle, sacraficeCost } = this.getState();
-		return idle >= sacraficeCost;
+	public canMakeUltimateSacrifice() {
+		const { idle, resources } = this.getState();
+
+		return idle >= 1000 && resources >= 1000;
 	}
 
-	public sacraficeResourcesForEnemyWeakness = () => {
-		const { weakness, idle, sacraficedIdle, sacraficeCost, turn, sacraficeCount } = this.getState();
+	public makeUltimateSacrifice = () => {
+		const { turn, sacrificeCount, sacrificedIdle, sacrificedResources } = this.getState();
 
 		this.setState({
-			weakness: weakness + 1,
-			sacrafice: 'idle',
-			sacraficeCount: sacraficeCount + 1,
-			sacraficeCost: this.getSacrificeCost({ turn, sacraficeCount: sacraficeCount + 1}),
-			idle: idle - sacraficeCost,
-			sacraficedIdle: sacraficedIdle + sacraficeCost,
+			win: true,
+			sacrificeCount: sacrificeCount + 1,
+			sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
+			sacrificedIdle: sacrificedIdle + 1000,
+			sacrificedResources: sacrificedResources + 1000,
 		});
 	}
 
-	public canMakeSacraficeForImmunity() {
-		const { resources, sacraficeCost, immunity } = this.getState();
-		return resources >= sacraficeCost && !immunity;
+	public canMakeSacrificeForWeakness() {
+		const { idle, sacrificeCost } = this.getState();
+		return idle >= sacrificeCost;
 	}
 
-	public sacraficeResourcesForImmunity = () => {
-		const { immunity, resources, sacraficedResources, sacraficeCost, turn, sacraficeCount } = this.getState();
+	public sacrificeResourcesForEnemyWeakness = () => {
+		const { weakness, idle, sacrificedIdle, sacrificeCost, turn, sacrificeCount } = this.getState();
+
+		this.setState({
+			weakness: weakness + 1,
+			sacrifice: 'idle',
+			sacrificeCount: sacrificeCount + 1,
+			sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
+			idle: idle - sacrificeCost,
+			sacrificedIdle: sacrificedIdle + sacrificeCost,
+		});
+	}
+
+	public canMakeSacrificeForImmunity() {
+		const { resources, sacrificeCost, immunity } = this.getState();
+		return resources >= sacrificeCost && !immunity;
+	}
+
+	public sacrificeResourcesForImmunity = () => {
+		const { immunity, resources, sacrificedResources, sacrificeCost, turn, sacrificeCount } = this.getState();
 
 		if (!immunity) {
 			this.setState({
 				immunity: true,
-				sacrafice: 'resources',
-				sacraficeCount: sacraficeCount + 1,
-				sacraficeCost: this.getSacrificeCost({ turn, sacraficeCount: sacraficeCount + 1}),
-				resources: resources - sacraficeCost,
-				sacraficedResources: sacraficedResources + sacraficeCost,
+				sacrifice: 'resources',
+				sacrificeCount: sacrificeCount + 1,
+				sacrificeCost: this.getSacrificeCost({ turn, sacrificeCount: sacrificeCount + 1}),
+				resources: resources - sacrificeCost,
+				sacrificedResources: sacrificedResources + sacrificeCost,
 			});
 		}
 	}
 
-	public getSacrificeCost({ turn, sacraficeCount }) {
-		return 1 + turn + 5 * sacraficeCount + 5 * Math.floor(turn / 5);
+	public getSacrificeCost({ turn, sacrificeCount }) {
+		return 1 + turn + 5 * sacrificeCount + 5 * Math.floor(turn / 5);
 	}
 
 	public canRealeseMoreWorkers = (amount = 1) => {
@@ -163,13 +181,13 @@ export class GameEngine {
 			immunity: false,
 			maxPopulation: 40,
 			resourcesStolen: 0,
-			sacrafice: '',
-			sacraficeCost: this.getSacrificeCost(state),
-			sacraficedChildren: 0,
-			sacraficedGuards: 0,
-			sacraficedIdle: 0,
-			sacraficedResources: 0,
-			sacraficedWorkers: 0,
+			sacrifice: '',
+			sacrificeCost: this.getSacrificeCost(state),
+			sacrificedChildren: 0,
+			sacrificedGuards: 0,
+			sacrificedIdle: 0,
+			sacrificedResources: 0,
+			sacrificedWorkers: 0,
 			totallKilled: 0,
 			trainedGuards: 0,
 			trainedWorkers: 0,
@@ -189,7 +207,7 @@ export class GameEngine {
 			reduceGatherResources,
 			reduceTrainUnits,
 			reducePayGuards,
-			// reduceHandleSacrafice,
+			// reduceHandleSacrifice,
 			reduceHandleEvent,
 			reduceMakeNewPeople,
 			reduceHomes,
