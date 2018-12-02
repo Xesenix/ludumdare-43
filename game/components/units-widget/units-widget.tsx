@@ -63,6 +63,7 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & WithS
 
 		return (
 			<Paper className={classes.root} elevation={0}>
+				<Typography className={classes.unitNameLabel} variant="headline" align="center">{ label }</Typography>
 				<Typography className={classes.unitAmountLabel} variant="display2" align="center">
 					{ amount }
 					{ change === 0
@@ -78,7 +79,6 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & WithS
 						)
 					}
 				</Typography>
-				<Typography className={classes.unitNameLabel} variant="headline" align="center">{ label }</Typography>
 				{ compact ? null : <Typography className={classes.description} variant="caption" align="center">{ children }</Typography> }
 			</Paper>
 		);
