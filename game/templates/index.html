@@ -25,5 +25,14 @@
 	<div class="footer">
 		&copy; <%= htmlWebpackPlugin.options.packageConfig.author %>, build version: <%= htmlWebpackPlugin.options.packageConfig.version %>
 	</div>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23677085-12"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-23677085-12');
+	</script>
 </body>
 </html>
