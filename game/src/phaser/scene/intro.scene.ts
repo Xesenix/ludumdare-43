@@ -136,15 +136,18 @@ current sound: ${currentSoundtrack}`,
 	}
 
 	private enterIdleMode() {
-		this.stm.soundtrackPlayer.scheduleNext(ambient, 0);
-		this.mode = 'idle';
+		if (this.mode !== 'idle') {
+			this.stm.soundtrackPlayer.scheduleNext(ambient, 0);
+			this.mode = 'idle';
+		}
 	}
 
 	private enterActionMode() {
-		this.stm.soundtrackPlayer.scheduleNext(action, note140 * 16);
-		this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
-		this.idleTimeout = this.sm.context.currentTime + note140 * 16;
-		this.mode = 'action';
+		if (this.mode !== 'action') {
+			this.stm.soundtrackPlayer.scheduleNext(action, 0);
+			this.idleTimeout = this.sm.context.currentTime + note140 * 16;
+			this.mode = 'action';
+		}
 	}
 
 	private setupSoundTrack() {

@@ -88,6 +88,7 @@ export interface IGameUIState {
 
 class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState & IUIState> {
 	private unsubscribe?: any;
+	private backToIdleHandle?: number;
 	private initialState = {
 		idleKilled: 0,
 		workersKilled: 0,
@@ -407,17 +408,22 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 
 	private progressToNextTurn = () => {
 		const { em } = this.props;
+		// plays action soundtrack
 		em.emit('mode:change', 'action');
+		// TODO: add logic to play win lose soundtrack
 
 		this.setState(this.engine.calculateConsequences(), this.engine.startNewTurn);
 
-		setTimeout(this.waitForDecisions, 5000);
+		if (this.backToIdleHandle) {
+			clearTimeout(this.backToIdleHandle);
+		}
+		this.backToIdleHandle = setTimeout(this.backToIdle, 15000);
 	}
 
-	private waitForDecisions = () => {
+	private backToIdle = () => {
 		const { em } = this.props;
+		// plays idle soundtrack
 		em.emit('mode:change', 'idle');
-		this.setState({ blockNextTurn: false });
 	}
 
 	private bindToStore(): void {
