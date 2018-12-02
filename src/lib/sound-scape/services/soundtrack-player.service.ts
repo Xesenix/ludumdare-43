@@ -200,6 +200,7 @@ export class SoundtrackPlayer {
 			const offset = sameSoundtrack ? duration : 0;
 
 			if (descriptor.loop && descriptor.interruptionStep > 0) {
+				// FIXME: lookout for magic number duration === 0 scheduling endless loop
 				const newEnd = descriptor.start + Math.ceil((this.context.currentTime + offset - descriptor.start) / descriptor.interruptionStep) * descriptor.interruptionStep;
 
 				if (descriptor.end !== newEnd && (!sameSoundtrack || descriptor.state !== 'endless')) {
@@ -207,7 +208,7 @@ export class SoundtrackPlayer {
 					descriptor.node.stop(newEnd);
 					this.scheduleOutroAt(descriptor.soundtrack, newEnd, layer);
 				}
-				extended = extended || sameSoundtrack;
+				extended = (extended || sameSoundtrack) && duration > 0;
 			}
 		});
 
