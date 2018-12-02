@@ -38,6 +38,7 @@ export interface ISacrificesWidgetProps {
 	__: (key: string) => string;
 	disabled: boolean;
 	engine: GameEngine;
+	compact: boolean;
 }
 
 const diDecorator = connectToInjector<ISacrificesWidgetProps>({
@@ -56,33 +57,64 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, __, engine } = this.props;
-		const { disabled, weaknessReduction, sacrificeCost, sacrificeCount } = engine.getState();
+		const { classes, __, engine, compact } = this.props;
+		const { disabled, turn, weakness, weaknessReduction, sacrificeCost, sacrificeCount } = engine.getState();
 
 		return (
-			<Paper className={classes.root} elevation={0}>
-				<Typography variant="display1" component="h3">
-					Sacrifices made {sacrificeCount}:
-				</Typography>
-				<Button
-					color="secondary"
-					variant="extendedFab"
-					disabled={disabled || !engine.canMakeSacrificeForImmunity()}
-					onClick={engine.sacrificeResourcesForImmunity}
-					size="large"
-				>
-					Make sacrifice for one turn immunity ({ sacrificeCost }&nbsp;resources)
-				</Button>
-				<Button
-					color="secondary"
-					variant="extendedFab"
-					disabled={disabled || !engine.canMakeSacrificeForWeakness()}
-					onClick={engine.sacrificeResourcesForEnemyWeakness}
-					size="large"
-				>
-					Make sacrifice for permament enemy weakness -{(weaknessReduction * 100).toFixed(2)}% multiplicative ({ sacrificeCost }&nbsp;idle population)
-				</Button>
-			</Paper>
+			<Grid className={classes.root} container spacing={8}>
+				<Grid item xs={12}>
+					<Typography variant="display1" component="h3">
+						Sacrifices made {sacrificeCount}:
+					</Typography>
+					{ compact ? null : (
+						<Typography variant="caption" component="p">
+							Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>
+							and every 5th by additional&nbsp;<strong>5</strong>.<br/>
+							Next turn cost will increase to&nbsp;<strong>{engine.getSacrificeCost({ turn: turn + 1, sacrificeCount })}</strong>
+						</Typography>
+					)}
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant="title" component="h4">
+						Immunity
+					</Typography>
+					{ compact ? null : (
+						<Typography variant="caption" component="p">
+							Make sacrifice for one turn immunity ({ sacrificeCost }&nbsp;resources). Enemies will ignore you in this year.
+						</Typography>
+					)}
+					<Button
+						color="secondary"
+						variant="raised"
+						disabled={disabled || !engine.canMakeSacrificeForImmunity()}
+						onClick={engine.sacrificeResourcesForImmunity}
+						size="small"
+					>
+						Sacrafice { sacrificeCost }&nbsp;resources
+					</Button>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Typography variant="title" component="h4">
+						Weakness
+					</Typography>
+					{ compact ? null : (
+						<Typography variant="caption" component="p">
+							Make sacrifice for permament enemy weakness -{(weaknessReduction * 100).toFixed(2)}% multiplicative ({ sacrificeCost }&nbsp;idle population)
+							Current reduction <strong>{engine.getWeaknessDamageReduction({ weaknessReduction, weakness })}%</strong>
+						</Typography>
+					)}
+					<Button
+						color="secondary"
+						variant="raised"
+						disabled={disabled || !engine.canMakeSacrificeForWeakness()}
+						onClick={engine.sacrificeResourcesForEnemyWeakness}
+						size="small"
+					>
+						Sacrafice { sacrificeCost }&nbsp;idle population (next level {engine.getWeaknessDamageReduction({ weaknessReduction, weakness: weakness + 1 })}%)
+					</Button>
+				</Grid>
+			</Grid>
 		);
 	}
 }

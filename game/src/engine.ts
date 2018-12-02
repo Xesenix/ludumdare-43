@@ -87,6 +87,10 @@ export class GameEngine {
 		});
 	}
 
+	public getWeaknessDamageReduction({ weaknessReduction, weakness }) {
+		return ((1 - Math.pow(1 - weaknessReduction, weakness)) * 100).toFixed(2);
+	}
+
 	public canMakeSacrificeForWeakness() {
 		const { idle, sacrificeCost } = this.getState();
 		return idle >= sacrificeCost;

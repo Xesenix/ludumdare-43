@@ -7,25 +7,14 @@ import Loadable from 'react-loadable';
 import { Store } from 'redux';
 
 // elements
-import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import ActionIcon from '@material-ui/icons/FlashOnRounded';
-import FullScreenIcon from '@material-ui/icons/Fullscreen';
-import FullScreenExitIcon from '@material-ui/icons/FullscreenExit';
-import MenuIcon from '@material-ui/icons/Menu';
-import PausedIcon from '@material-ui/icons/PauseCircleFilled';
-import PlayIcon from '@material-ui/icons/PlayCircleFilled';
 // icons
 import WinIcon from '@material-ui/icons/Star';
-import BackIcon from '@material-ui/icons/Undo';
-import MuteOnIcon from '@material-ui/icons/VolumeOff';
 
 import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
@@ -43,6 +32,7 @@ const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import('.
 const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import('../status-widget/status-widget') });
 const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import('../sacrifices-widget/sacrifices-widget') });
 const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../buildings-widget/buildings-widget') });
+const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import('../turn-details/turn-details') });
 
 export interface IGameUIProps {
 	di?: Container;
@@ -90,6 +80,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	private unsubscribe?: any;
 	private backToIdleHandle?: number;
 	private initialState = {
+		// game state
 		idleKilled: 0,
 		workersKilled: 0,
 		babiesKilled: 0,
@@ -148,7 +139,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	}
 
 	public render(): any {
-		const { classes, __, em } = this.props;
+		const { compact, classes, __, em } = this.props;
 		const {
 			population = 0,
 			babies = 0,
@@ -202,7 +193,6 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 			</Paper>);
 
 		const consequences = engine.calculateConsequences();
-		const compact = false;
 
 		return win
 			? winBlock
@@ -211,7 +201,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 
 				<Grid container spacing={compact ? 8 : 24}>
 					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
-						<PhaserViewComponent keepInstanceOnRemove />
+						{ compact ? null : <PhaserViewComponent keepInstanceOnRemove /> }
 						<EventWidgetComponent consequences={consequences} currentState={this.state}/>
 					</Grid>
 					<Grid item xs={12} sm={12}>
@@ -314,12 +304,14 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 						<SacrificesWidgetComponent
 							disabled={blockNextTurn}
 							engine={engine}
+							compact={compact}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<BuildingsWidgetComponent
 							disabled={blockNextTurn}
 							engine={engine}
+							compact={compact}
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
@@ -334,58 +326,11 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							(1000&nbsp;idle population and 1000&nbsp;resources)
 						</Button>
 					</Grid>
-				</Grid>
-				<Grid container spacing={0} alignItems="center">
-					<Grid item xs={12}>
-						<Paper className={classes.actionbar} elevation={2}>
-							<Typography variant="headline" component="h3">
-								Next turn consequences
-							</Typography>
-							<Grid className={classes.consequences} container spacing={0} alignItems="center">
-								<Grid className={classes.resource} item xs={12}>
-									<Typography variant="headline" component="h3">Event</Typography>
-									<Typography variant="subheading" component="p">{event} power {consequences.attackPower} (weakness reduced it by { ((1 - Math.pow(0.5, weakness)) * 100).toFixed(2) }% wall reduced it by {wallPower})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.totallKilled})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(stolen: {consequences.resourcesStolen})</Typography>
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Villagers {consequences.population}
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Workers {consequences.workers}
-									<Typography className={classes.positive} variant="caption" component="p">(trained: {consequences.trainedWorkers})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(sacrificed: {consequences.sacrificedWorkers})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.workersKilled})</Typography>
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Guards {consequences.guards}
-									<Typography className={classes.positive} variant="caption" component="p">(trained: {consequences.trainedGuards})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(sacrificed: {consequences.sacrificedGuards})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.guardsKilled})</Typography>
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Idle {consequences.idle}
-									<Typography className={classes.positive} variant="caption" component="p">(new adult: {consequences.newAdults})</Typography>
-									<Typography className={classes.positive} variant="caption" component="p">(retrained: {consequences.trainedWorkers + consequences.trainedGuards})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(sacrificed: {consequences.sacrificedIdle})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.idleKilled})</Typography>
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Babies {consequences.babies}
-									<Typography className={classes.positive} variant="caption" component="p">(born: {consequences.newChildren})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(sacrificed: {consequences.sacrificedChildren})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(killed: {consequences.babiesKilled})</Typography>
-								</Grid>
-								<Grid className={classes.resource} item xs={3}>
-									Resources {consequences.resources}
-									<Typography className={classes.positive} variant="caption" component="p">(gathered: {consequences.resourceGathered})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(guard salary: {consequences.guardsPaid})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(sacrificed: {consequences.sacrificedResources})</Typography>
-									<Typography className={classes.negative} variant="caption" component="p">(stolen: {consequences.resourcesStolen})</Typography>
-								</Grid>
-							</Grid>
-						</Paper>
-					</Grid>
+					{ compact ? null : (
+						<Grid item xs={12}>
+							<TurnDetailsComponent consequences={consequences}/>
+						</Grid>
+					)}
 					{restartBlock}
 				</Grid>
 			</Paper>

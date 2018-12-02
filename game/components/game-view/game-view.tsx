@@ -69,6 +69,7 @@ export interface IGameViewState {
 	tab: 'configuration' | 'game';
 	drawer: boolean;
 	loading: boolean;
+	compact: boolean;
 }
 
 class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<typeof styles>, IGameViewState & IUIState> {
@@ -80,6 +81,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 			tab: 'game',
 			drawer: false,
 			loading: false,
+			compact: false,
 			...defaultUIState,
 		};
 	}
@@ -103,7 +105,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 	}
 
 	public render(): any {
-		const { tab = 'game', fullscreen, paused, mute, loading } = this.state;
+		const { tab = 'game', fullscreen, paused, mute, loading, compact } = this.state;
 		const { classes, __ } = this.props;
 
 		const menu = (
@@ -124,13 +126,16 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 					{fullscreen ? <FullScreenExitIcon className={classes.extendedIcon} /> : <FullScreenIcon className={classes.extendedIcon} />}
 					{__('Fullscreen')}
 				</Button>
-				<Button color="primary" variant="extendedFab" className={classes.button} onClick={this.togglePause}>
+				{/* <Button color="primary" variant="extendedFab" className={classes.button} onClick={this.togglePause}>
 					{paused ? <PausedIcon className={classes.extendedIcon} /> : <PlayIcon className={classes.extendedIcon} />}
 					{__('Pause')}
-				</Button>
+				</Button> */}
 				<Button color="primary" variant="extendedFab" className={classes.button} onClick={this.toggleMute}>
 					{mute ? <MuteOnIcon className={classes.extendedIcon} /> : <MuteOffIcon className={classes.extendedIcon} />}
 					{__('Mute')}
+				</Button>
+				<Button color={compact ? 'secondary' : 'default' } variant="extendedFab" className={classes.button} onClick={this.toggleCompactMode}>
+					{__('Compact')}
 				</Button>
 			</>
 		);
@@ -154,7 +159,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 							{menu}
 						</Drawer>
 						{tab === 'configuration' ? <ConfigurationViewComponent /> : null}
-						{tab === 'game' ? <GameUIComponent /> : null}
+						{tab === 'game' ? <GameUIComponent compact={compact}/> : null}
 					</Paper>
 				</Grid>
 			</Grid>
@@ -208,6 +213,13 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 		const { dispatchCreateSetMutedAction } = this.props;
 		const { mute } = this.state;
 		dispatchCreateSetMutedAction(!mute);
+	}
+
+	private toggleCompactMode = () => {
+		const { compact } = this.state;
+		this.setState({
+			compact: !compact,
+		});
 	}
 }
 

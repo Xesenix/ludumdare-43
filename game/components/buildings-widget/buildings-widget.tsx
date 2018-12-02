@@ -38,6 +38,7 @@ export interface IBuildingsWidgetProps {
 	__: (key: string) => string;
 	disabled: boolean;
 	engine: GameEngine;
+	compact: boolean;
 }
 
 const diDecorator = connectToInjector<IBuildingsWidgetProps>({
@@ -56,31 +57,54 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, __, engine } = this.props;
+		const { classes, __, engine, compact } = this.props;
 		const { disabled, homesCount, wallPower } = engine.getState();
 
 		return (
-			<Paper className={classes.root} elevation={0}>
-				<Typography variant="display1" component="h3">
+			<Grid className={classes.root} container spacing={8}>
+				<Grid item xs={12}>
+					<Typography variant="display1" component="h3">
 					Buildings:
-				</Typography>
-				<Button
-					color="secondary"
-					variant="extendedFab"
-					disabled={disabled || !engine.canBuildWall()}
-					onClick={engine.buildWall}
-				>
-					Build wall (current reduction: { wallPower }) (+30 enemy power reduction cost { engine.wallCost() } resources)
-				</Button>
-				<Button
-					color="secondary"
-					variant="extendedFab"
-					disabled={disabled || !engine.canBuildHome()}
-					onClick={engine.buildHome}
-				>
-					Build home ({ homesCount }) (+20 max population cost { engine.homeCost() } resources)
-				</Button>
-			</Paper>
+					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant="title" component="h4">
+						Wall
+					</Typography>
+					{ compact ? null : (
+						<Typography variant="caption" component="p">
+							Build wall (current reduction: { wallPower }) (+30 enemy power reduction cost { engine.wallCost() } resources)
+						</Typography>
+					)}
+					<Button
+						color="secondary"
+						variant="raised"
+						disabled={disabled || !engine.canBuildWall()}
+						onClick={engine.buildWall}
+					>
+						Build wall { engine.wallCost() } resources
+					</Button>
+				</Grid>
+
+				<Grid item xs={12}>
+					<Typography variant="title" component="h4">
+						Cottage
+					</Typography>
+					{ compact ? null : (
+						<Typography variant="caption" component="p">
+							Build cottage ({ homesCount }) (+20 max population cost { engine.homeCost() } resources)
+						</Typography>
+					)}
+					<Button
+						color="secondary"
+						variant="raised"
+						disabled={disabled || !engine.canBuildHome()}
+						onClick={engine.buildHome}
+					>
+						Build cottage { engine.homeCost() } resources
+					</Button>
+				</Grid>
+			</Grid>
 		);
 	}
 }
