@@ -12,7 +12,12 @@ export const styles = (theme: Theme) =>
 			margin: theme.spacing.unit,
 			position: 'relative',
 		},
+		title: {
+			marginBottom: '16px',
+		},
 		headline: {
 			marginBottom: '8px',
+			maxWidth: '800px',
+			textAlign: 'justify',
 		},
 	});

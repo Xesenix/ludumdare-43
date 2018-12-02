@@ -87,11 +87,11 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 		const gameView = ready ? (
 			<GameView />
 		) : phaserReady ? (
-			<Button color="primary" variant="contained" onClick={this.start}>
+			<Button color="primary" variant="extendedFab" onClick={this.start} size="large">
 				{__('Start')}
 			</Button>
 		) : (
-			<Typography component="p">{`${__('loading')}: PHASER`}</Typography>
+			<Typography component="p">{`${__('loading')}: please wait`}</Typography>
 		);
 
 		return (
@@ -99,11 +99,15 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 				<CssBaseline />
 				<Paper className={classes.root} elevation={1}>
 					{loading ? <LinearProgress /> : null}
-					<Typography className={classes.headline} variant="display4" component="h1" align="center">
+					<Typography className={classes.title} variant="display4" component="h1" align="center">
 						The greatest sacrifice
 					</Typography>
-					<Typography className={classes.headline} variant="display1" component="h2" align="center">
+					<Typography className={classes.title} variant="display1" component="h2" align="center">
 						Ludumdare 43 edition
+					</Typography>
+					<Typography className={classes.headline} variant="headline" component="p" align="center">
+						You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year.<br/>
+						Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.
 					</Typography>
 					{gameView}
 				</Paper>
