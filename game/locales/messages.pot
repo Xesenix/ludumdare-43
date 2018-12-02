@@ -2,27 +2,23 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: game/app/app.tsx:103
-msgid "Ancient maze of Epla"
-msgstr ""
-
-#: game/src/phaser/scene/intro.scene.ts:133
+#: game/src/phaser/scene/intro.scene.ts:124
 msgid "audio time"
 msgstr ""
 
-#: game/components/game-view/game-view.tsx:114
+#: game/components/game-view/game-view.tsx:116
 msgid "Back"
 msgstr ""
 
-#: game/components/game-view/game-view.tsx:120
+#: game/components/game-view/game-view.tsx:138
+msgid "Compact"
+msgstr ""
+
+#: game/components/game-view/game-view.tsx:122
 msgid "Configuration"
 msgstr ""
 
-#: game/components/configuration-view/configuration-view.tsx:179
-msgid "dark"
-msgstr ""
-
-#: game/src/phaser/scene/intro.scene.ts:132
+#: game/src/phaser/scene/intro.scene.ts:123
 msgid "delta time"
 msgstr ""
 
@@ -30,7 +26,7 @@ msgstr ""
 msgid "english"
 msgstr ""
 
-#: game/components/game-view/game-view.tsx:125
+#: game/components/game-view/game-view.tsx:127
 msgid "Fullscreen"
 msgstr ""
 
@@ -40,10 +36,6 @@ msgstr ""
 
 #: game/components/configuration-view/configuration-view.tsx:169
 msgid "language"
-msgstr ""
-
-#: game/components/configuration-view/configuration-view.tsx:178
-msgid "light"
 msgstr ""
 
 #: game/app/app.tsx:94
@@ -66,12 +58,8 @@ msgstr ""
 msgid "music volume"
 msgstr ""
 
-#: game/components/game-view/game-view.tsx:133
+#: game/components/game-view/game-view.tsx:135
 msgid "Mute"
-msgstr ""
-
-#: game/components/game-view/game-view.tsx:129
-msgid "Pause"
 msgstr ""
 
 #: game/components/configuration-view/configuration-view.tsx:172
@@ -90,11 +78,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: game/components/configuration-view/configuration-view.tsx:176
-msgid "theme"
-msgstr ""
-
-#: game/src/phaser/scene/intro.scene.ts:131
+#: game/src/phaser/scene/intro.scene.ts:122
 msgid "total time"
 msgstr ""
 
