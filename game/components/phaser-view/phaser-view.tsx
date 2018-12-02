@@ -8,7 +8,6 @@ import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
 
 import { IPhaserGameProvider } from '../../src/phaser/game.provider';
-import GameUIComponent from '../game-ui/game-ui';
 
 import { styles } from './phaser-view.styles';
 
