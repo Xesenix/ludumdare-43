@@ -18,8 +18,8 @@ const ambient: ISoundtrack = {
 	},
 	loop: {
 		start: note140 * 0,
-		end: note140 * 28,
-		duration: note140 * 28,
+		end: note140 * 56,
+		duration: note140 * 56,
 		interruptionStep: note140 * 2,
 	},
 	outro: {
@@ -85,7 +85,7 @@ export class IntroScene extends Phaser.Scene {
 	public create(): void {
 		this.setupSoundTrack();
 
-		const bg = this.add.image(400, 150, 'bg');
+		const bg = this.add.image(384, 150, 'bg');
 		bg.setOrigin(0.5, 0.5);
 
 		// this.label = this.add.text(400, 20, '', { font: '24px Consolas', fill: '#ffffff' });

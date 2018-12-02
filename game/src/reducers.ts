@@ -117,10 +117,10 @@ export const reducePopulationLimit = (state) => {
 };
 
 export const reduceWeakness = (state) => {
-	const { attackPower, weakness } = state;
+	const { attackPower, weakness, weaknessReduction } = state;
 
 	return {
 		...state,
-		attackPower: attackPower * Math.pow(0.5, weakness),
+		attackPower: attackPower * Math.pow(1 - weaknessReduction, weakness),
 	};
 };

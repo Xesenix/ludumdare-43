@@ -4,6 +4,9 @@ export const appThemes = {
 	light: createMuiTheme({
 		typography: {
 			htmlFontSize: 16,
+			display4: {
+				fontWeight: 'bold',
+			},
 		},
 		palette: {
 			type: 'light',

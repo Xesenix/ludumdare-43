@@ -108,7 +108,7 @@ export class GameEngine {
 	}
 
 	public getSacrificeCost({ turn, sacraficeCount }) {
-		return 1 + 2 * turn + 5 * (sacraficeCount + 1);
+		return 1 + turn + 5 * sacraficeCount + 5 * Math.floor(turn / 5);
 	}
 
 	public canRealeseMoreWorkers = (amount = 1) => {
@@ -117,8 +117,8 @@ export class GameEngine {
 	}
 
 	public releaseWorker = (amount = 1) => {
-		const { trainedWorkers } = this.getState();
-		this.setState({ trainedWorkers: Math.max(0, trainedWorkers - amount) });
+		const { trainedWorkers, workers } = this.getState();
+		this.setState({ trainedWorkers: Math.max(-workers, trainedWorkers - amount) });
 	}
 
 	public canTrainMoreWorkers = (amount = 1) => {
@@ -156,7 +156,7 @@ export class GameEngine {
 		this.setState({
 			attackPower: this.getAttackPower(state),
 			babiesKilled: 0,
-			blockNextTurn: true,
+			// blockNextTurn: true,
 			event: 'orcs',
 			guardsKilled: 0,
 			idleKilled: 0,
@@ -198,7 +198,7 @@ export class GameEngine {
 
 		return {
 			...state,
-			people: state.babies + state.idle + state.workers + state.guards,
+			population: state.babies + state.idle + state.workers + state.guards,
 		};
 	}
 }

@@ -34,8 +34,9 @@ export interface IStatusWidgetProps {
 	di?: Container;
 	store?: Store<any, any>;
 	__: (key: string) => string;
-	population: { current: number, max: number };
+	population: { current: number, change: number, max: number };
 	resources: { current: number, income: number };
+	compact: boolean;
 	turn: number;
 }
 
@@ -55,27 +56,52 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & Wit
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, population, resources, turn } = this.props;
+		const { classes, population, resources, turn, compact } = this.props;
 
 		return (
-			<Paper className={classes.root}>
-				<div className={classes.resources}>
-					<Typography variant="headline" align="left">Resources</Typography>
-					<Typography variant="display2" align="left">{resources.current }(+{resources.income})</Typography>
-					<Typography variant="caption" align="left">
-						Hire more workers to collect more resources.
-					</Typography>
-				</div>
-				<div className={classes.year}>
-					<Typography variant="display2" align="center">Year { turn }</Typography>
-				</div>
-				<div className={classes.population}>
-					<Typography variant="headline" align="right">Population</Typography>
-					<Typography variant="display2" align="right">{population.current}/{population.max}</Typography>
-					<Typography variant="caption" align="right">
-						Build more cottages to increase max population.
-					</Typography>
-				</div>
+			<Paper className={classes.root} elevation={0}>
+				<Grid container>
+					<Grid className={classes.resources} item xs={6} sm={4}>
+						<Typography variant="headline">Resources</Typography>
+						<Typography className={classes.resourcesAmountLabel} variant="display2">
+							{resources.current }
+							<Typography
+								className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
+								variant="display1"
+								component="span"
+							>
+								({resources.income > 0 ? '+' : ''}{resources.income})
+							</Typography>
+						</Typography>
+						{ compact ? null : (
+							<Typography variant="caption">
+								Hire more workers to collect more resources.
+							</Typography>
+						)}
+					</Grid>
+					<Grid className={classes.year} item xs={12} sm={4}>
+						<Typography variant="display2">Year { turn }</Typography>
+					</Grid>
+					<Grid className={classes.population} item xs={6} sm={4}>
+						<Typography variant="headline">Population</Typography>
+						<Typography className={classes.populationAmountLabel} variant="display2">
+							{population.current}
+							<Typography
+								className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
+								variant="display1"
+								component="span"
+							>
+								{population.change ? `(${population.change > 0 ? '+' : ''}${population.change})` : null}
+							</Typography>
+							/{population.max}
+						</Typography>
+						{ compact ? null : (
+							<Typography variant="caption">
+								Build more cottages to increase max population.
+							</Typography>
+						)}
+					</Grid>
+				</Grid>
 			</Paper>
 		);
 	}

@@ -71,7 +71,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 						audio: {
 							noAudio: true,
 						},
-						width: 800,
+						width: 768,
 						height: 300,
 						type: Phaser.CANVAS, // AUTO, CANVAS, WEBGL, HEADLESS
 						parent,

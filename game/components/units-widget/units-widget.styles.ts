@@ -1,6 +1,12 @@
 import { Theme } from '@material-ui/core';
 import { createStyles } from '@material-ui/core/styles';
 
+const changeLabel = {
+	display: 'inline',
+	alignSelf: 'center',
+	marginLeft: '8px',
+};
+
 export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
@@ -8,38 +14,30 @@ export const styles = (theme: Theme) =>
 			display: 'flex',
 			flexDirection: 'column',
 			justifyContent: 'flex-end',
-			minWidth: '260px',
 			margin: '0 12px',
+			flexGrow: 1,
+			padding: `12px`,
 		},
 		description: {
 			margin: '0 auto 12px',
 			flexGrow: 1,
 		},
-		unit: {
-			display: 'flex',
-			flexGrow: 1,
-			padding: `12px`,
-			margin: '0 auto 24px',
-			flexDirection: 'column',
-			justifyContent: 'flex-end',
+		unitLabel: {
+
 		},
 		unitNameLabel: {
 
 		},
 		unitAmountLabel: {
-
-		},
-		actions: {
 			display: 'flex',
-			justifyContent: 'space-between',
-			backgroundColor: theme.palette.primary.main,
-			borderRadius: '16px',
+			justifyContent: 'center',
 		},
-		actionLabel: {
-			color: theme.palette.primary.contrastText,
-			alignSelf: 'center',
+		unitPositiveChangeLabel: {
+			...changeLabel,
+			color: '#00c700',
 		},
-		actionButton: {
-			margin: '-8px',
+		unitNegativeChangeLabel: {
+			...changeLabel,
+			color: '#c70000',
 		},
 	});

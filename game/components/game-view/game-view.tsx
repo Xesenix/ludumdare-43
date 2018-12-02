@@ -138,7 +138,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 		return (
 			<Grid container spacing={0} alignItems="center">
 				<Grid item xs={12}>
-					<Paper className={classes.root} elevation={2}>
+					<Paper className={classes.root} elevation={0}>
 						<AppBar position="fixed">
 							<Toolbar>
 								<Hidden xsDown>{menu}</Hidden>

@@ -9,15 +9,16 @@ import { Store } from 'redux';
 // elements
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 // icons
 import ConfigIcon from '@material-ui/icons/Build';
+import ActionIcon from '@material-ui/icons/FlashOnRounded';
 import FullScreenIcon from '@material-ui/icons/Fullscreen';
 import FullScreenExitIcon from '@material-ui/icons/FullscreenExit';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -25,21 +26,21 @@ import PausedIcon from '@material-ui/icons/PauseCircleFilled';
 import PlayIcon from '@material-ui/icons/PlayCircleFilled';
 import BackIcon from '@material-ui/icons/Undo';
 import MuteOnIcon from '@material-ui/icons/VolumeOff';
-import MuteOffIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
-
-import StatusWidgetComponent from '../status-widget/status-widget';
-import UnitsWidgetComponent from '../units-widget/units-widget';
 
 import { GameEngine } from '../../src/engine';
 
 import { styles } from './game-ui.styles';
 
-const Loader = () => <LinearProgress />;
+const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
 
+const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import('../event-widget/event-widget') });
 const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import('../phaser-view/phaser-view') });
+const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import('../train-widget/train-widget') });
+const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../units-widget/units-widget') });
+const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import('../status-widget/status-widget') });
 
 export interface IGameUIProps {
 	di?: Container;
@@ -61,7 +62,7 @@ const diDecorator = connectToInjector<IGameUIProps>({
 });
 
 export interface IGameUIState {
-	people: number;
+	population: number;
 	maxPopulation: number;
 	babies: number;
 	trainedWorkers: number;
@@ -97,7 +98,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		sacraficedIdle: 0,
 		sacraficedGuards: 0,
 		sacraficedWorkers: 0,
-		people: 20,
+		population: 20,
 		maxPopulation: 40,
 		idle: 20,
 		babies: 0,
@@ -110,6 +111,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		blockNextTurn: false,
 		event: 'orcs',
 		weakness: 0,
+		weaknessReduction: 0.30,
 		attackPower: 2,
 		sacraficeCost: 1,
 		sacraficeCount: 0,
@@ -144,7 +146,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	public render(): any {
 		const { classes, __, em } = this.props;
 		const {
-			people = 0,
+			population = 0,
 			babies = 0,
 			trainedWorkers = 0,
 			workers = 0,
@@ -160,24 +162,44 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 			wallPower = 0,
 			homesCount = 0,
 			weakness = 0,
+			weaknessReduction = 0.5,
 		} = this.state;
-		const consequences = this.engine.calculateConsequences();
 
-		return people ? (<Paper className={classes.root} elevation={2}>
-				<Grid container spacing={0}>
+		const restartBlock = (
+			<Grid item xs={12} style={{padding: '24px', textAlign: 'center'}}>
+				<Button
+					color="default"
+					variant="extendedFab"
+					disabled={blockNextTurn}
+					onClick={this.engine.reset}
+					size="large"
+				>
+					Restart
+				</Button>
+			</Grid>);
+
+		const consequences = this.engine.calculateConsequences();
+		const compact = false;
+
+		return population ? (<Paper className={classes.root} elevation={0}>
+
+				<Grid container spacing={compact ? 8 : 24}>
+					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
+						<PhaserViewComponent keepInstanceOnRemove />
+						<EventWidgetComponent consequences={consequences} currentState={this.state}/>
+					</Grid>
 					<Grid item xs={12} sm={12}>
 						<StatusWidgetComponent
-							population={{ current: people, max: this.engine.getMaxPopulation() }}
-							resources={{ current: resources, income: workers }}
+							compact={compact}
+							population={{ current: population, change: consequences.population - population, max: this.engine.getMaxPopulation() }}
+							resources={{ current: resources, income: consequences.resources - resources }}
 							turn={turn}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
-						<PhaserViewComponent keepInstanceOnRemove />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
+							compact={compact}
 							label="Idlers"
 							amount={idle}
 							hideActionBar={true}
@@ -187,27 +209,25 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							Population without occupation will produce children in rate 1 child per every 2 idle persons.
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
+							compact={compact}
 							label="Children"
 							amount={babies}
 							hideActionBar={true}
 							change={consequences.babies - babies}
 							height={180}
 						>
-							Those young villagers will become idle population in next year.
+							Those young villagers will become idle population in next year (if they survive next year attack).
 							They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
+							compact={compact}
 							label="Workers"
-							canHire={this.engine.canTrainMoreWorkers}
-							hire={this.engine.scheduleWorkerTraining}
-							canRelease={this.engine.canRealeseMoreWorkers}
-							release={this.engine.releaseWorker}
 							amount={workers}
 							trained={trainedWorkers}
 							change={consequences.workers - workers}
@@ -217,14 +237,11 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							Newly trained workers will start collecting resources in next year.
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
+							compact={compact}
 							label="Guards"
-							canHire={this.engine.canTrainMoreGuards}
-							hire={this.engine.scheduleGuardsTraining}
-							canRelease={this.engine.canRealeseMoreGuards}
-							release={this.engine.releaseGuard}
 							amount={guards}
 							trained={trainedGuards}
 							change={consequences.guards - guards}
@@ -233,6 +250,61 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							They will protect other units from being attacked and resources from being stolen.
 							Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.
 						</UnitsWidgetComponent>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TrainWidgetComponent
+							disabled={blockNextTurn}
+							label="train/release workers"
+							canHire={this.engine.canTrainMoreWorkers}
+							hire={this.engine.scheduleWorkerTraining}
+							canRelease={this.engine.canRealeseMoreWorkers}
+							release={this.engine.releaseWorker}
+							trained={trainedWorkers}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TrainWidgetComponent
+							disabled={blockNextTurn}
+							label="train/release guards"
+							canHire={this.engine.canTrainMoreGuards}
+							hire={this.engine.scheduleGuardsTraining}
+							canRelease={this.engine.canRealeseMoreGuards}
+							release={this.engine.releaseGuard}
+							trained={trainedGuards}
+						/>
+					</Grid>
+					<Grid container item xs={12} justify="center">
+						<Button
+							color="primary"
+							variant="extendedFab"
+							disabled={blockNextTurn}
+							onClick={this.progressToNextTurn}
+							size="large"
+						>
+							<ActionIcon/>{ event !== 'sacrafice' ? 'Defend yourself' : 'Continue' }
+						</Button>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<Button
+							color="secondary"
+							variant="extendedFab"
+							disabled={blockNextTurn || !this.engine.canMakeSacraficeForImmunity()}
+							onClick={this.engine.sacraficeResourcesForImmunity}
+							size="large"
+						>
+							Make sacrafice for one turn immunity ({ sacraficeCost } resources)
+						</Button>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<Button
+							color="secondary"
+							variant="extendedFab"
+							disabled={blockNextTurn || !this.engine.canMakeSacraficeForWeakness()}
+							onClick={this.engine.sacraficeResourcesForEnemyWeakness}
+							size="large"
+						>
+							Make sacrafice for permament enemy weakness -{(weaknessReduction * 100).toFixed(2)}% multiplicative ({ sacraficeCost } idle)
+						</Button>
 					</Grid>
 				</Grid>
 				<Grid container spacing={0} alignItems="center">
@@ -249,7 +321,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 									<Typography className={classes.negative} variant="caption" component="p">(stolen: {consequences.resourcesStolen})</Typography>
 								</Grid>
 								<Grid className={classes.resource} item xs={3}>
-									Villagers {consequences.people}
+									Villagers {consequences.population}
 								</Grid>
 								<Grid className={classes.resource} item xs={3}>
 									Workers {consequences.workers}
@@ -284,30 +356,6 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 									<Typography className={classes.negative} variant="caption" component="p">(stolen: {consequences.resourcesStolen})</Typography>
 								</Grid>
 							</Grid>
-							<Button
-								color="secondary"
-								variant="extendedFab"
-								disabled={blockNextTurn || !this.engine.canMakeSacraficeForImmunity()}
-								onClick={this.engine.sacraficeResourcesForImmunity}
-							>
-								Make sacrafice for one turn immunity ({ sacraficeCost } resources)
-							</Button>
-							<Button
-								color="secondary"
-								variant="extendedFab"
-								disabled={blockNextTurn || !this.engine.canMakeSacraficeForWeakness()}
-								onClick={this.engine.sacraficeResourcesForEnemyWeakness}
-							>
-								Make sacrafice for permament enemy weakness -50% multiplicative ({ sacraficeCost } idle)
-							</Button>
-							<Button
-								color="primary"
-								variant="extendedFab"
-								disabled={blockNextTurn}
-								onClick={this.progressToNextTurn}
-							>
-								{ event !== 'sacrafice' ? 'Defend yourself' : 'Continuue' }
-							</Button>
 						</Paper>
 					</Grid>
 					<Grid item xs={12}>
@@ -333,36 +381,21 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							</Button>
 						</Paper>
 					</Grid>
-					<Grid className={classes.resource} item xs={12}>
-						<Button
-							color="secondary"
-							variant="extendedFab"
-							disabled={blockNextTurn}
-							onClick={this.engine.reset}
-						>
-							Restart
-						</Button>
-					</Grid>
+					{restartBlock}
 				</Grid>
 			</Paper>
-		) : (<Paper className={classes.root} elevation={2}>
+		) : (<Paper className={classes.root} elevation={0}>
 			<Grid container spacing={0} alignItems="center">
+				<Grid item xs={12} style={{ marginBottom: '12px' }}>
+					<PhaserViewComponent keepInstanceOnRemove />
+				</Grid>
 				<Grid item xs={12}>
-					<Typography variant="display1" component="h1">
-						Your village perished after {turn} years
+					<Typography variant="display1" component="h1" align="center">
+						Your village has perished after {turn} years
 					</Typography>
 				</Grid>
 			</Grid>
-			<Grid className={classes.resource} item xs={12}>
-				<Button
-					color="secondary"
-					variant="extendedFab"
-					disabled={blockNextTurn}
-					onClick={this.engine.reset}
-				>
-					Restart
-				</Button>
-			</Grid>
+			{restartBlock}
 		</Paper>);
 	}
 
