@@ -109,6 +109,7 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 						You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year.<br/>
 						Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.
 					</Typography>
+					<Button className={classes.headline} href="https://ldjam.com/events/ludum-dare/43/$126387">Go to ludumdare 43 game page</Button>
 					{gameView}
 				</Paper>
 			</MuiThemeProvider>
