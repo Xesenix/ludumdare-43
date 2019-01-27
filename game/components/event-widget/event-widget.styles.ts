@@ -4,7 +4,7 @@ import { createStyles } from '@material-ui/core/styles';
 const title = {
 	padding: '12px',
 	borderRadius: '0',
-	textAlign: 'center',
+	textAlign: 'center' as 'center', // if its not casted it complains about beeing type string
 };
 
 export const styles = (theme: Theme) =>

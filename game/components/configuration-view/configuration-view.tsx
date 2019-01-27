@@ -1,4 +1,5 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
@@ -30,6 +31,7 @@ import { styles } from './configuration-view.styles';
 
 export interface IConfigurationProps {
 	store?: Store<IUIState & II18nState>;
+	di?: Container;
 	dispatchSetCurrentLanguageAction: () => void;
 	dispatchSetEffectsMutedAction: () => void;
 	dispatchSetEffectsVolumeAction: () => void;
