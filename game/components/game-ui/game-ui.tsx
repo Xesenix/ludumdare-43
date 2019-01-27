@@ -19,7 +19,7 @@ import WinIcon from '@material-ui/icons/Star';
 import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
 
-import { GameEngine } from '../../src/engine';
+import { GameEngine } from 'engine';
 
 import { styles } from './game-ui.styles';
 

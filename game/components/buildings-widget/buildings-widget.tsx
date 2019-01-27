@@ -9,9 +9,9 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
+import { GameEngine } from 'engine';
 import { connectToInjector } from 'lib/di';
 
-import { GameEngine } from '../../src/engine';
 import { styles } from './buildings-widget.styles';
 
 export interface IBuildingsWidgetProps {

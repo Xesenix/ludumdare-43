@@ -7,7 +7,7 @@ import { Store } from 'redux';
 import { connectToInjector } from 'lib/di';
 import { IUIState } from 'lib/ui';
 
-import { IPhaserGameProvider } from '../../src/phaser/game.provider';
+import { IPhaserGameProvider } from 'phaser/game.provider';
 
 import { styles } from './phaser-view.styles';
 
