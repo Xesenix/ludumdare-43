@@ -11,7 +11,7 @@ const Phaser = Extend(
 		// Data: require('phaser/src/data'),
 		Display: { Masks: require('phaser/src/display/mask') },
 		Events: require('phaser/src/events'),
-		Game: require('phaser/src/boot/Game'),
+		Game: require('phaser/src/core/Game'),
 		GameObjects: {
 			DisplayList: require('phaser/src/gameobjects/DisplayList'),
 		// 	GameObjectCreator: require('phaser/src/gameobjects/GameObjectCreator'),
