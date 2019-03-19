@@ -1,4 +1,5 @@
 import {
+	// prettier-ignore
 	changeAmountOf,
 	get,
 	set,
@@ -6,24 +7,24 @@ import {
 
 // === GUARDS_CURRENT
 
-export const getCurrentGuards = get<number>('guards', 'current');
-export const setCurrentGuards = set<number>('guards', 'current');
-export const changeAmountOfCurrentGuards = changeAmountOf('guards', 'current');
+export const getCurrentGuards = get<number>('guards.current', 0);
+export const setCurrentGuards = set<number>('guards.current');
+export const changeAmountOfCurrentGuards = changeAmountOf('guards.current');
 
 // === GUARDS_TRAINED
 
-export const getTrainedGuards = get<number>('guards', 'trained');
-export const setTrainedGuards = set<number>('guards', 'trained');
-export const changeAmountOfTrainedGuards = changeAmountOf('guards', 'trained');
+export const getTrainedGuards = get<number>('guards.trained', 0);
+export const setTrainedGuards = set<number>('guards.trained');
+export const changeAmountOfTrainedGuards = changeAmountOf('guards.trained');
 
-// === GUARDS_KILLED
+// === GUARDS_KILLED_IN_THIS_TURN
 
-export const getKilledGuards = get<number>('guards', 'killed');
-export const setKilledGuards = set<number>('guards', 'killed');
-export const changeAmountOfKilledGuards = changeAmountOf('guards', 'killed');
+export const getGuardsKilledInLastTurn = get<number>('guards.killed.current', 0);
+export const setGuardsKilledInLastTurn = set<number>('guards.killed.current');
+export const changeAmountOfGuardsKilledInLastTurn = changeAmountOf('guards.killed.current');
 
-// === GUARDS_MAX
+// === GUARDS_KILLED_IN_TOTAL
 
-export const getMaxGuards = get<number>('guards', 'max');
-export const setMaxGuards = set<number>('guards', 'max');
-export const changeAmountOfMaxGuards = changeAmountOf('guards', 'max');
+export const getGuardsKilledInTotal = get<number>('guards.killed.total', 0);
+export const setGuardsKilledInTotal = set<number>('guards.killed.total');
+export const changeAmountOfGuardsKilledInTotal = changeAmountOf('guards.killed.total');

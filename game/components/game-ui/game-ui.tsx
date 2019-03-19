@@ -17,10 +17,35 @@ import ActionIcon from '@material-ui/icons/FlashOnRounded';
 import WinIcon from '@material-ui/icons/Star';
 
 import { connectToInjector } from 'lib/di';
-import { IUIState } from 'lib/ui';
 
-import { GameEngine } from 'engine';
+import { Game } from 'game/game';
+import { DataStore, IGameState } from 'game/store';
 
+import { canMakeUltimateSacrifice } from 'game/actions/sacrifice';
+import {
+	// prettier-ignore
+	canTrainGuards,
+	canTrainWorkers,
+} from 'game/actions/training';
+import { getResourcesAmount } from 'game/features/resources/resources';
+import { getSacrificeCount, getSacrificedPopulationInTotal, getSacrificedResourcesInTotal } from 'game/features/skills/sacrifice';
+import { getCurrentChildren } from 'game/features/units/children';
+import {
+	// prettier-ignore
+	getCurrentGuards,
+	getTrainedGuards,
+} from 'game/features/units/guards';
+import { getCurrentIdles } from 'game/features/units/idles';
+import {
+	// prettier-ignore
+	getCurrentPopulation,
+	getMaxPopulation,
+} from 'game/features/units/population';
+import {
+	// prettier-ignore
+	getCurrentWorkers,
+	getTrainedWorkers,
+} from 'game/features/units/workers';
 import { styles } from './game-ui.styles';
 
 const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
@@ -36,8 +61,9 @@ const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import('.
 
 export interface IGameUIProps {
 	di?: Container;
-	em?: EventEmitter;
+	em: EventEmitter;
 	store?: Store<any, any>;
+	compact: boolean;
 	__: (key: string) => string;
 }
 
@@ -54,78 +80,80 @@ const diDecorator = connectToInjector<IGameUIProps>({
 });
 
 export interface IGameUIState {
-	population: number;
-	maxPopulation: number;
-	babies: number;
-	trainedWorkers: number;
-	workers: number;
-	trainedGuards: number;
-	guards: number;
-	idle: number;
-	turn: number;
-	resources: number;
-	event: 'sacrifice' | 'orcs';
-	sacrifice: 'babies' | 'idle' | 'workers' | 'resources' | 'guards';
-	weakness: number;
-	immunity: boolean;
-	attackPower: number;
-	sacrificeCost: number;
-	sacrificeCount: number;
-	blockNextTurn: boolean;
-	wallPower: number;
-	homesCount: number;
+	game?: Game;
+	currentState: IGameState;
 }
 
-class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState & IUIState> {
+class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState> {
 	private unsubscribe?: any;
 	private backToIdleHandle?: number;
-	private initialState = {
-		// game state
-		idleKilled: 0,
-		workersKilled: 0,
-		babiesKilled: 0,
-		guardsKilled: 0,
-		resourcesStolen: 0,
-		totallKilled: 0,
-		sacrificedResources: 0,
-		totalSacrificedResources: 0,
-		sacrificedChildren: 0,
-		totalSacrificedChildren: 0,
-		sacrificedIdle: 0,
-		totalSacrificedIdle: 0,
-		sacrificedGuards: 0,
-		totalSacrificedGuards: 0,
-		sacrificedWorkers: 0,
-		totalSacrificedWorkers: 0,
-		population: 20,
-		maxPopulation: 40,
-		idle: 20,
-		babies: 0,
-		trainedWorkers: 0,
-		workers: 0,
-		trainedGuards: 0,
-		guards: 0,
-		turn: 0,
-		resources: 0,
-		blockNextTurn: false,
-		event: 'orcs',
-		weakness: 0,
-		weaknessReduction: 0.30,
-		attackPower: 2,
-		sacrificeCost: 1,
-		sacrificeCount: 0,
-		wallPower: 0,
-		homesCount: 0,
-		immunity: false,
-		win: false,
-	};
 
-	private engine: GameEngine;
+	private initialState: IGameState = {
+		population: {
+			current: 20,
+			max: 20,
+		},
+		idles: {
+			current: 20,
+			killed: { current: 0, total: 0 },
+		},
+		guards: {
+			current: 0,
+			trained: 0,
+			killed: { current: 0, total: 0 },
+		},
+		workers: {
+			current: 0,
+			trained: 0,
+			killed: { current: 0, total: 0 },
+		},
+		children: {
+			current: 0,
+			killed: { current: 0, total: 0 },
+		},
+		resources: {
+			amount: 0,
+			reserved: 0,
+			used: { current: 0, total: 0 },
+			stolen: { current: 0, total: 0 },
+		},
+		cottages: {
+			level: 1,
+		},
+		walls: {
+			level: 0,
+			perLevelReduction: 30,
+			costMultiplier: 1.25,
+		},
+		sacrifice: {
+			count: 0,
+			cost: {
+				resources: { current: 0, total: 0 },
+				population: { current: 0, total: 0 },
+			},
+		},
+		turn: 0,
+		win: false,
+		lose: false,
+		event: 'orcs',
+		weakness: {
+			level: 0,
+			perLevelReduction: 0.3,
+		},
+		immunity: false,
+	};
 
 	constructor(props) {
 		super(props);
-		this.state = this.initialState;
-		this.engine = new GameEngine(this.initialState, () => this.state, (data) => this.setState(data));
+
+		const { em } = this.props;
+
+		const dataStore = new DataStore<IGameState>(this.initialState, em);
+
+		this.state = {
+			game: new Game(this.initialState, dataStore),
+			currentState: this.initialState,
+		};
 	}
 
 	public componentDidMount(): void {
@@ -144,41 +172,26 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	}
 
 	public render(): any {
-		const { compact, classes, __, em } = this.props;
-		const {
-			population = 0,
-			babies = 0,
-			trainedWorkers = 0,
-			workers = 0,
-			idle = 0,
-			trainedGuards = 0,
-			guards = 0,
-			turn = 0,
-			resources = 0,
-			blockNextTurn = false,
-			event = '',
-			wallPower = 0,
-			weakness = 0,
-			immunity = false,
-			win = false,
-		} = this.state;
+		const { compact, classes } = this.props;
+		const { game = {} as Game, currentState } = this.state;
+		const blockNextTurn = false;
 
-		const engine = this.engine;
+		const consequences: IGameState = game.calculateConsequences();
 
 		const restartBlock = (
-			<Grid item xs={12} style={{padding: '24px', textAlign: 'center'}}>
+			<Grid item xs={12} style={{ padding: '24px', textAlign: 'center' }}>
 				<Button
 					color="default"
 					variant="extendedFab"
 					disabled={blockNextTurn}
-					onClick={engine.reset}
+					onClick={game.resetGame}
 					size="large"
 				>
 					Restart
 				</Button>
-			</Grid>);
+			</Grid>
+		);
 
-		const { sacrificeCount, totalSacrificedIdle, totalSacrificedResources } = this.state;
 		const winBlock = (
 			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={0} alignItems="center">
@@ -190,31 +203,57 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							Your village is safe everybody are in heaven now.
 						</Typography>
 						<Typography variant="subheading" component="p" align="center">
-							Victory achieved in year {turn}. You have sacrificed {totalSacrificedResources} resources and {totalSacrificedIdle} people in {sacrificeCount} sacrifices.
+							Victory achieved in year {currentState.turn}.
+							You have sacrificed {getSacrificedResourcesInTotal(currentState)}
+							resources and {getSacrificedPopulationInTotal(currentState)}
+							people in {getSacrificeCount(currentState)} sacrifices.
 						</Typography>
 					</Grid>
 				</Grid>
 				{restartBlock}
-			</Paper>);
+			</Paper>
+		);
 
-		const consequences = engine.calculateConsequences();
+		const loseBlock = (
+			<Paper className={classes.root} elevation={0}>
+				<Grid container spacing={0} alignItems="center">
+					<Grid item xs={12} style={{ marginBottom: '12px' }}>
+						<PhaserViewComponent keepInstanceOnRemove />
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="display1" component="h1" align="center">
+							Your village has perished after {currentState.turn} years
+						</Typography>
+					</Grid>
+				</Grid>
+				{restartBlock}
+			</Paper>
+		);
 
-		return win
-			? winBlock
-			: population
-			? (<Paper className={classes.root} elevation={0}>
-
+		const gameBlock = (
+			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={compact ? 8 : 24}>
 					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
 						{ compact ? null : <PhaserViewComponent keepInstanceOnRemove /> }
-						<EventWidgetComponent consequences={consequences} currentState={this.state}/>
+						<EventWidgetComponent
+							consequences={consequences}
+							currentState={currentState}
+							game={game}
+						/>
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<StatusWidgetComponent
 							compact={compact}
-							population={{ current: population, change: consequences.population - population, max: engine.getMaxPopulation() }}
-							resources={{ current: resources, income: consequences.resources - resources }}
-							turn={turn}
+							population={{
+								current: getCurrentPopulation(currentState),
+								change: getCurrentPopulation(consequences) - getCurrentPopulation(currentState),
+								max: getMaxPopulation(currentState),
+							}}
+							resources={{
+								current: getResourcesAmount(currentState),
+								income: getResourcesAmount(consequences) - getResourcesAmount(currentState),
+							}}
+							turn={currentState.turn}
 						/>
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
@@ -222,9 +261,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							disabled={blockNextTurn}
 							compact={compact}
 							label="Idlers"
-							amount={idle}
+							amount={getCurrentIdles(currentState)}
 							hideActionBar={true}
-							change={consequences.idle - idle}
+							change={getCurrentIdles(consequences) - getCurrentIdles(currentState)}
 							height={180}
 						>
 							Population without occupation will produce children in rate 1 child per every 2 idle persons.
@@ -235,9 +274,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							disabled={blockNextTurn}
 							compact={compact}
 							label="Children"
-							amount={babies}
+							amount={getCurrentChildren(currentState)}
 							hideActionBar={true}
-							change={consequences.babies - babies}
+							change={getCurrentChildren(consequences) - getCurrentChildren(currentState)}
 							height={180}
 						>
 							Those young villagers will become idle population in next year (if they survive next year attack).
@@ -249,9 +288,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							disabled={blockNextTurn}
 							compact={compact}
 							label="Workers"
-							amount={workers}
-							trained={trainedWorkers}
-							change={consequences.workers - workers}
+							amount={getCurrentWorkers(currentState)}
+							trained={getTrainedWorkers(currentState)}
+							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
 							height={180}
 						>
 							Each one will collect 1 resource per turn.
@@ -263,9 +302,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							disabled={blockNextTurn}
 							compact={compact}
 							label="Guards"
-							amount={guards}
-							trained={trainedGuards}
-							change={consequences.guards - guards}
+							amount={getCurrentGuards(currentState)}
+							trained={getTrainedGuards(currentState)}
+							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
 							height={180}
 						>
 							They will protect other units from being attacked and resources from being stolen.
@@ -276,22 +315,18 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 						<TrainWidgetComponent
 							disabled={blockNextTurn}
 							label="train/release workers"
-							canHire={engine.canTrainMoreWorkers}
-							hire={engine.scheduleWorkerTraining}
-							canRelease={engine.canRealeseMoreWorkers}
-							release={engine.releaseWorker}
-							trained={trainedWorkers}
+							canTrain={canTrainWorkers(currentState)}
+							train={game.trainWorkers}
+							trained={getTrainedWorkers(currentState)}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<TrainWidgetComponent
 							disabled={blockNextTurn}
 							label="train/release guards"
-							canHire={engine.canTrainMoreGuards}
-							hire={engine.scheduleGuardsTraining}
-							canRelease={engine.canRealeseMoreGuards}
-							release={engine.releaseGuard}
-							trained={trainedGuards}
+							canTrain={canTrainGuards(currentState)}
+							train={game.trainGuards}
+							trained={getTrainedGuards(currentState)}
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
@@ -302,20 +337,20 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							onClick={this.progressToNextTurn}
 							size="large"
 						>
-							<ActionIcon/>{ immunity ? 'Continue' : 'Defend yourself' }
+							<ActionIcon/>{ currentState.immunity ? 'Continue' : 'Defend yourself' }
 						</Button>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<SacrificesWidgetComponent
 							disabled={blockNextTurn}
-							engine={engine}
+							game={game}
 							compact={compact}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<BuildingsWidgetComponent
 							disabled={blockNextTurn}
-							engine={engine}
+							game={game}
 							compact={compact}
 						/>
 					</Grid>
@@ -323,8 +358,8 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 						<Button
 							color="primary"
 							variant="extendedFab"
-							disabled={blockNextTurn || !engine.canMakeUltimateSacrifice()}
-							onClick={engine.makeUltimateSacrifice}
+							disabled={blockNextTurn || !canMakeUltimateSacrifice(currentState)}
+							onClick={game.makeUltimateSacrificeAction}
 							size="large"
 						>
 							<WinIcon/> Make ultimate sacrifice to save everybody
@@ -333,47 +368,46 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 					</Grid>
 					{ compact ? null : (
 						<Grid item xs={12}>
-							<TurnDetailsComponent consequences={consequences}/>
+							{/* <TurnDetailsComponent consequences={consequences}/> */}
 						</Grid>
 					)}
 					{restartBlock}
 				</Grid>
 			</Paper>
-		) : (
-			<Paper className={classes.root} elevation={0}>
-				<Grid container spacing={0} alignItems="center">
-					<Grid item xs={12} style={{ marginBottom: '12px' }}>
-						<PhaserViewComponent keepInstanceOnRemove />
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="display1" component="h1" align="center">
-							Your village has perished after {turn} years
-						</Typography>
-					</Grid>
-				</Grid>
-				{restartBlock}
-			</Paper>
 		);
+
+		return currentState.win
+			? winBlock
+			: currentState.lose
+			? loseBlock
+			: gameBlock;
 	}
 
 	private progressToNextTurn = () => {
+		const { game } = this.state;
+		if (game) {
+			game.commitNextTurn();
+		}
 		const { em } = this.props;
 		// plays action soundtrack
-		em.emit('mode:change', 'action');
+		if (em) {
+			em.emit('mode:change', 'action');
+		}
 		// TODO: add logic to play win lose soundtrack
-
-		this.setState(this.engine.calculateConsequences(), this.engine.startNewTurn);
 
 		if (this.backToIdleHandle) {
 			clearTimeout(this.backToIdleHandle);
 		}
-		this.backToIdleHandle = setTimeout(this.backToIdle, 15000);
+
+		this.backToIdleHandle = setTimeout(this.backToIdle, 15000) as any;
 	}
 
 	private backToIdle = () => {
 		const { em } = this.props;
 		// plays idle soundtrack
-		em.emit('mode:change', 'idle');
+		if (em) {
+			em.emit('mode:change', 'idle');
+		}
 	}
 
 	private bindToStore(): void {
@@ -393,8 +427,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		const { em } = this.props;
 
 		if (em) {
-			em.addListener('mode:change', (ev) => {
-				console.log('DECISION:bindToEventManager', ev);
+			em.addListener('state:update', (state: IGameState) => {
+				console.log('GameUIComponent:state', state);
+				this.setState({ currentState: state });
 			});
 		}
 	}

@@ -1,4 +1,5 @@
 import {
+	// prettier-ignore
 	changeAmountOf,
 	get,
 	set,
@@ -6,24 +7,24 @@ import {
 
 // === WORKERS_CURRENT
 
-export const getCurrentWorkers = get<number>('workers', 'current');
-export const setCurrentWorkers = set<number>('workers', 'current');
-export const changeAmountOfCurrentWorkers = changeAmountOf('workers', 'current');
+export const getCurrentWorkers = get<number>('workers.current', 0);
+export const setCurrentWorkers = set<number>('workers.current');
+export const changeAmountOfCurrentWorkers = changeAmountOf('workers.current');
 
 // === WORKERS_TRAINED
 
-export const getTrainedWorkers = get<number>('workers', 'trained');
-export const setTrainedWorkers = set<number>('workers', 'trained');
-export const changeAmountOfTrainedWorkers = changeAmountOf('workers', 'trained');
+export const getTrainedWorkers = get<number>('workers.trained', 0);
+export const setTrainedWorkers = set<number>('workers.trained');
+export const changeAmountOfTrainedWorkers = changeAmountOf('workers.trained');
 
-// === WORKERS_KILLED
+// === WORKERS_KILLED_IN_THIS_TURN
 
-export const getKilledWorkers = get<number>('workers', 'killed');
-export const setKilledWorkers = set<number>('workers', 'killed');
-export const changeAmountOfKilledWorkers = changeAmountOf('workers', 'killed');
+export const getWorkersKilledInLastTurn = get<number>('workers.killed.current', 0);
+export const setWorkersKilledInLastTurn = set<number>('workers.killed.current');
+export const changeAmountOfWorkersKilledInLastTurn = changeAmountOf('workers.killed.current');
 
-// === WORKERS_MAX
+// === WORKERS_KILLED_IN_TOTAL
 
-export const getMaxWorkers = get<number>('workers', 'max');
-export const setMaxWorkers = set<number>('workers', 'max');
-export const changeAmountOfMaxWorkers = changeAmountOf('workers', 'max');
+export const getWorkersKilledInTotal = get<number>('workers.killed.total', 0);
+export const setWorkersKilledInTotal = set<number>('workers.killed.total');
+export const changeAmountOfWorkersKilledInTotal = changeAmountOf('workers.killed.total');

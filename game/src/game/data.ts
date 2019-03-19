@@ -1,55 +1,51 @@
+import {
+	// prettier-ignore
+	cloneDeep,
+	get as lodashGet,
+	set as lodashSet,
+} from 'lodash';
 import { IGameState } from './store';
 
 // === BASE
 
 /**
- * Scope property selector.
+ * Scoped property selector.
  *
- * @param scope scope for keeping variables
- * @param key key on which property value is stored
+ * @param path path on which property value is stored
+ * @param defaultValue value retrived if nothing is set on path
  */
-export const get = <T>(scope: string, key: string) => (state: IGameState): T => state[scope][key];
+export const get = <T = any>(path: string, defaultValue: T) => (state: IGameState): T => lodashGet(state, path, defaultValue);
 
 /**
- * Scope property set action.
+ * Scoped property set action.
  *
- * @param scope scope for keeping variables
- * @param key key on which property value is stored
+ * @param path path on which property value is stored
  */
-export const set = <T>(scope: string, key: string) => (value: T) => (state: IGameState): IGameState => ({
-	...state,
-	[scope]: {
-		...(state[scope] || {}),
-		[key]: value,
-	},
-});
+export const set = <T = any>(path: string, cloneState: boolean = false) => (value: T) => (state: IGameState): IGameState => lodashSet<IGameState>(
+	cloneState ? cloneDeep(state) : state,
+	path,
+	value,
+);
 
 /**
- * Scope property changeAmountOf action.
+ * Scoped property changeAmountOf action.
  *
- * @param scope scope for keeping variables
- * @param key key on which property value is stored
+ * @param path path on which property value is stored
  */
-export const changeAmountOf = (scope: string, key: string) => (value: number) => (state: IGameState): IGameState => ({
-	...state,
-	[scope]: {
-		...(state[scope] || {}),
-		[key]: state[scope][key] + value,
-	},
-});
+export const changeAmountOf = (path: string, cloneState: boolean = false) => (value: number) => (state: IGameState): IGameState => lodashSet<IGameState>(
+	cloneState ? cloneDeep(state) : state,
+	path,
+	lodashGet(state, path, 0) as number + value,
+);
 
 /**
- * Scope property update action.
+ * Scoped property update action.
  *
  * @param scope scope for keeping variables
- * @param key key on which property value is stored
+ * @param path path on which property value is stored
  */
-export const update = <T>(scope: string, key: string, reduce: (prev: T, ...args) => T) => (...args) => (state: IGameState): IGameState => ({
-	...state,
-	[scope]: {
-		...state[key],
-		[key]: reduce(state[scope][key], ...args),
-	},
-});
-
-
+export const update = <T>(path: string, reduce: (prev: T, ...args) => T, cloneState: boolean = false) => (...args) => (state: IGameState): IGameState => lodashSet<IGameState>(
+	cloneState ? cloneDeep(state) : state,
+	path,
+	reduce(lodashGet(state, path, null), ...args),
+);

@@ -1,50 +1,112 @@
 import pipeline from 'pipeline-operator';
 
-import { reserveResources } from 'game/features/resources/resources';
 import {
+	// prettier-ignore
+	changeAmountOfReservedResources,
+	getFreeResourcesAmount,
+	getReservedResources,
+	getResourcesAmount,
+	payReservedResources,
+} from 'game/features/resources/resources';
+import {
+	// prettier-ignore
 	changeAmountOfCurrentGuards,
 	changeAmountOfTrainedGuards,
 	getCurrentGuards,
-	getMaxGuards,
 	getTrainedGuards,
 	setTrainedGuards,
 } from 'game/features/units/guards';
 import {
+	// prettier-ignore
 	changeAmountOfCurrentIdles,
-	changeAmountOfTrainedIdles,
 	getCurrentIdles,
-	getTrainedIdles,
+	getFreeIdles,
 } from 'game/features/units/idles';
+import {
+	// prettier-ignore
+	changeAmountOfCurrentWorkers,
+	changeAmountOfTrainedWorkers,
+	getCurrentWorkers,
+	getTrainedWorkers,
+	setTrainedWorkers,
+} from 'game/features/units/workers';
 import { IGameState } from 'game/store';
-import { payResources } from '../features/resources/resources';
 
-export const scheduleTrainingGuards = (amount: number) => (state: IGameState) => {
+/**
+ *
+ * @param state
+ */
+export const canTrainWorkers = (state: IGameState) => {
+	const available = getFreeIdles(state);
+	const availableWorkers = getTrainedWorkers(state) + getCurrentWorkers(state);
+	return (amount: number) => available >= amount && availableWorkers >= -amount;
+};
+
+export const scheduleTrainingWorkers = (amount: number) => (state: IGameState): IGameState => {
+	const workers = getCurrentWorkers(state);
+	const alreadyTrainedWorkers = getTrainedWorkers(state);
+	const idles = getCurrentIdles(state);
+	const trainedWorkers = Math.max(- workers - alreadyTrainedWorkers, Math.min(idles - alreadyTrainedWorkers, amount));
+
+	return pipeline(
+		state,
+		changeAmountOfTrainedWorkers(trainedWorkers),
+	);
+};
+
+export const trainWorkersRule = (state: IGameState) => {
+	const trained = getTrainedWorkers(state);
+
+	return pipeline(
+		state,
+		setTrainedWorkers(0),
+		changeAmountOfCurrentWorkers(trained),
+		changeAmountOfCurrentIdles(-trained),
+	);
+};
+
+export const canTrainGuards = (state: IGameState) => {
+	const availableIdles = getFreeIdles(state);
+	const availableResources = getFreeResourcesAmount(state);
+	const availableGuards = getTrainedGuards(state) + getCurrentGuards(state);
+	return (amount: number) => availableIdles >= amount && availableResources >= amount && availableGuards >= -amount;
+};
+
+export const scheduleTrainingGuards = (amount: number) => (state: IGameState): IGameState => {
 	const guards = getCurrentGuards(state);
 	const alreadyTrainedGuards = getTrainedGuards(state);
-	const idles = getCurrentIdles(state);
-	const alreadyTrainedIdles = getTrainedIdles(state);
-	const availableToTrain = Math.min(getMaxGuards(state) - guards - alreadyTrainedGuards, idles - alreadyTrainedIdles);
-	const trainedGuards = Math.min(availableToTrain, amount);
+	const alreadyReservedResources = getReservedResources(state);
+	const availableIdles = getFreeIdles(state);
+	const resourcesAmount = getResourcesAmount(state);
+	const freeResources = resourcesAmount - alreadyReservedResources;
+	const resourcesReservedForTrainingGuards = Math.max(alreadyTrainedGuards, 0);
+	const trainedGuards = Math.max(
+		- alreadyTrainedGuards - guards,
+		Math.min(
+			availableIdles,
+			freeResources,
+			amount,
+		),
+	);
+	const resourcesChange = Math.max(-resourcesReservedForTrainingGuards, trainedGuards);
 
 	return pipeline(
 		state,
 		changeAmountOfTrainedGuards(trainedGuards),
-		changeAmountOfTrainedIdles(trainedGuards),
-		reserveResources(trainedGuards),
+		changeAmountOfReservedResources(resourcesChange),
 	);
 };
 
-// TODO: add resource cost
 export const trainGuardsRule = (state: IGameState) => {
 	const trained = getTrainedGuards(state);
+	const reservedResources = Math.max(0, trained);
 
 	return pipeline(
 		state,
 		setTrainedGuards(0),
-		changeAmountOfTrainedIdles(-trained),
 		changeAmountOfCurrentGuards(trained),
 		changeAmountOfCurrentIdles(-trained),
-		payResources(trained),
+		payReservedResources(reservedResources),
 	);
 };
 

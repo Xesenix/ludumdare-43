@@ -19,9 +19,8 @@ export interface ITrainUnitsWidgetProps {
 	disabled: boolean;
 	label: string;
 	amount: number;
-	canHire?: (amount: number) => boolean;
-	hire?: (amount: number) => void;
-	canRelease?: (amount: number) => boolean;
+	canTrain?: (amount: number) => boolean;
+	train?: (amount: number) => void;
 	release?: (amount: number) => void;
 	trained?: number;
 }
@@ -66,8 +65,8 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 						className={classes.actionButton}
 						color="primary"
 						variant="extendedFab"
-						disabled={!this.canHire()}
-						onClick={this.hire}
+						disabled={!this.canTrain()}
+						onClick={this.train}
 					>
 						+
 					</Button>
@@ -100,35 +99,35 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 		}
 	}
 
-	private canHire = () => {
-		const { disabled, canHire } = this.props;
+	private canTrain = () => {
+		const { disabled, canTrain } = this.props;
 		const { step } = this.state;
 
-		return !disabled && canHire && canHire(step);
+		return !disabled && canTrain && canTrain(step);
 	}
 
-	private hire = (ev) => {
-		const { hire } = this.props;
+	private train = (ev) => {
+		const { train } = this.props;
 		const { step } = this.state;
 
-		if (hire) {
-			hire(step);
+		if (train) {
+			train(step);
 		}
 	}
 
 	private canRelease = () => {
-		const { disabled, canRelease } = this.props;
+		const { disabled, canTrain } = this.props;
 		const { step } = this.state;
 
-		return !disabled && canRelease && canRelease(step);
+		return !disabled && canTrain && canTrain(-step);
 	}
 
 	private release = (ev) => {
-		const { release } = this.props;
+		const { train } = this.props;
 		const { step } = this.state;
 
-		if (release) {
-			release(step);
+		if (train) {
+			train(-step);
 		}
 	}
 }

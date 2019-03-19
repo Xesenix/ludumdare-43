@@ -1,29 +1,55 @@
+import { get } from 'game/data';
+import { IGameState } from 'game/store';
+
+import { getCottagesLevel } from '../buildings/cottages';
 import {
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
+	// prettier-ignore
+	getChildrenKilledInLastTurn,
+	getChildrenKilledInTotal,
+	getCurrentChildren,
+} from './children';
+import {
+	// prettier-ignore
+	getCurrentGuards,
+	getGuardsKilledInLastTurn,
+	getGuardsKilledInTotal,
+} from './guards';
+import {
+	// prettier-ignore
+	getCurrentIdles,
+	getIdlesKilledInLastTurn,
+	getIdlesKilledInTotal,
+} from './idles';
+import {
+	// prettier-ignore
+	getCurrentWorkers,
+	getWorkersKilledInLastTurn,
+	getWorkersKilledInTotal,
+} from './workers';
 
 // === POPULATION_CURRENT
 
-export const getCurrentPopulation = get<number>('population', 'current');
-export const setCurrentPopulation = set<number>('population', 'current');
-export const changeAmountOfCurrentPopulation = changeAmountOf('population', 'current');
+export const getCurrentPopulation = (state: IGameState) => getCurrentIdles(state)
+	+ getCurrentWorkers(state)
+	+ getCurrentChildren(state)
+	+ getCurrentGuards(state);
 
-// === POPULATION_TRAINED
+// === POPULATION_KILLED_IN_THIS_TURN
 
-export const getTrainedPopulation = get<number>('population', 'trained');
-export const setTrainedPopulation = set<number>('population', 'trained');
-export const changeAmountOfTrainedPopulation = changeAmountOf('population', 'trained');
+export const getPopulationKilledInLastTurn = (state: IGameState) => getChildrenKilledInLastTurn(state)
+	+ getIdlesKilledInLastTurn(state)
+	+ getGuardsKilledInLastTurn(state)
+	+ getWorkersKilledInLastTurn(state);
 
-// === POPULATION_KILLED
+// === POPULATION_KILLED_IN_TOTAL
 
-export const getKilledPopulation = get<number>('population', 'killed');
-export const setKilledPopulation = set<number>('population', 'killed');
-export const changeAmountOfKilledPopulation = changeAmountOf('population', 'killed');
+export const getPopulationKilledInTotal = (state: IGameState) => getChildrenKilledInTotal(state)
+	+ getIdlesKilledInTotal(state)
+	+ getGuardsKilledInTotal(state)
+	+ getWorkersKilledInTotal(state);
 
 // === POPULATION_MAX
 
-export const getMaxPopulation = get<number>('population', 'max');
-export const setMaxPopulation = set<number>('population', 'max');
-export const changeAmountOfMaxPopulation = changeAmountOf('population', 'max');
+const getBaseMaxPopulation = get<number>('population.max', 0);
+export const getMaxPopulation = (state: IGameState) => getBaseMaxPopulation(state)
+	+ getCottagesLevel(state) * 20;

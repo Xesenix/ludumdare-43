@@ -9,7 +9,23 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import { GameEngine } from 'engine';
+import {
+	// prettier-ignore
+	canBuildCottages,
+	canBuildWalls,
+} from 'game/actions/build';
+import {
+	// prettier-ignore
+	getCottagesBuildCost,
+	getCottagesLevel,
+} from 'game/features/buildings/cottages';
+import {
+	// prettier-ignore
+	getWallsBuildCost,
+	getWallsLevel,
+	getWallsReduction,
+} from 'game/features/buildings/walls';
+import { Game } from 'game/game';
 import { connectToInjector } from 'lib/di';
 
 import { styles } from './buildings-widget.styles';
@@ -19,7 +35,7 @@ export interface IBuildingsWidgetProps {
 	store?: Store<any, any>;
 	__: (key: string) => string;
 	disabled: boolean;
-	engine: GameEngine;
+	game: Game;
 	compact: boolean;
 }
 
@@ -39,8 +55,8 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, __, engine, compact } = this.props;
-		const { disabled, homesCount, wallPower } = engine.getState();
+		const { disabled, classes, game, compact } = this.props;
+		const currentState = game.getState();
 
 		return (
 			<Grid className={classes.root} container spacing={8}>
@@ -51,43 +67,55 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Wall lvl {wallPower / 30}
+						Wall lvl { getWallsLevel(currentState) }
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
-							Build wall (current reduction: { wallPower }) (+30 enemy power reduction cost { engine.wallCost() } resources)
+							Build wall (current reduction: { getWallsReduction(currentState) }) (+30 enemy power reduction cost { getWallsBuildCost(currentState)(1) } resources)
 						</Typography>
 					)}
 					<Button
 						color="secondary"
 						variant="raised"
-						disabled={disabled || !engine.canBuildWall()}
-						onClick={engine.buildWall}
+						disabled={disabled || !canBuildWalls(currentState)(1)}
+						onClick={this.buildWall}
 					>
-						Build wall { engine.wallCost() } resources
+						Build wall { getWallsBuildCost(currentState)(1) } resources
 					</Button>
 				</Grid>
 
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Cottage lvl {homesCount}
+						Cottage lvl { getCottagesLevel(currentState) }
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
-							Build cottage ({ homesCount }) (+20 max population cost { engine.homeCost() } resources)
+							Build cottage ({ getCottagesLevel(currentState) }) (+20 max population cost { getCottagesBuildCost(currentState)(1) } resources)
 						</Typography>
 					)}
 					<Button
 						color="secondary"
 						variant="raised"
-						disabled={disabled || !engine.canBuildHome()}
-						onClick={engine.buildHome}
+						disabled={disabled || !canBuildCottages(currentState)(1)}
+						onClick={this.buildCottage}
 					>
-						Build cottage { engine.homeCost() } resources
+						Build cottage { getCottagesBuildCost(currentState)(1) } resources
 					</Button>
 				</Grid>
 			</Grid>
 		);
+	}
+
+	private buildWall = () => {
+		const { game } = this.props;
+
+		game.buildWalls(1);
+	}
+
+	private buildCottage = () => {
+		const { game } = this.props;
+
+		game.buildCottages(1);
 	}
 }
 

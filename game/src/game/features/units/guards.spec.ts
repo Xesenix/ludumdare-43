@@ -1,24 +1,27 @@
+import { IGameState } from 'game/store';
+import { cloneDeep } from 'lodash';
 import {
+	// prettier-ignore
 	changeAmountOfCurrentGuards,
-	changeAmountOfKilledGuards,
-	changeAmountOfMaxGuards,
+	changeAmountOfGuardsKilledInLastTurn,
+	changeAmountOfGuardsKilledInTotal,
 	changeAmountOfTrainedGuards,
 	getCurrentGuards,
-	getKilledGuards,
-	getMaxGuards,
+	getGuardsKilledInLastTurn,
+	getGuardsKilledInTotal,
 	getTrainedGuards,
 	setCurrentGuards,
-	setKilledGuards,
-	setMaxGuards,
+	setGuardsKilledInLastTurn,
+	setGuardsKilledInTotal,
 	setTrainedGuards,
 } from './guards';
 
-describe('feature/guards', () => {
+describe('feature/units/guards', () => {
 	describe('current', () => {
 		describe('.getCurrentGuards()', () => {
 			it('should get amount of guards in provided state', () => {
 				const amount = 123;
-				const result = getCurrentGuards({ guards: { current: amount } } as any);
+				const result = getCurrentGuards({ guards: { current: amount } } as IGameState);
 				expect(result).toBe(amount, 'amount of current guards');
 			});
 		});
@@ -26,18 +29,26 @@ describe('feature/guards', () => {
 		describe('.setCurrentGuards()', () => {
 			it('should set amount of guards in provided state', () => {
 				const amount = 42;
-				const state = setCurrentGuards(amount)({ guards: { current: 543 } } as any);
+				const state = setCurrentGuards(amount)({ guards: { current: 543 } } as IGameState);
 				expect(state.guards.current).toBe(amount, 'amount of current guards');
 			});
 
 			it('should not modify other guards fields in provided state', () => {
 				const amount = 0;
-				const baseGuards = { current: 123, trained: 22, killed: 34, max: 223 };
-				const state = setCurrentGuards(amount)({ guards: { ...baseGuards } } as any);
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = setCurrentGuards(amount)(cloneDeep(baseState as IGameState));
 				expect(state.guards.current).toBe(amount, 'amount of current guards');
-				expect(state.guards.trained).toBe(baseGuards.trained, 'amount of trained guards');
-				expect(state.guards.killed).toBe(baseGuards.killed, 'amount of killed guards');
-				expect(state.guards.max).toBe(baseGuards.max, 'max amount of guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
+
 			});
 		});
 
@@ -45,8 +56,26 @@ describe('feature/guards', () => {
 			it('should update amount of guards in provided state', () => {
 				const current = 13;
 				const amount = 42;
-				const state = changeAmountOfCurrentGuards(amount)({ guards: { current } } as any);
+				const state = changeAmountOfCurrentGuards(amount)({ guards: { current } } as Partial<IGameState> as IGameState);
 				expect(state.guards.current).toBe(current + amount, 'amount of current guards');
+			});
+
+			it('should not modify other guards fields in provided state', () => {
+				const amount = 0;
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = changeAmountOfCurrentGuards(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
+
 			});
 		});
 	});
@@ -55,7 +84,7 @@ describe('feature/guards', () => {
 		describe('.getTrainedGuards()', () => {
 			it('should get amount of trained guards in provided state', () => {
 				const amount = 34;
-				const result = getTrainedGuards({ guards: { current: 44, trained: amount } } as any);
+				const result = getTrainedGuards({ guards: { current: 44, trained: amount } } as Partial<IGameState> as IGameState);
 				expect(result).toBe(amount, 'amount of trained guards');
 			});
 		});
@@ -63,18 +92,26 @@ describe('feature/guards', () => {
 		describe('.setTrainedGuards()', () => {
 			it('should set amount of trained guards in provided state', () => {
 				const amount = 21;
-				const state = setTrainedGuards(amount)({ guards: { current: 23, trained: 45 } } as any);
+				const state = setTrainedGuards(amount)({ guards: { current: 23, trained: 45 } } as Partial<IGameState> as IGameState);
 				expect(state.guards.trained).toBe(amount, 'amount of trained guards');
 			});
 
 			it('should not modify other guards fields in provided state', () => {
 				const amount = 0;
-				const baseGuards = { current: 123, trained: 22, killed: 34, max: 223 };
-				const state = setTrainedGuards(amount)({ guards: { ...baseGuards } } as any);
-				expect(state.guards.current).toBe(baseGuards.current, 'amount of current guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = setTrainedGuards(amount)(baseState as IGameState);
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
 				expect(state.guards.trained).toBe(amount, 'amount of trained guards');
-				expect(state.guards.killed).toBe(baseGuards.killed, 'amount of killed guards');
-				expect(state.guards.max).toBe(baseGuards.max, 'max amount of guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
+
 			});
 		});
 
@@ -82,82 +119,189 @@ describe('feature/guards', () => {
 			it('should update amount of trained guards in provided state', () => {
 				const trained = 34;
 				const amount = -5;
-				const state = changeAmountOfTrainedGuards(amount)({ guards: { current: 11, trained } } as any);
+				const state = changeAmountOfTrainedGuards(amount)({ guards: { current: 11, trained } } as Partial<IGameState> as IGameState);
 				expect(state.guards.trained).toBe(trained + amount, 'amount of trained guards');
+			});
+
+			it('should not modify other guards fields in provided state', () => {
+				const amount = 0;
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = changeAmountOfTrainedGuards(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
+
 			});
 		});
 	});
 
 	describe('killed', () => {
-		describe('.getKilledGuards()', () => {
-			it('should get amount of killed guards in provided state', () => {
+		describe('.getGuardsKilledInLastTurn()', () => {
+			it('should get amount of guards killed in last turn in provided state', () => {
 				const amount = 34;
-				const result = getKilledGuards({ guards: { current: 44, killed: amount } } as any);
-				expect(result).toBe(amount, 'amount of killed guards');
+				const result = getGuardsKilledInLastTurn({ guards: { current: 44, killed: { current: amount, total: 42 } } } as Partial<IGameState> as IGameState);
+				expect(result).toBe(amount, 'amount of guards killed in last turn');
 			});
 		});
 
-		describe('.setKilledGuards()', () => {
-			it('should set amount of killed guards in provided state', () => {
+		describe('.setGuardsKilledInLastTurn()', () => {
+			it('should set amount of guards killed in last turn in provided state', () => {
 				const amount = 21;
-				const state = setKilledGuards(amount)({ guards: { current: 23, killed: 45 } } as any);
-				expect(state.guards.killed).toBe(amount, 'amount of killed guards');
+				const killed = { current: 45, total: 42 };
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 23,
+						trained: 11,
+						killed,
+					},
+				};
+				const state = setGuardsKilledInLastTurn(amount)(baseState as IGameState);
+				expect(state.guards.killed.current).toBe(amount, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(killed.total, 'amount of guards killed in total');
+
 			});
 
 			it('should not modify other guards fields in provided state', () => {
 				const amount = 0;
-				const baseGuards = { current: 123, trained: 22, killed: 34, max: 223 };
-				const state = setKilledGuards(amount)({ guards: { ...baseGuards } } as any);
-				expect(state.guards.current).toBe(baseGuards.current, 'amount of current guards');
-				expect(state.guards.trained).toBe(baseGuards.trained, 'amount of trained guards');
-				expect(state.guards.killed).toBe(amount, 'amount of killed guards');
-				expect(state.guards.max).toBe(baseGuards.max, 'max amount of guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = setGuardsKilledInLastTurn(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(amount, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
 			});
 		});
 
-		describe('.changeAmountOfKilledGuards()', () => {
-			it('should update amount of killed guards in provided state', () => {
-				const killed = 34;
+		describe('.changeAmountOfGuardsKilledInLastTurn()', () => {
+			it('should update amount of guards killed in last turn in provided state', () => {
+				const killed = { current: 34, total: 3 };
 				const amount = 5;
-				const state = changeAmountOfKilledGuards(amount)({ guards: { current: 11, killed } } as any);
-				expect(state.guards.killed).toBe(killed + amount, 'amount of killed guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 11,
+						trained: 0,
+						killed,
+					},
+				};
+				const state = changeAmountOfGuardsKilledInLastTurn(amount)(cloneDeep(baseState) as IGameState);
+				expect(state.guards.killed.current).toBe(killed.current + amount, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(killed.total, 'amount of guards killed in total');
+			});
+
+			it('should not modify other guards fields in provided state', () => {
+				const amount = 0;
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = changeAmountOfGuardsKilledInLastTurn(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
 			});
 		});
-	});
 
-	describe('max', () => {
-		describe('.getMaxGuards()', () => {
-			it('should get max amount of guards in provided state', () => {
+		describe('.getGuardsKilledInTotal()', () => {
+			it('should get amount of guards killed in total in provided state', () => {
 				const amount = 34;
-				const result = getMaxGuards({ guards: { current: 44, max: amount } } as any);
-				expect(result).toBe(amount, 'max amount of guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 44,
+						trained: 22,
+						killed: { current: 12, total: amount },
+					},
+				};
+				const result = getGuardsKilledInTotal(cloneDeep(baseState) as IGameState);
+				expect(result).toBe(amount, 'amount of guards killed in last turn');
 			});
 		});
 
-		describe('.setMaxGuards()', () => {
-			it('should set max amount of guards in provided state', () => {
-				const amount = 33;
-				const state = setMaxGuards(amount)({ guards: { current: 23, max: 45 } } as any);
-				expect(state.guards.max).toBe(amount, 'max amount of guards');
+		describe('.setGuardsKilledInTotal()', () => {
+			it('should set amount of guards killed in total in provided state', () => {
+				const amount = 21;
+				const killed = { current: 45, total: 42 };
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 23,
+						trained: 11,
+						killed,
+					},
+				};
+				const state = setGuardsKilledInTotal(amount)(baseState as IGameState);
+				expect(state.guards.killed.current).toBe(killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(amount, 'amount of guards killed in total');
+
 			});
 
 			it('should not modify other guards fields in provided state', () => {
 				const amount = 0;
-				const baseGuards = { current: 123, trained: 22, killed: 34, max: 223 };
-				const state = setMaxGuards(amount)({ guards: { ...baseGuards } } as any);
-				expect(state.guards.current).toBe(baseGuards.current, 'amount of current guards');
-				expect(state.guards.trained).toBe(baseGuards.trained, 'amount of trained guards');
-				expect(state.guards.killed).toBe(baseGuards.killed, 'amount of killed guards');
-				expect(state.guards.max).toBe(amount, 'max amount of guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = setGuardsKilledInTotal(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(amount, 'amount of guards killed in total');
 			});
 		});
 
-		describe('.changeAmountOfMaxGuards()', () => {
-			it('should update max amount of guards in provided state', () => {
-				const max = 34;
+		describe('.changeAmountOfGuardsKilledInTotal()', () => {
+			it('should update amount of guards killed in total in provided state', () => {
+				const killed = { current: 34, total: 3 };
 				const amount = 5;
-				const state = changeAmountOfMaxGuards(amount)({ guards: { current: 11, max } } as any);
-				expect(state.guards.max).toBe(max + amount, 'max amount of guards');
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 11,
+						trained: 0,
+						killed,
+					},
+				};
+				const state = changeAmountOfGuardsKilledInTotal(amount)(cloneDeep(baseState) as IGameState);
+				expect(state.guards.killed.current).toBe(killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(killed.total + amount, 'amount of guards killed in total');
+			});
+
+			it('should not modify other guards fields in provided state', () => {
+				const amount = 0;
+				const baseState: Partial<IGameState> = {
+					guards: {
+						current: 123,
+						trained: 22,
+						killed: { current: 34, total: 42 },
+					},
+				};
+				const guards = baseState.guards as any;
+				const state = changeAmountOfGuardsKilledInTotal(amount)(cloneDeep(baseState as IGameState));
+				expect(state.guards.current).toBe(guards.current, 'amount of current guards');
+				expect(state.guards.trained).toBe(guards.trained, 'amount of trained guards');
+				expect(state.guards.killed.current).toBe(guards.killed.current, 'amount of guards killed in last turn');
+				expect(state.guards.killed.total).toBe(guards.killed.total, 'amount of guards killed in total');
 			});
 		});
 	});

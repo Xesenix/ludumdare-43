@@ -28,7 +28,7 @@ const baseConfiguration = configureWebpack(webpack.webpackConfigFactory(factoryC
 
 // load additional per application webpack configuration
 if (fs.existsSync(appWebpack)) {
-	module.exports = (env) => require(appWebpack)(baseConfiguration);
+	module.exports = () => require(appWebpack)(baseConfiguration);
 } else {
-	module.exports = (env) => baseConfiguration;
+	module.exports = () => baseConfiguration;
 }

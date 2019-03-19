@@ -1,4 +1,5 @@
 import {
+	// prettier-ignore
 	changeAmountOf,
 	get,
 	set,
@@ -6,24 +7,18 @@ import {
 
 // === CHILDREN_CURRENT
 
-export const getCurrentChildren = get<number>('children', 'current');
-export const setCurrentChildren = set<number>('children', 'current');
-export const changeAmountOfCurrentChildren = changeAmountOf('children', 'current');
+export const getCurrentChildren = get<number>('children.current', 0);
+export const setCurrentChildren = set<number>('children.current');
+export const changeAmountOfCurrentChildren = changeAmountOf('children.current');
 
-// === CHILDREN_TRAINED
+// === CHILDREN_KILLED_IN_THIS_TURN
 
-export const getTrainedChildren = get<number>('children', 'trained');
-export const setTrainedChildren = set<number>('children', 'trained');
-export const changeAmountOfTrainedChildren = changeAmountOf('children', 'trained');
+export const getChildrenKilledInLastTurn = get<number>('children.killed.current', 0);
+export const setChildrenKilledInLastTurn = set<number>('children.killed.current');
+export const changeAmountOfChildrenKilledInLastTurn = changeAmountOf('children.killed.current');
 
-// === CHILDREN_KILLED
+// === CHILDREN_KILLED_IN_TOTAL
 
-export const getKilledChildren = get<number>('children', 'killed');
-export const setKilledChildren = set<number>('children', 'killed');
-export const changeAmountOfKilledChildren = changeAmountOf('children', 'killed');
-
-// === CHILDREN_MAX
-
-export const getMaxChildren = get<number>('children', 'max');
-export const setMaxChildren = set<number>('children', 'max');
-export const changeAmountOfMaxChildren = changeAmountOf('children', 'max');
+export const getChildrenKilledInTotal = get<number>('children.killed.total', 0);
+export const setChildrenKilledInTotal = set<number>('children.killed.total');
+export const changeAmountOfChildrenKilledInTotal = changeAmountOf('children.killed.total');
