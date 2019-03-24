@@ -28,24 +28,30 @@ import { II18nTranslation } from 'lib/i18n';
 import { getWallsLevel, getWallsReduction } from 'game/features/buildings/walls';
 import { styles } from './event-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface IEventWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: II18nTranslation;
-	event: string;
-	currentState: IGameState;
 	consequences: IGameState;
+	currentState: IGameState;
+	event: string;
 }
 
-const diDecorator = connectToInjector<IEventWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IEventWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<IEventWidgetProps, IEventWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-export interface IEventWidgetState {}
+/** Internal component state. */
+interface IEventWidgetState {}
 
-class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & WithStyles<typeof styles>, IEventWidgetState> {
+class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEventWidgetInternalProps & WithStyles<typeof styles>, IEventWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -176,4 +182,4 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & WithS
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(EventWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(EventWidgetComponent)));

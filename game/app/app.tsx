@@ -33,7 +33,7 @@ interface IAppProps {
 	phaserProvider: IPhaserProvider;
 }
 
-const diDecorator = connectToInjector<IAppProps>({
+const diDecorator = connectToInjector<IAppProps, IAppProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -144,4 +144,4 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(App)));
+export default hot(module)(withStyles(styles)(diDecorator(App)));

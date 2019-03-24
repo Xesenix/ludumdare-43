@@ -26,6 +26,7 @@ import MuteOnIcon from '@material-ui/icons/VolumeOff';
 import MuteOffIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 
 import { styles } from './game-view.styles';
@@ -35,16 +36,21 @@ const Loader = () => <LinearProgress />;
 const ConfigurationViewComponent = Loadable({ loading: Loader, loader: () => import('../configuration-view/configuration-view') });
 const GameUIComponent = Loadable({ loading: Loader, loader: () => import('../game-ui/game-ui') });
 
+/** Component public properties required to be provided by parent component. */
 export interface IGameViewProps {
-	di?: Container;
-	store?: Store<IUIState>;
-	dispatchSetFullscreenAction: (value: boolean) => void;
-	dispatchSetPausedAction: (value: boolean) => void;
-	dispatchCreateSetMutedAction: (value: boolean) => void;
-	__: (key: string) => string;
 }
 
-const diDecorator = connectToInjector<IGameViewProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IGameViewInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	dispatchCreateSetMutedAction: (value: boolean) => void;
+	dispatchSetFullscreenAction: (value: boolean) => void;
+	dispatchSetPausedAction: (value: boolean) => void;
+	store?: Store<IUIState>;
+}
+
+const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -65,14 +71,15 @@ const diDecorator = connectToInjector<IGameViewProps>({
 	},
 });
 
-export interface IGameViewState {
-	tab: 'configuration' | 'game';
+/** Internal component state. */
+interface IGameViewState {
+	compact: boolean;
 	drawer: boolean;
 	loading: boolean;
-	compact: boolean;
+	tab: 'configuration' | 'game';
 }
 
-class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<typeof styles>, IGameViewState & IUIState> {
+class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewInternalProps & WithStyles<typeof styles>, IGameViewState & IUIState> {
 	private unsubscribe?: any;
 
 	constructor(props) {
@@ -223,4 +230,4 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & WithStyles<
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(GameViewComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(GameViewComponent)));

@@ -1,6 +1,6 @@
+import { Container } from 'inversify';
 import * as React from 'react';
 
-import { Container } from 'inversify';
 
 // tslint:disable:max-classes-per-file
 
@@ -14,7 +14,7 @@ export const DIContext = React.createContext<Container | null>(null);
  * @param Consumer component into which we want to inject dependency injection container
  * @returns component with injected DI container property under `di` property
  */
-export function connectToDI<T extends { di?: Container }>(Consumer: React.ComponentType<T>) {
+export function connectToDI<T>(Consumer: React.ComponentType<T & { di: Container | null }>) {
 	class DIConsumer extends React.Component<T, {}> {
 		public render() {
 			return <DIContext.Consumer>{(container: Container | null) => <Consumer {...this.props} di={container} />}</DIContext.Consumer>;
@@ -33,24 +33,27 @@ export function connectToDI<T extends { di?: Container }>(Consumer: React.Compon
  * @param select map dependencies from container to properties names injected into decorated component properties
  * @returns component with injected values from DI container
  */
-export function connectToInjector<T extends { di?: Container }>(
+export function connectToInjector<T, I = any>(
 	// prettier-ignore
-	select: { [name: string]: { dependencies: string[], value?: (...dependencies: any[]) => Promise<any> } },
+	select: { [K in keyof I]: { dependencies: string[], value?: (...dependencies: any[]) => Promise<I[K]> } },
 	Preloader: React.FunctionComponent = () => <>loading...</>,
 ) {
 	return (Consumer: React.ComponentType<T>) => {
-		class DIInjector extends React.Component<T> {
+		class DIInjector extends React.Component<T & { di: Container | null }> {
 			public componentDidMount() {
 				const { di } = this.props;
 
 				if (!!di) {
 					const keys = Object.keys(select);
-					const configs = Object.values(select);
+					const configs = Object.values<{ dependencies: string[], value?: (...dependencies: any[]) => Promise<any> }>(select);
 
 					Promise.all(
 						configs.map(
-							({ value = (dep: any) => Promise.resolve(dep), dependencies }) =>
-								value.apply({}, dependencies.map((key) => di.get<any>(key))),
+							// prettier-ignore
+							({
+								value = (dep: any) => Promise.resolve(dep),
+								dependencies,
+							}) => value.apply({}, dependencies.map((key) => di.get<any>(key))),
 						),
 					).then(
 						(values: any[]) => {
@@ -73,6 +76,6 @@ export function connectToInjector<T extends { di?: Container }>(
 			}
 		}
 
-		return connectToDI<T>(DIInjector);
+		return connectToDI<T>(DIInjector) as React.ComponentType<T>;
 	};
 }

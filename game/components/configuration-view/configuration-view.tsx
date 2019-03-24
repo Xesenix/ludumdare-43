@@ -24,13 +24,18 @@ import MuteOffIcon from '@material-ui/icons/VolumeOff';
 import MuteOnIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
-import { II18nActions, II18nState } from 'lib/i18n';
+import { II18nState, II18nTranslation } from 'lib/i18n';
 import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 
 import { styles } from './configuration-view.styles';
 
-export interface IConfigurationProps {
-	store?: Store<IUIState & II18nState>;
+/** Component public properties required to be provided by parent component. */
+export interface IConfigurationViewProps {
+}
+
+/** Internal component properties include properties injected via dependency injection. */
+interface IConfigurationViewInternalProps {
+	__: II18nTranslation;
 	di?: Container;
 	dispatchSetCurrentLanguageAction: () => void;
 	dispatchSetEffectsMutedAction: () => void;
@@ -40,13 +45,9 @@ export interface IConfigurationProps {
 	dispatchSetMutedAction: () => void;
 	dispatchSetThemeAction: () => void;
 	dispatchSetVolumeAction: () => void;
-	__: (key: string) => string;
 }
 
-const diDecorator = connectToInjector<IConfigurationProps>({
-	store: {
-		dependencies: ['data-store'],
-	},
+const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -84,9 +85,10 @@ const diDecorator = connectToInjector<IConfigurationProps>({
 	},
 });
 
-export interface IConfigurationState {}
+/** Internal component state. */
+interface IConfigurationState {}
 
-export class ConfigurationViewComponent extends React.Component<IConfigurationProps & WithStyles<typeof styles>, IConfigurationState> {
+export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationState> {
 	public render(): any {
 		const {
 			classes,
@@ -101,7 +103,14 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationPr
 			dispatchSetVolumeAction,
 			__,
 		} = this.props;
-		const { mute, musicMuted, effectsMuted, volume, musicVolume, effectsVolume, language, theme } = store.getState();
+		const {
+			mute,
+			musicMuted,
+			effectsMuted,
+			volume,
+			musicVolume,
+			effectsVolume,
+		} = store.getState();
 
 		return (
 			<form className={classes.root}>
@@ -180,4 +189,4 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationPr
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(ConfigurationViewComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(ConfigurationViewComponent)));

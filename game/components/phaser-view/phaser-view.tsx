@@ -14,21 +14,27 @@ import { styles } from './phaser-view.styles';
 let game: Phaser.Game | null;
 let gameContainer: HTMLDivElement | null;
 
+/** Component public properties required to be provided by parent component. */
 export interface IPhaserViewProps {
-	di?: Container;
-	store?: Store<IUIState>;
 	keepInstanceOnRemove: boolean;
 }
 
-const diDecorator = connectToInjector<IPhaserViewProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IPhaserViewInternalProps {
+	di?: Container;
+	store?: Store<IUIState>;
+}
+
+const diDecorator = connectToInjector<IPhaserViewProps, IPhaserViewInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
 });
 
-export interface IPhaserViewState {}
+/** Internal component state. */
+interface IPhaserViewState {}
 
-class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & WithStyles<typeof styles>, IPhaserViewState> {
+class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaserViewInternalProps & WithStyles<typeof styles>, IPhaserViewState> {
 	private unsubscribe?: any;
 
 	constructor(props) {
@@ -87,4 +93,4 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & WithSty
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(PhaserViewComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(PhaserViewComponent)));

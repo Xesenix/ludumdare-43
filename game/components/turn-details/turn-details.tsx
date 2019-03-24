@@ -10,26 +10,33 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './turn-details.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface ITurnDetailsProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
-	disabled: boolean;
 	consequences: any;
+	disabled: boolean;
 }
 
-const diDecorator = connectToInjector<ITurnDetailsProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface ITurnDetailsInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<ITurnDetailsProps, ITurnDetailsInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-export interface ITurnDetailsState {}
+/** Internal component state. */
+interface ITurnDetailsState {}
 
-class TurnDetailsComponent extends React.Component<ITurnDetailsProps & WithStyles<typeof styles>, ITurnDetailsState> {
+class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDetailsInternalProps & WithStyles<typeof styles>, ITurnDetailsState> {
 	constructor(props) {
 		super(props);
 		this.state = {};

@@ -26,27 +26,37 @@ import {
 } from 'game/features/skills/weakness';
 import { Game } from 'game/game';
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './sacrifices-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface ISacrificesWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
-	disabled: boolean;
-	game: Game;
 	compact: boolean;
+	disabled: boolean;
 }
 
-const diDecorator = connectToInjector<ISacrificesWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface ISacrificesWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	game: Game;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<ISacrificesWidgetProps, ISacrificesWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
+	game: {
+		dependencies: ['game'],
+	},
 });
 
-export interface ISacrificesWidgetState {}
+/** Internal component state. */
+interface ISacrificesWidgetState {}
 
-class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps & WithStyles<typeof styles>, ISacrificesWidgetState> {
+class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>, ISacrificesWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -118,4 +128,4 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(SacrificesWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(SacrificesWidgetComponent)));

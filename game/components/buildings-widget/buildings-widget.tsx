@@ -27,27 +27,37 @@ import {
 } from 'game/features/buildings/walls';
 import { Game } from 'game/game';
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './buildings-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface IBuildingsWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
 	disabled: boolean;
-	game: Game;
 	compact: boolean;
 }
 
-const diDecorator = connectToInjector<IBuildingsWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IBuildingsWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	game: Game;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<IBuildingsWidgetProps, IBuildingsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
+	game: {
+		dependencies: ['game'],
+	},
 });
 
-export interface IBuildingsWidgetState {}
+/** Internal component state. */
+interface IBuildingsWidgetState {}
 
-class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & WithStyles<typeof styles>, IBuildingsWidgetState> {
+class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>, IBuildingsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -119,4 +129,4 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & W
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(BuildingsWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(BuildingsWidgetComponent)));

@@ -9,30 +9,37 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './units-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface IUnitsWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
-	disabled: boolean;
-	label: string;
 	amount: number;
-	trained?: number;
 	change: number;
 	compact: boolean;
+	disabled: boolean;
+	label: string;
+	trained?: number;
 }
 
-const diDecorator = connectToInjector<IUnitsWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IUnitsWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<IUnitsWidgetProps, IUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-export interface IUnitsWidgetState {}
+/** Internal component state. */
+interface IUnitsWidgetState {}
 
-class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & WithStyles<typeof styles>, IUnitsWidgetState> {
+class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>, IUnitsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -66,4 +73,4 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & WithS
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(UnitsWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(UnitsWidgetComponent)));

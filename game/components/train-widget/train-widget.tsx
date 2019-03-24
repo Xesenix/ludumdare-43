@@ -12,30 +12,36 @@ import { connectToInjector } from 'lib/di';
 
 import { styles } from './train-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface ITrainUnitsWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
-	disabled: boolean;
-	label: string;
 	amount: number;
 	canTrain?: (amount: number) => boolean;
-	train?: (amount: number) => void;
+	disabled: boolean;
+	label: string;
 	release?: (amount: number) => void;
+	train?: (amount: number) => void;
 	trained?: number;
 }
 
-const diDecorator = connectToInjector<ITrainUnitsWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface ITrainUnitsWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<ITrainUnitsWidgetProps, ITrainUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-export interface ITrainUnitsWidgetState {
+/** Internal component state. */
+interface ITrainUnitsWidgetState {
 	step: number;
 }
 
-class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps & WithStyles<typeof styles>, ITrainUnitsWidgetState> {
+class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps & ITrainUnitsWidgetInternalProps & WithStyles<typeof styles>, ITrainUnitsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -132,4 +138,4 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(TrainUnitsWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(TrainUnitsWidgetComponent)));

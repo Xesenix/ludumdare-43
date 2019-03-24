@@ -10,28 +10,35 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './status-widget.styles';
 
+/** Component public properties required to be provided by parent component. */
 export interface IStatusWidgetProps {
-	di?: Container;
-	store?: Store<any, any>;
-	__: (key: string) => string;
+	compact: boolean;
 	population: { current: number, change: number, max: number };
 	resources: { current: number, income: number };
-	compact: boolean;
 	turn: number;
 }
 
-const diDecorator = connectToInjector<IStatusWidgetProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IStatusWidgetInternalProps {
+	__: II18nTranslation;
+	di?: Container;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-export interface IStatusWidgetState {}
+/** Internal component state. */
+interface IStatusWidgetState {}
 
-class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & WithStyles<typeof styles>, IStatusWidgetState> {
+class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & IStatusWidgetInternalProps & WithStyles<typeof styles>, IStatusWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -90,4 +97,4 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & Wit
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(StatusWidgetComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(StatusWidgetComponent)));

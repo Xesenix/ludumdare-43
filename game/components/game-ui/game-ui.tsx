@@ -60,26 +60,31 @@ import { styles } from './game-ui.styles';
 
 const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
 
+const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../buildings-widget/buildings-widget') });
 const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import('../event-widget/event-widget') });
 const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import('../phaser-view/phaser-view') });
-const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import('../train-widget/train-widget') });
-const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../units-widget/units-widget') });
-const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import('../status-widget/status-widget') });
 const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import('../sacrifices-widget/sacrifices-widget') });
-const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../buildings-widget/buildings-widget') });
+const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import('../status-widget/status-widget') });
+const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import('../train-widget/train-widget') });
 const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import('../turn-details/turn-details') });
+const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../units-widget/units-widget') });
 
+/** Component public properties required to be provided by parent component. */
 export interface IGameUIProps {
-	di?: Container;
-	em: EventEmitter;
-	store?: Store<any, any>;
 	compact: boolean;
-	__: II18nTranslation;
-	_$: II18nPluralTranslation;
-	game: Game;
 }
 
-const diDecorator = connectToInjector<IGameUIProps>({
+/** Internal component properties include properties injected via dependency injection. */
+interface IGameUIInternalProps {
+	__: II18nTranslation;
+	_$: II18nPluralTranslation;
+	di?: Container;
+	em: EventEmitter;
+	game: Game;
+	store?: Store<any, any>;
+}
+
+const diDecorator = connectToInjector<IGameUIProps, IGameUIInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -97,11 +102,12 @@ const diDecorator = connectToInjector<IGameUIProps>({
 	},
 });
 
-export interface IGameUIState {
+/** Internal component state. */
+interface IGameUIState {
 	currentState: IGameState | null;
 }
 
-class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState> {
+class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternalProps & WithStyles<typeof styles>, IGameUIState> {
 	private unsubscribeDataStore?: any;
 	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
@@ -416,4 +422,4 @@ Each one requires 1 resource per year to be operational if there are no enough r
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(GameUIComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(GameUIComponent)));
