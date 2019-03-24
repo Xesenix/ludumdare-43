@@ -18,6 +18,10 @@ const configureWebpack = (config) => {
 	config.output.filename = '[name].js';
 	config.output.chunkFilename = '[name].js';
 
+	config.resolve.alias = {
+		'react-dom': '@hot-loader/react-dom'
+	};
+
 	// if you are using moment you can reduce amount of locales here
 	// config.plugins.push(new webpackBase.ContextReplacementPlugin(/moment[\/\\]locale$/, /(en|pl)$/));
 
