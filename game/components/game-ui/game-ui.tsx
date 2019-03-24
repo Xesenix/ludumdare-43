@@ -28,7 +28,12 @@ import {
 	canTrainWorkers,
 } from 'game/actions/training';
 import { getResourcesAmount } from 'game/features/resources/resources';
-import { getSacrificeCount, getSacrificedPopulationInTotal, getSacrificedResourcesInTotal } from 'game/features/skills/sacrifice';
+import {
+	// prettier-ignore
+	getSacrificeCount,
+	getSacrificedPopulationInTotal,
+	getSacrificedResourcesInTotal,
+} from 'game/features/skills/sacrifice';
 import { getCurrentChildren } from 'game/features/units/children';
 import {
 	// prettier-ignore
@@ -46,6 +51,11 @@ import {
 	getCurrentWorkers,
 	getTrainedWorkers,
 } from 'game/features/units/workers';
+import {
+	// prettier-ignore
+	II18nPluralTranslation,
+	II18nTranslation,
+} from 'lib/i18n';
 import { styles } from './game-ui.styles';
 
 const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
@@ -64,7 +74,8 @@ export interface IGameUIProps {
 	em: EventEmitter;
 	store?: Store<any, any>;
 	compact: boolean;
-	__: (key: string) => string;
+	__: II18nTranslation;
+	_$: II18nPluralTranslation;
 	game: Game;
 }
 
@@ -77,6 +88,9 @@ const diDecorator = connectToInjector<IGameUIProps>({
 	},
 	__: {
 		dependencies: ['i18n:translate'],
+	},
+	_$: {
+		dependencies: ['i18n:translate_plural'],
 	},
 	game: {
 		dependencies: ['game'],
@@ -134,10 +148,14 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 					onClick={game.resetGame}
 					size="large"
 				>
-					Restart
+					{__('Restart')}
 				</Button>
 			</Grid>
 		);
+
+		const sacrificedResources = getSacrificedResourcesInTotal(currentState);
+		const sacrificedPopulation = getSacrificedPopulationInTotal(currentState);
+		const sacrificesCount = getSacrificeCount(currentState);
 
 		const winBlock = (
 			<Paper className={classes.root} elevation={0}>
@@ -147,13 +165,20 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="display1" component="h3" align="center">
-							Your village is safe everybody are in heaven now.
+							{__(`Your village is safe everybody are in heaven now.`)}
 						</Typography>
 						<Typography variant="subheading" component="p" align="center">
-							Victory achieved in year {currentState.turn}.
-							You have sacrificed {getSacrificedResourcesInTotal(currentState)}
-							resources and {getSacrificedPopulationInTotal(currentState)}
-							people in {getSacrificeCount(currentState)} sacrifices.
+							{_$(currentState.turn, `Victory achieved in first year.`, `Victory achieved in %{turn} years.`, {
+								turn: currentState.turn,
+							})}
+							<br/>
+							{_$(sacrificedResources, `You have sacrificed one resource`, `You have sacrificed %{sacrificedResources}&nbsp;resources`, {
+								sacrificedResources,
+							})} {_$(sacrificedPopulation, `and one person`, `and %{sacrificedPopulation}&nbsp;people`, {
+								sacrificedPopulation,
+							})} {_$(sacrificesCount, `in one sacrifice.`, `in %{sacrificesCount} sacrifices.`, {
+								sacrificesCount,
+							})}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -168,8 +193,10 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 						<PhaserViewComponent keepInstanceOnRemove />
 					</Grid>
 					<Grid item xs={12}>
-						<Typography variant="display1" component="h1" align="center">
-							Your village has perished after {currentState.turn} years
+						<Typography align="center" component="h1" variant="display1">
+							{__(`Your village has perished after %{turn} years`, {
+								turn: currentState.turn,
+							})}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -180,7 +207,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 		const gameBlock = (
 			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={compact ? 8 : 24}>
-					<Grid item xs={12} sm={12} style={{ marginBottom: '12px' }}>
+					<Grid item sm={12} xs={12} style={{ marginBottom: '12px' }}>
 						{ compact ? null : <PhaserViewComponent keepInstanceOnRemove /> }
 						<EventWidgetComponent
 							consequences={consequences}
@@ -207,61 +234,60 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
 							compact={compact}
-							label="Idlers"
+							label={__('Idlers')}
 							amount={getCurrentIdles(currentState)}
 							hideActionBar={true}
 							change={getCurrentIdles(consequences) - getCurrentIdles(currentState)}
 							height={180}
 						>
-							Population without occupation will produce children in rate 1 child per every 2 idle persons.
+							{__(`Population without occupation will produce children in rate 1 child per every 2 idle persons.`)}
 						</UnitsWidgetComponent>
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
 							compact={compact}
-							label="Children"
+							label={__('Children')}
 							amount={getCurrentChildren(currentState)}
 							hideActionBar={true}
 							change={getCurrentChildren(consequences) - getCurrentChildren(currentState)}
 							height={180}
 						>
-							Those young villagers will become idle population in next year (if they survive next year attack).
-							They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.
+							{__(`Those young villagers will become idle population in next year (if they survive next year attack).
+They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.`)}
 						</UnitsWidgetComponent>
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
 							compact={compact}
-							label="Workers"
+							label={__('Workers')}
 							amount={getCurrentWorkers(currentState)}
 							trained={getTrainedWorkers(currentState)}
 							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
 							height={180}
 						>
-							Each one will collect 1 resource per turn.
-							Newly trained workers will start collecting resources in next year.
+							{__(`Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year.`)}
 						</UnitsWidgetComponent>
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
 							disabled={blockNextTurn}
 							compact={compact}
-							label="Guards"
+							label={__('Guards')}
 							amount={getCurrentGuards(currentState)}
 							trained={getTrainedGuards(currentState)}
 							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
 							height={180}
 						>
-							They will protect other units from being attacked and resources from being stolen.
-							Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.
+							{__(`They will protect other units from being attacked and resources from being stolen.
+Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.`)}
 						</UnitsWidgetComponent>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<TrainWidgetComponent
 							disabled={blockNextTurn}
-							label="train/release workers"
+							label={__('train/release workers')}
 							canTrain={canTrainWorkers(currentState)}
 							train={game.trainWorkers}
 							trained={getTrainedWorkers(currentState)}
@@ -270,7 +296,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 					<Grid item xs={12} sm={6}>
 						<TrainWidgetComponent
 							disabled={blockNextTurn}
-							label="train/release guards"
+							label={__('train/release guards')}
 							canTrain={canTrainGuards(currentState)}
 							train={game.trainGuards}
 							trained={getTrainedGuards(currentState)}
@@ -284,7 +310,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							onClick={this.progressToNextTurn}
 							size="large"
 						>
-							<ActionIcon/>{ currentState.immunity ? 'Continue' : 'Defend yourself' }
+							<ActionIcon/>{ currentState.immunity ? __('Continue') : __('Defend yourself') }
 						</Button>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -309,8 +335,10 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 							onClick={game.makeUltimateSacrificeAction}
 							size="large"
 						>
-							<WinIcon/> Make ultimate sacrifice to save everybody
-							(1000&nbsp;idle population and 1000&nbsp;resources)
+							<WinIcon/> {__(`Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)`, {
+								requiredPopulation: 1000,
+								requiredResources: 1000,
+							})}
 						</Button>
 					</Grid>
 					{ compact ? null : (

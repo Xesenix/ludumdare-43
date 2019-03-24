@@ -14,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 import { defaultUIState, IUIState } from 'lib/ui';
 
 import { styles } from './app.styles';
@@ -28,7 +29,7 @@ const GameView = Loadable({ loading: Loader, loader: () => import('../components
 interface IAppProps {
 	di?: Container;
 	store?: Store<IUIState, any>;
-	__: (key: string) => string;
+	__: II18nTranslation;
 	phaserProvider: IPhaserProvider;
 }
 
@@ -106,8 +107,15 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 						Ludumdare 43 edition
 					</Typography>
 					<Typography className={classes.headline} variant="headline" component="p" align="center">
-						You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year.<br/>
-						Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.
+						{
+							__(`You are the leader of a small village in this very hostile world.`)
+						} {
+							__(`You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own.`)}<br/>
+						{
+							__(`Manage your villagers assign them to work so they can gather resources for sacrifices or village development.`)
+						} {
+							__(`or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.`)
+						}
 					</Typography>
 					<Button className={classes.headline} href="https://ldjam.com/events/ludum-dare/43/$126387">Go to ludumdare 43 game page</Button>
 					{gameView}
