@@ -1,21 +1,20 @@
 import pipeline from 'pipeline-operator';
 
-import { getWallsBuildCost } from 'game/features/buildings/walls';
-
 import {
 	// prettier-ignore
 	changeCottagesLevel,
 	getCottagesBuildCost,
-} from '../features/buildings/cottages';
+} from 'game/features/buildings/cottages';
+import { getWallsBuildCost } from 'game/features/buildings/walls';
 import {
 	// prettier-ignore
 	changeWallsLevel,
-} from '../features/buildings/walls';
+} from 'game/features/buildings/walls';
 import {
 	// prettier-ignore
 	changeAmountOfResources,
 	getFreeResourcesAmount,
-} from '../features/resources/resources';
+} from 'game/features/resources/resources';
 import { IGameState } from '../store';
 
 export const canBuildCottages = (state: IGameState) => (amount: number = 1) => {

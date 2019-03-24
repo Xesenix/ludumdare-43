@@ -34,7 +34,7 @@ import { IGameState } from 'game/store';
 
 /**
  *
- * @param state
+ * @param IGameState state
  */
 export const canTrainWorkers = (state: IGameState) => {
 	const available = getFreeIdles(state);

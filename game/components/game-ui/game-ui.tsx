@@ -19,7 +19,7 @@ import WinIcon from '@material-ui/icons/Star';
 import { connectToInjector } from 'lib/di';
 
 import { Game } from 'game/game';
-import { DataStore, IGameState } from 'game/store';
+import { IGameState } from 'game/store';
 
 import { canMakeUltimateSacrifice } from 'game/actions/sacrifice';
 import {
@@ -65,6 +65,7 @@ export interface IGameUIProps {
 	store?: Store<any, any>;
 	compact: boolean;
 	__: (key: string) => string;
+	game: Game;
 }
 
 const diDecorator = connectToInjector<IGameUIProps>({
@@ -77,82 +78,25 @@ const diDecorator = connectToInjector<IGameUIProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
+	game: {
+		dependencies: ['game'],
+	},
 });
 
 export interface IGameUIState {
-	game?: Game;
-	currentState: IGameState;
+	currentState: IGameState | null;
 }
 
 class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<typeof styles>, IGameUIState> {
-	private unsubscribe?: any;
+	private unsubscribeDataStore?: any;
+	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
-
-	private initialState: IGameState = {
-		population: {
-			current: 20,
-			max: 20,
-		},
-		idles: {
-			current: 20,
-			killed: { current: 0, total: 0 },
-		},
-		guards: {
-			current: 0,
-			trained: 0,
-			killed: { current: 0, total: 0 },
-		},
-		workers: {
-			current: 0,
-			trained: 0,
-			killed: { current: 0, total: 0 },
-		},
-		children: {
-			current: 0,
-			killed: { current: 0, total: 0 },
-		},
-		resources: {
-			amount: 0,
-			reserved: 0,
-			used: { current: 0, total: 0 },
-			stolen: { current: 0, total: 0 },
-		},
-		cottages: {
-			level: 1,
-		},
-		walls: {
-			level: 0,
-			perLevelReduction: 30,
-			costMultiplier: 1.25,
-		},
-		sacrifice: {
-			count: 0,
-			cost: {
-				resources: { current: 0, total: 0 },
-				population: { current: 0, total: 0 },
-			},
-		},
-		turn: 0,
-		win: false,
-		lose: false,
-		event: 'orcs',
-		weakness: {
-			level: 0,
-			perLevelReduction: 0.3,
-		},
-		immunity: false,
-	};
 
 	constructor(props) {
 		super(props);
 
-		const { em } = this.props;
-
-		const dataStore = new DataStore<IGameState>(this.initialState, em);
-
 		this.state = {
-			game: new Game(this.initialState, dataStore),
-			currentState: this.initialState,
+			currentState: null,
 		};
 	}
 
@@ -166,16 +110,19 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	}
 
 	public componentWillUnmount(): void {
-		if (this.unsubscribe) {
-			this.unsubscribe();
+		if (this.unsubscribeDataStore) {
+			this.unsubscribeDataStore();
+		}
+		if (this.unsubscribeEventManager) {
+			this.unsubscribeEventManager();
 		}
 	}
 
 	public render(): any {
-		const { compact, classes } = this.props;
-		const { game = {} as Game, currentState } = this.state;
+		const { game, compact, classes, __, _$ } = this.props;
 		const blockNextTurn = false;
 
+		const currentState = game.getState();
 		const consequences: IGameState = game.calculateConsequences();
 
 		const restartBlock = (
@@ -384,7 +331,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	}
 
 	private progressToNextTurn = () => {
-		const { game } = this.state;
+		const { game } = this.props;
 		if (game) {
 			game.commitNextTurn();
 		}
@@ -413,8 +360,8 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	private bindToStore(): void {
 		const { store } = this.props;
 
-		if (!this.unsubscribe && store) {
-			this.unsubscribe = store.subscribe(() => {
+		if (!this.unsubscribeDataStore && store) {
+			this.unsubscribeDataStore = store.subscribe(() => {
 				if (store) {
 					this.setState(store.getState());
 				}
@@ -426,11 +373,17 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & WithStyles<type
 	private bindToEventManager(): void {
 		const { em } = this.props;
 
-		if (em) {
-			em.addListener('state:update', (state: IGameState) => {
-				console.log('GameUIComponent:state', state);
+		if (!this.unsubscribeEventManager && em) {
+			console.log('GameUIComponent:bindToEventManager:subscribe');
+			const handle = (state: IGameState) => {
+				console.log('GameUIComponent:bindToEventManager:state', state);
 				this.setState({ currentState: state });
-			});
+			};
+			em.addListener('state:update', handle);
+			this.unsubscribeEventManager = () => {
+				console.log('GameUIComponent:bindToEventManager:unsubscribe');
+				em.removeListener('state:update', handle);
+			};
 		}
 	}
 }

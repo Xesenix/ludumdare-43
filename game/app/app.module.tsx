@@ -4,6 +4,8 @@ import * as ReactDOM from 'react-dom';
 import { EventEmitter } from 'events';
 import { Container } from 'inversify';
 
+import { Game } from 'game/game';
+import { DataStore, IGameState } from 'game/store';
 import { DataStoreModule } from 'lib/data-store';
 import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
@@ -15,8 +17,8 @@ import { SoundScapeModule } from 'lib/sound-scape';
 import { defaultUIState, IUIState, UIModule, uiReducer } from 'lib/ui';
 
 import OutletComponent from '../components/outlet/outlet';
+import { initialGameState } from '../data/initial-state';
 import { PhaserGameModule } from '../src/phaser/game.module';
-
 import App from './app';
 
 declare const process: any;
@@ -98,6 +100,12 @@ export class AppModule extends Container implements IApplication {
 
 		// ui
 		UIModule.register(this);
+
+		// game
+		const dataStore = new DataStore<IGameState>({}, this.eventManager);
+		const game = new Game(initialGameState, dataStore);
+
+		this.bind<Game>('game').toConstantValue(game);
 	}
 
 	public banner() {

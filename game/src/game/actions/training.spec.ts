@@ -297,8 +297,15 @@ describe('features/training', () => {
 		describe('trainGuardsRule', () => {
 			it('should not break anything if there is no scheduled training', () => {
 				const baseState: Partial<IGameState> = {
-					idles: { current: 120, killed: { current: 0, total: 0 } },
-					guards: { current: 20, trained: 0, killed: { current: 0, total: 0 } },
+					idles: {
+						current: 120,
+						killed: { current: 0, total: 0 },
+					},
+					guards: {
+						current: 20,
+						trained: 0,
+						killed: { current: 0, total: 0 },
+					},
 					resources: {
 						amount: 120,
 						reserved: 25,
@@ -315,8 +322,15 @@ describe('features/training', () => {
 			it('should recalculate scheduled guards training', () => {
 				const amount = 4;
 				const baseState: Partial<IGameState> = {
-					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 0, killed: { current: 0, total: 0 } },
+					idles: {
+						current: 20,
+						killed: { current: 0, total: 0 },
+					},
+					guards: {
+						current: 3,
+						trained: 0,
+						killed: { current: 0, total: 0 },
+					},
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -339,12 +353,19 @@ describe('features/training', () => {
 			it('should recalculate scheduled guards release', () => {
 				const amount = -3;
 				const baseState: Partial<IGameState> = {
-					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 0, killed: { current: 0, total: 0 } },
+					idles: {
+						current: 20,
+						killed: { current: 0, total: 0 },
+					},
+					guards: {
+						current: 3,
+						trained: 0,
+						killed: { current: 0, total: 0 },
+					},
 					resources: {
 						amount: 10,
 						reserved: 5,
-						used: { current: 31, total: 23 },
+						used: { current: 31, total: 33 },
 						stolen: { current: 0, total: 0 },
 					},
 				};

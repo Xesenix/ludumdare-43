@@ -1,4 +1,6 @@
-import { EventEmitter } from 'events';
+export interface IEventEmitter {
+	emit( name: string, payload: any ): void;
+}
 
 export interface IGameState {
 	/**
@@ -107,7 +109,7 @@ export interface IGameState {
 export class DataStore<T> {
 	constructor(
 		private state: T,
-		private em: EventEmitter,
+		private em: IEventEmitter,
 	) {
 	}
 
