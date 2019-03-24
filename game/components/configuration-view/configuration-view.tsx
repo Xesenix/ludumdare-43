@@ -1,5 +1,6 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
+import { memoize } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
@@ -29,6 +30,8 @@ import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 
 import { styles } from './configuration-view.styles';
 
+import LanguageSelectorComponent from '../language-selector/language-selector';
+
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewProps {
 }
@@ -37,7 +40,6 @@ export interface IConfigurationViewProps {
 interface IConfigurationViewInternalProps {
 	__: II18nTranslation;
 	di?: Container;
-	dispatchSetCurrentLanguageAction: () => void;
 	dispatchSetEffectsMutedAction: () => void;
 	dispatchSetEffectsVolumeAction: () => void;
 	dispatchSetMusicMutedAction: () => void;
@@ -45,15 +47,15 @@ interface IConfigurationViewInternalProps {
 	dispatchSetMutedAction: () => void;
 	dispatchSetThemeAction: () => void;
 	dispatchSetVolumeAction: () => void;
+	store?: Store<IUIState & II18nState>;
 }
 
 const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
-	dispatchSetCurrentLanguageAction: {
-		dependencies: ['i18n:actions'],
-		value: (actions: II18nActions) => Promise.resolve((event) => actions.setCurrentLanguage(event.target.value)),
+	store: {
+		dependencies: ['data-store'],
 	},
 	dispatchSetEffectsMutedAction: {
 		dependencies: ['ui:actions'],
@@ -93,13 +95,11 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 		const {
 			classes,
 			store = { getState: () => ({ ...defaultUIState, language: 'en' }) },
-			dispatchSetCurrentLanguageAction,
 			dispatchSetEffectsMutedAction,
 			dispatchSetEffectsVolumeAction,
 			dispatchSetMusicMutedAction,
 			dispatchSetMusicVolumeAction,
 			dispatchSetMutedAction,
-			dispatchSetThemeAction,
 			dispatchSetVolumeAction,
 			__,
 		} = this.props;
@@ -178,13 +178,21 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 				<Grid item xs={12} container component="section">
 					<FormControl className={classes.formControl}>
 						<InputLabel>{__('language')}</InputLabel>
-						<Select value={language} onChange={dispatchSetCurrentLanguageAction}>
-							<MenuItem value={'en'}>{__('english')}</MenuItem>
-							<MenuItem value={'pl'}>{__('polish')}</MenuItem>
-						</Select>
+						<LanguageSelectorComponent view={this.renderLanguageSelector}/>
 					</FormControl>
 				</Grid>
 			</form>
+		);
+	}
+
+	private renderLanguageSelector = (language: string, updateLanguage: any) => {
+		const { __ } = this.props;
+		// tslint:disable:jsx-no-lambda
+		return (
+			<Select value={language} onChange={(event) => updateLanguage(event.target.value)}>
+				<MenuItem value={'en'}>{__('english')}</MenuItem>
+				<MenuItem value={'pl'}>{__('polish')}</MenuItem>
+			</Select>
 		);
 	}
 }

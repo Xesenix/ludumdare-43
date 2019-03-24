@@ -35,6 +35,7 @@ const Loader = () => <LinearProgress />;
 
 const ConfigurationViewComponent = Loadable({ loading: Loader, loader: () => import('../configuration-view/configuration-view') });
 const GameUIComponent = Loadable({ loading: Loader, loader: () => import('../game-ui/game-ui') });
+const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import('../language-selector/language-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IGameViewProps {
@@ -144,6 +145,8 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 				<Button color={compact ? 'secondary' : 'default' } variant="extendedFab" className={classes.button} onClick={this.toggleCompactMode}>
 					{__('Compact')}
 				</Button>
+
+				<LanguageSelectorComponent view={this.renderLanguageSelector}/>
 			</>
 		);
 
@@ -227,6 +230,31 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 		this.setState({
 			compact: !compact,
 		});
+	}
+
+	private renderLanguageSelector = (language: string, updateLanguage: any) => {
+		const { __, classes } = this.props;
+		// tslint:disable:jsx-no-lambda
+		return (
+			<>
+				<Button
+					color={language === 'pl' ? 'secondary' : 'default' }
+					variant="extendedFab"
+					className={classes.button}
+					onClick={() => updateLanguage('pl')}
+				>
+					PL
+				</Button>
+				<Button
+					color={language === 'en' ? 'secondary' : 'default' }
+					variant="extendedFab"
+					className={classes.button}
+					onClick={() => updateLanguage('en')}
+				>
+					EN
+				</Button>
+			</>
+		);
 	}
 }
 
