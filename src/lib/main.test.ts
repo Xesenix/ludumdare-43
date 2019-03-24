@@ -23,3 +23,10 @@ const excludeRegexp: RegExp = /.*\/(main|index|interfaces)\./;
 		.filter((p: string) => !excludeRegexp.test(p))
 		.forEach(contextLib);
 }
+{
+	const contextLib = require.context('i18n', true, /\.(t|j)sx?$/);
+	contextLib
+		.keys()
+		.filter((p: string) => !excludeRegexp.test(p))
+		.forEach(contextLib);
+}
