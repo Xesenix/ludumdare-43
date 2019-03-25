@@ -82,7 +82,10 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 						component="p"
 						variant="display1"
 					>
-						{event} attack power {Math.floor(getAttackPower(currentState))}
+						{__(`%{event} attack power %{attackPower}`, {
+							event,
+							attackPower: Math.floor(getAttackPower(currentState)),
+						})}
 					</Typography>
 					<Paper
 						className={classes.attackContainer}
@@ -100,7 +103,9 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									component="p"
 									variant="subheading"
 								>
-									Original power {Math.floor(getBaseAttackPower(currentState))}
+									{__(`Original power %{baseAttackPower}`, {
+										baseAttackPower: Math.floor(getBaseAttackPower(currentState)),
+									})}
 								</Typography>
 								<Typography
 									className={classes.powerDescription}
@@ -108,8 +113,8 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									variant="caption"
 								>
 									{__(`weakness lvl %{weaknessLvl} reduced it by %{weaknessDamageReduction}%`, {
-										weaknessLvl: getWeaknessLevel(currentState),
 										weaknessDamageReduction: (getWeaknessDamageReduction(currentState) * 100).toFixed(2),
+										weaknessLvl: getWeaknessLevel(currentState),
 									})}
 								</Typography>
 								<Typography
@@ -118,8 +123,8 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									variant="caption"
 								>
 									{__(`wall lvl %{weaknessLvl} reduced it by %{wallsReduction}`, {
-										weaknessLvl: getWallsLevel(currentState),
 										wallsReduction: getWallsReduction(currentState),
+										weaknessLvl: getWallsLevel(currentState),
 									})}
 								</Typography>
 							</Grid>
@@ -142,15 +147,15 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 								<Grid item xs={6}>
 									<Typography
 										className={classes.amountDescription}
-										variant="headline"
 										component="p"
+										variant="headline"
 									>
 										{getPopulationKilledInLastTurn(consequences)}
 									</Typography>
 									<Typography
 										className={classes.label}
-										variant="caption"
 										component="p"
+										variant="caption"
 									>
 										{__(`casualties`)}
 									</Typography>
@@ -158,15 +163,15 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 								<Grid item xs={6}>
 									<Typography
 										className={classes.amountDescription}
-										variant="headline"
 										component="p"
+										variant="headline"
 									>
 										{getResourcesStolenInLastTurn(consequences)}
 									</Typography>
 									<Typography
 										className={classes.label}
-										variant="caption"
 										component="p"
+										variant="caption"
 									>
 										{__(`resources stolen`)}
 									</Typography>

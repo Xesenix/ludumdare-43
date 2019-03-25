@@ -46,14 +46,34 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 	}
 
 	public render(): any {
-		const { } = this.state;
-		const { label, amount, classes, __, children, change, compact } = this.props;
+		const {
+			__,
+			amount,
+			change,
+			children,
+			classes,
+			compact,
+			label,
+		} = this.props;
 
 		return (
-			<Paper className={classes.root} elevation={0}>
-				<Typography className={classes.unitNameLabel} variant="headline" align="center">{ label }</Typography>
-				<Typography className={classes.unitAmountLabel} variant="display2" align="center">
-					{ amount }
+			<Paper
+				className={classes.root}
+				elevation={0}
+			>
+				<Typography
+					className={classes.unitNameLabel}
+					variant="headline"
+					align="center"
+				>
+					{label}
+				</Typography>
+				<Typography
+					className={classes.unitAmountLabel}
+					variant="display2"
+					align="center"
+				>
+					{amount}
 					{ change === 0
 						? null
 						: (
@@ -62,12 +82,23 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 								variant="display1"
 								component="span"
 							>
-								({change > 0 ? '+' : ''}{ change })
+								({change > 0 ? '+' : ''}{change})
 							</Typography>
 						)
 					}
 				</Typography>
-				{ compact ? null : <Typography className={classes.description} variant="caption" align="center">{ children }</Typography> }
+				{ compact
+					? null
+					: (
+						<Typography
+							className={classes.description}
+							variant="caption"
+							align="center"
+						>
+							{children}
+						</Typography>
+					)
+				}
 			</Paper>
 		);
 	}

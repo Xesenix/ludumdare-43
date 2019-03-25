@@ -65,23 +65,31 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 
 	public render(): any {
 		const { } = this.state;
-		const { disabled, classes, game, compact } = this.props;
+		const { disabled, classes, game, compact, __ } = this.props;
 		const currentState = game.getState();
+		const wallsBuildCost = getWallsBuildCost(currentState)(1);
+		const cottagesBuildCost = getCottagesBuildCost(currentState)(1);
+		const wallsReduction = getWallsReduction(currentState);
+		const wallLevel = getWallsLevel(currentState);
+		const cottagesLevel = getCottagesLevel(currentState);
 
 		return (
 			<Grid className={classes.root} container spacing={8}>
 				<Grid item xs={12}>
 					<Typography variant="display1" component="h3">
-					Buildings:
+					{__(`Buildings`)}:
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Wall lvl { getWallsLevel(currentState) }
+						{__(`Wall lvl %{wallLevel}`, { wallLevel })}
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
-							Build wall (current reduction: { getWallsReduction(currentState) }) (+30 enemy power reduction cost { getWallsBuildCost(currentState)(1) } resources)
+							{__(`Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)`, {
+								wallsReduction,
+								wallsBuildCost,
+							})}
 						</Typography>
 					)}
 					<Button
@@ -90,17 +98,20 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 						disabled={disabled || !canBuildWalls(currentState)(1)}
 						onClick={this.buildWall}
 					>
-						Build wall { getWallsBuildCost(currentState)(1) } resources
+						{__(`Build wall %{wallsBuildCost} resources`, { wallsBuildCost })}
 					</Button>
 				</Grid>
 
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
-						Cottage lvl { getCottagesLevel(currentState) }
+						{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
 					</Typography>
 					{ compact ? null : (
 						<Typography variant="caption" component="p">
-							Build cottage ({ getCottagesLevel(currentState) }) (+20 max population cost { getCottagesBuildCost(currentState)(1) } resources)
+							{__(`Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)`, {
+								cottagesLevel,
+								cottagesBuildCost,
+							})}
 						</Typography>
 					)}
 					<Button
@@ -109,7 +120,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 						disabled={disabled || !canBuildCottages(currentState)(1)}
 						onClick={this.buildCottage}
 					>
-						Build cottage { getCottagesBuildCost(currentState)(1) } resources
+						{__(`Build cottage %{cottagesBuildCost} resources`, { cottagesBuildCost })}
 					</Button>
 				</Grid>
 			</Grid>

@@ -95,4 +95,4 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 	}
 }
 
-export default hot(module)(diDecorator(withStyles(styles)(TurnDetailsComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(TurnDetailsComponent)));

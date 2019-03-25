@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './train-widget.styles';
 
@@ -61,31 +62,54 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 
 	public render(): any {
 		const { step } = this.state;
-		const { label, trained = 0, classes, __ } = this.props;
+		const {
+			__,
+			classes,
+			label,
+			trained = 0,
+		} = this.props;
 
 		return (
 			<div className={classes.root}>
-				<Typography className={classes.label} variant="subheading" align="center">{label}</Typography>
+				<Typography
+					align="center"
+					className={classes.label}
+					variant="subheading"
+				>
+					{label}
+				</Typography>
 				<div className={classes.actions}>
 					<Button
 						className={classes.actionButton}
 						color="primary"
-						variant="extendedFab"
 						disabled={!this.canTrain()}
 						onClick={this.train}
+						variant="extendedFab"
 					>
 						+
 					</Button>
 					<span className={classes.actionLabelContainer}>
-						<Typography className={classes.actionLabel} variant="title" component="span">{ trained }</Typography>
-						<Typography className={classes.actionLabel} variant="caption" component="span">+/-{step} hold ctrl/alt</Typography>
+						<Typography
+							className={classes.actionLabel}
+							component="span"
+							variant="title"
+						>
+							{trained}
+						</Typography>
+						<Typography
+							className={classes.actionLabel}
+							component="span"
+							variant="caption"
+						>
+							{__(`+/-%{step} hold ctrl/alt`, { step })}
+						</Typography>
 					</span>
 					<Button
 						className={classes.actionButton}
 						color="primary"
-						variant="extendedFab"
 						disabled={!this.canRelease()}
 						onClick={this.release}
+						variant="extendedFab"
 					>
 						-
 					</Button>

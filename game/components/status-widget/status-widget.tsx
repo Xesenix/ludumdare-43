@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
-import { II18nTranslation } from 'lib/i18n';
+import { II18nPluralTranslation, II18nTranslation } from 'lib/i18n';
 
 import { styles } from './status-widget.styles';
 
@@ -25,6 +25,7 @@ export interface IStatusWidgetProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface IStatusWidgetInternalProps {
 	__: II18nTranslation;
+	_$: II18nPluralTranslation;
 	di?: Container;
 	store?: Store<any, any>;
 }
@@ -32,6 +33,9 @@ interface IStatusWidgetInternalProps {
 const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
+	},
+	_$: {
+		dependencies: ['i18n:translate_plural'],
 	},
 });
 
@@ -46,13 +50,13 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, population, resources, turn, compact } = this.props;
+		const { classes, population, resources, turn, compact, __, _$ } = this.props;
 
 		return (
 			<Paper className={classes.root} elevation={0}>
 				<Grid container>
 					<Grid className={classes.resources} item xs={6} sm={4}>
-						<Typography variant="headline">Resources</Typography>
+						<Typography variant="headline">{__(`Resources`)}</Typography>
 						<Typography className={classes.resourcesAmountLabel} variant="display1">
 							{resources.current}
 							<Typography
@@ -65,15 +69,15 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 						</Typography>
 						{ compact ? null : (
 							<Typography variant="caption">
-								Hire more workers to collect more resources.
+								{__(`Hire more workers to collect more resources.`)}
 							</Typography>
 						)}
 					</Grid>
 					<Grid className={classes.year} item xs={12} sm={4}>
-						<Typography variant="display1">Year { turn }</Typography>
+						<Typography variant="display1">{_$(turn + 1, `Year one`, `Year %{turn}`, { turn: turn + 1 })}</Typography>
 					</Grid>
 					<Grid className={classes.population} item xs={6} sm={4}>
-						<Typography variant="headline">Population</Typography>
+						<Typography variant="headline">{__(`Population`)}</Typography>
 						<Typography className={classes.populationAmountLabel} variant="display1">
 							{population.current}
 							<Typography
@@ -87,7 +91,7 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 						</Typography>
 						{ compact ? null : (
 							<Typography variant="caption">
-								Build more cottages to increase max population.
+								{__(`Build more cottages to increase max population.`)}
 							</Typography>
 						)}
 					</Grid>
