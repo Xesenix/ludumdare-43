@@ -13,3 +13,8 @@ export interface IValueAction<T> extends Action {
 }
 
 export type ICreateSetAction<T> = (value: T) => IValueAction<T>;
+
+export interface IEventEmitter {
+	emit(name: string, payload: any): void;
+	on(name: string, cb: (...params: any[]) => any): void;
+}

@@ -13,6 +13,7 @@ let game: Phaser.Game | null = null;
 
 export function PhaserGameProvider(context: interfaces.Context) {
 	const console: Console = context.container.get<Console>('debug:console');
+	const eventManager: Console = context.container.get<Console>('event-manager');
 	console.debug('PhaserGameProvider');
 
 	return (forceNew: boolean = false): Promise<Phaser.Game> => {
@@ -25,14 +26,12 @@ export function PhaserGameProvider(context: interfaces.Context) {
 		// TODO: convert to observable so it can return progress on loading
 		return phaserProvider().then((Phaser) => Promise.all([
 				// prettier-ignore
-				import('lib/phaser/di.plugin'),
 				import('lib/phaser/ui-manager.plugin'),
 				import('./scene/intro.scene'),
 				context.container.get<interfaces.Factory<IAudioManagerPlugin<any>>>('audio-manager-plugin:provider')(),
 				context.container.get<interfaces.Factory<Phaser.Plugins.BasePlugin>>('soundtrack-manager-plugin:provider')(),
 			]).then(([
 				// prettier-ignore
-				{ createDIPlugin },
 				{ createUIManagerPlugin },
 				{ phaserIntroSceneFactory },
 				AudioManagerPluginClass,
@@ -101,11 +100,6 @@ export function PhaserGameProvider(context: interfaces.Context) {
 					plugins: {
 						global: [
 							{
-								key: 'di',
-								plugin: createDIPlugin(Phaser, context.container),
-								start: true,
-							},
-							{
 								key: 'ui:manager',
 								plugin: createUIManagerPlugin(Phaser, store),
 								start: true,
@@ -122,7 +116,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 							},
 						],
 					},
-					scene: [phaserIntroSceneFactory(Phaser)],
+					scene: [phaserIntroSceneFactory(Phaser, eventManager)],
 				};
 
 				game = new Phaser.Game(config);

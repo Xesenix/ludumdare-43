@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { EventEmitter } from 'events';
 import { Container } from 'inversify';
 
 import { Game } from 'game/game';
@@ -10,7 +9,7 @@ import { DataStoreModule } from 'lib/data-store';
 import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
 import { defaultI18nState, I18nModule, i18nReducer, II18nState } from 'lib/i18n';
-import { IApplication, IValueAction } from 'lib/interfaces';
+import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
 import { defaultUIState, IUIState, UIModule, uiReducer } from 'lib/ui';
@@ -54,7 +53,7 @@ export class AppModule extends Container implements IApplication {
 		}
 
 		// event manager
-		this.bind<EventEmitter>('event-manager').toConstantValue(this.eventManager);
+		this.bind<IEventEmitter>('event-manager').toConstantValue(this.eventManager);
 
 		// load modules
 

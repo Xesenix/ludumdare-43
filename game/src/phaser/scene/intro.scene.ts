@@ -1,7 +1,5 @@
-import { EventEmitter } from 'events';
-import { Container } from 'inversify';
-
 import { __ } from 'lib/i18n';
+import { IEventEmitter } from 'lib/interfaces';
 import { IAudioManager } from 'lib/sound';
 import { ISoundtrackManager } from 'lib/sound-scape';
 import { ISoundtrack } from 'lib/sound-scape/interfaces';
@@ -53,18 +51,15 @@ const action: ISoundtrack = {
 export const phaserIntroSceneFactory = (
 	// prettier-ignore
 	Phaser,
+	em: IEventEmitter,
 ) => class IntroScene extends Phaser.Scene {
 	private soundtrack?: Phaser.Sound.BaseSound;
 	private label?: Phaser.GameObjects.Text;
 
 	private mode: 'idle' | 'action' = 'idle';
 	private idleTimeout: number = 0;
-
-	// TODO: check if this can be handled by DI via phaserIntroSceneFactory
-	private di: Container;
-	private em: EventEmitter;
-	private sm: IAudioManager;
-	private stm: ISoundtrackManager;
+	private sm?: IAudioManager;
+	private stm?: ISoundtrackManager;
 
 	constructor() {
 		super({
@@ -95,10 +90,7 @@ export const phaserIntroSceneFactory = (
 		// this.label = this.add.text(400, 20, '', { font: '24px Consolas', fill: '#ffffff' });
 		// this.label.setOrigin(0.5, 0.0);
 
-		this.di = (this.sys.plugins.get('di') as any).di;
-		this.em = this.di.get<EventEmitter>('event-manager');
-
-		this.em.on('mode:change', (mode) => {
+		em.on('mode:change', (mode: 'idle' | 'action') => {
 			if (mode !== this.mode) {
 				if (mode === 'action') {
 					this.enterActionMode();

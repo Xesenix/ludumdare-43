@@ -1,6 +1,4 @@
-export interface IEventEmitter {
-	emit( name: string, payload: any ): void;
-}
+import { IEventEmitter } from 'lib/interfaces';
 
 export interface IGameState {
 	/**
