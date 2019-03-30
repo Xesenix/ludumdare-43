@@ -50,13 +50,17 @@ const action: ISoundtrack = {
 	},
 };
 
-export class IntroScene extends Phaser.Scene {
+export const phaserIntroSceneFactory = (
+	// prettier-ignore
+	Phaser,
+) => class IntroScene extends Phaser.Scene {
 	private soundtrack?: Phaser.Sound.BaseSound;
 	private label?: Phaser.GameObjects.Text;
 
 	private mode: 'idle' | 'action' = 'idle';
 	private idleTimeout: number = 0;
 
+	// TODO: check if this can be handled by DI via phaserIntroSceneFactory
 	private di: Container;
 	private em: EventEmitter;
 	private sm: IAudioManager;
@@ -165,4 +169,4 @@ current sound: ${currentSoundtrack}`,
 			this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
 		});
 	}
-}
+};

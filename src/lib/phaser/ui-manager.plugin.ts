@@ -10,7 +10,7 @@ export interface IUIState {
 	volume: number;
 }
 
-export const createUIManagerPlugin = <T extends IUIState>(store: Store) =>
+export const createUIManagerPlugin = <T extends IUIState>(Phaser, store: Store) =>
 	class UIManagerPlugin extends Phaser.Plugins.BasePlugin {
 		public store: Store<T> = store;
 		private unsubscribe: any;

@@ -5,7 +5,11 @@ import { ISoundtrackPlayer } from '../interfaces';
 
 import { phaserSoundtrackManagerPluginFactory } from './soundtrack-manager.plugin';
 
+export type IPhaserProvider = () => Promise<any>;
+
 export const phaserSoundtrackManagerPluginProvider = (context: interfaces.Context) => () =>
-	context.container
-		.get<IAudioFileLoaderProvider>('audio-loader:provider')()
-		.then(() => phaserSoundtrackManagerPluginFactory(context.container.get<ISoundtrackPlayer>('sound-scape:soundtrack-player')));
+	Promise.all([
+		// prettier-ignore
+		context.container.get<IPhaserProvider>('phaser:provider')(),
+		context.container.get<IAudioFileLoaderProvider>('audio-loader:provider')(),
+	]).then(([Phaser]) => phaserSoundtrackManagerPluginFactory(Phaser, context.container.get<ISoundtrackPlayer>('sound-scape:soundtrack-player')));

@@ -11,6 +11,7 @@ import {
 
 export const phaserAudioManagerPluginFactory = <T extends IAudioConfigurationState>(
 	// prettier-ignore
+	Phaser,
 	store: Store,
 	context: AudioContext,
 	audioMixer: IStateAwareAudioMixer,

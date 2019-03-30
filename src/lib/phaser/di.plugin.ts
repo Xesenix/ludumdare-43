@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 
-export const createDIPlugin = (di: Container) =>
+export const createDIPlugin = (Phaser, di: Container) =>
 	class DIPlugin extends Phaser.Plugins.BasePlugin {
 		public di: Container = di;
 

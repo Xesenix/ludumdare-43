@@ -1,6 +1,6 @@
 import { ISoundtrackPlayer } from '../interfaces';
 
-export const phaserSoundtrackManagerPluginFactory = (soundtrackPlayer: ISoundtrackPlayer) =>
+export const phaserSoundtrackManagerPluginFactory = (Phaser, soundtrackPlayer: ISoundtrackPlayer) =>
 	class PhaserSoundtrackManagerPlugin extends Phaser.Plugins.BasePlugin {
 		public soundtrackPlayer: ISoundtrackPlayer = soundtrackPlayer;
 

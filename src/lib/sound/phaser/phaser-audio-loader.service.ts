@@ -7,17 +7,20 @@ import {
 	IAudioFileLoader,
 } from '../interfaces';
 
-@inject(['audio-repository', 'audio-context:factory', 'debug:console'])
+@inject(['phaser:provider', 'audio-repository', 'audio-context:factory', 'debug:console'])
 export class PhaserAudioLoaderService implements IAudioFileLoader {
 	public loader?: Phaser.Loader.LoaderPlugin;
 	private loadQueue: boolean[] = [];
+	private promises: Promise<void>[] = [];
 
 	constructor(
 		// prettier-ignore
+		private phaserProvider: any,
 		private repository: IAudioBufferRepository,
 		private context: IAudioContextFactory,
 		private console: Console,
 	) {
+		this.phaserProvider = phaserProvider;
 		this.repository = repository;
 		this.context = context;
 		this.console = console;
@@ -45,27 +48,30 @@ export class PhaserAudioLoaderService implements IAudioFileLoader {
 		}
 		if (this.loader) {
 			// TODO: phaser has mismatched interface for configuring audioContext so we need cast second argument to any
-			this.loader.addFile(
-				new Phaser.Loader.FileTypes.AudioFile(
-					this.loader,
-					{
-						key,
-						context: this.context,
-						xhrSettings: {
-							responseType: 'arraybuffer',
+			this.promises.push(this.phaserProvider().then((Phaser: any) => {
+				this.loader.addFile(
+					new Phaser.Loader.FileTypes.AudioFile(
+						this.loader,
+						{
+							key,
+							context: this.context,
+							xhrSettings: {
+								responseType: 'arraybuffer',
+							},
+						} as any,
+						{
+							type: 'audio',
+							url,
 						},
-					} as any,
-					{
-						type: 'audio',
-						url,
-					},
-				),
-			);
+					),
+				);
+			}));
 		}
 	}
 
-	public loadAll(): Promise<void> {
-		return new Promise((resolve) => {
+	public async loadAll(): Promise<void> {
+		await Promise.all(this.promises);
+		return await new Promise((resolve) => {
 			if (Object.values(this.loadQueue).some((loading) => loading)) {
 				if (this.loader) {
 					this.loader.addListener('complete', () => {

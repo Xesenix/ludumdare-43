@@ -98,8 +98,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 		this.bindToStore();
 
 		// optional preloading
-		this.setState({ loading: true });
-		import('phaser').then(() => this.setState({ loading: false }));
+		this.setState({ loading: false });
 	}
 
 	public componentDidUpdate(): void {

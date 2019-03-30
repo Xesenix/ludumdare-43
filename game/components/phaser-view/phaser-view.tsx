@@ -70,9 +70,11 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaser
 	public render(): any {
 		const { classes } = this.props;
 
-		return (<>
-			<div className={classes.root} ref={this.bindContainer} />
-		</>);
+		return (
+			<>
+				<div className={classes.root} ref={this.bindContainer} />
+			</>
+		);
 	}
 
 	private bindToStore(): void {

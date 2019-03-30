@@ -89,4 +89,4 @@ const Phaser = Extend(
 
 export default Phaser;
 
-window.Phaser = Phaser;
+// window.Phaser = Phaser;

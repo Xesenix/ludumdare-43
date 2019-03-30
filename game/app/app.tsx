@@ -20,8 +20,6 @@ import { defaultUIState, IUIState } from 'lib/ui';
 import { styles } from './app.styles';
 import { appThemes } from './app.themes';
 
-import { IPhaserProvider } from '../src/phaser/game.module';
-
 const Loader = () => <div>...</div>;
 
 const GameView = Loadable({ loading: Loader, loader: () => import('../components/game-view/game-view') });
@@ -30,7 +28,6 @@ interface IAppProps {
 	di?: Container;
 	store?: Store<IUIState, any>;
 	__: II18nTranslation;
-	phaserProvider: IPhaserProvider;
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppProps>({
@@ -40,14 +37,11 @@ const diDecorator = connectToInjector<IAppProps, IAppProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
-	phaserProvider: {
-		dependencies: ['phaser:provider'],
-	},
 });
 
 interface IAppState {
 	ready: boolean;
-	phaserReady: boolean;
+	viewReady: boolean;
 	loading: boolean;
 }
 
@@ -59,15 +53,12 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 		this.state = {
 			...defaultUIState,
 			ready: false,
-			phaserReady: false,
+			viewReady: true,
 			loading: false,
 		};
 	}
 
 	public componentDidMount(): void {
-		const { phaserProvider } = this.props;
-		// optional preloading
-		phaserProvider().then(() => this.setState({ phaserReady: true }));
 		this.bindToStore();
 	}
 
@@ -83,11 +74,11 @@ class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppSta
 
 	public render() {
 		const { classes, __ } = this.props;
-		const { loading, ready, phaserReady, theme = 'light' } = this.state;
+		const { loading, ready, viewReady, theme = 'light' } = this.state;
 
 		const gameView = ready ? (
 			<GameView />
-		) : phaserReady ? (
+		) : viewReady ? (
 			<Button color="primary" variant="extendedFab" onClick={this.start} size="large">
 				{__('Start')}
 			</Button>

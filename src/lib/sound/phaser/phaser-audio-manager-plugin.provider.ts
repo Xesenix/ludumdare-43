@@ -12,9 +12,20 @@ import {
 
 import { phaserAudioManagerPluginFactory } from './phaser-audio-manager.plugin';
 
+export type IPhaserProvider = () => Promise<any>;
+
 export const phaserAudioManagerPluginProvider = <T extends IAudioConfigurationState>(context: interfaces.Context) => () =>
-	Promise.all([context.container.get<IAudioFileLoaderProvider>('audio-loader:provider')()]).then(([audioLoader]) =>
+	Promise.all([
+		// prettier-ignore
+		context.container.get<IPhaserProvider>('phaser:provider')(),
+		context.container.get<IAudioFileLoaderProvider>('audio-loader:provider')(),
+	]).then(([
+		// prettier-ignore
+		Phaser,
+		audioLoader,
+	]) =>
 		phaserAudioManagerPluginFactory<T>(
+			Phaser,
 			context.container.get<Store<T>>('data-store'),
 			context.container.get<IAudioContextFactory>('audio-context:factory'),
 			context.container.get<AudioMixer>('audio-mixer'),
