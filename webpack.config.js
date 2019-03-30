@@ -21,9 +21,13 @@ const configureWebpack = (config) => {
 
 	config.plugins.push(new webpackBase.ProgressPlugin());
 
-	config.optimization.splitChunks = {
-		chunks: 'all',
-	};
+	if (process.env.ENV !== 'test') {
+		// this option doesn't work well with tests
+		// for some reason it mismatches files so karma doesn't see spec files
+		config.optimization.splitChunks = {
+			chunks: 'all',
+		};
+	}
 
 	if (process.env.ENV === 'development') {
 		config.resolve.alias = {

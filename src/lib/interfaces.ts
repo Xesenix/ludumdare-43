@@ -1,9 +1,8 @@
-import { EventEmitter } from 'events';
 import { Container } from 'inversify';
 import { Action } from 'redux';
 
 export interface IApplication extends Container {
-	eventManager: EventEmitter;
+	eventManager: IEventEmitter;
 
 	boot: () => Promise<IApplication>;
 }

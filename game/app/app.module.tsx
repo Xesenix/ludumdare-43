@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { EventEmitter } from 'eventemitter3';
 import { Container } from 'inversify';
 
 import { Game } from 'game/game';
@@ -30,7 +31,7 @@ type AppAction = IValueAction<any>;
  * @extends {Container}
  */
 export class AppModule extends Container implements IApplication {
-	public eventManager = new EventEmitter();
+	public eventManager: IEventEmitter = new EventEmitter();
 
 	constructor() {
 		super();

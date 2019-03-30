@@ -220,7 +220,7 @@ msgid ""
 "or leave them idle so they can multiply and sacrifice them to permanently "
 "weaken creatures disturbing this world."
 msgstr ""
-"Bądź pozostaw ich bez zajęcia by rozmnarzali się byś mógł złorzyć w ofierze "
+"Bądź pozostaw ich bez zajęcia by rozmnaźali się byś mógł złorzyć w ofierze "
 "część populacji wioski w zamian za trwałe osłabienie plag nękających ten "
 "świat."
 
