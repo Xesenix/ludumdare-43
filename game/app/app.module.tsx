@@ -11,12 +11,10 @@ import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
 import { defaultI18nState, I18nModule, i18nReducer, II18nState } from 'lib/i18n';
 import { IApplication, IValueAction } from 'lib/interfaces';
-import { IRenderer, ReactRenderer } from 'lib/renderer/react-renderer';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
 import { defaultUIState, IUIState, UIModule, uiReducer } from 'lib/ui';
 
-import OutletComponent from '../components/outlet/outlet';
 import { initialGameState } from '../data/initial-state';
 import { PhaserGameModule } from '../src/phaser/game.module';
 import App from './app';
@@ -91,12 +89,12 @@ export class AppModule extends Container implements IApplication {
 			),
 		);
 
-		// rendering DOM
+		// rendering DOM - from outside of react
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
-		this.bind<React.ComponentFactory<any, any>>('ui:outlet-component').toConstantValue(React.createFactory(OutletComponent));
-		this.bind<IRenderer>('ui:renderer')
-			.to(ReactRenderer)
-			.inSingletonScope();
+		// this.bind<React.ComponentFactory<any, any>>('ui:outlet-component').toConstantValue(React.createFactory(OutletComponent));
+		// this.bind<IRenderer>('ui:renderer')
+		// 	.to(ReactRenderer)
+		// 	.inSingletonScope();
 
 		// ui
 		UIModule.register(this);
