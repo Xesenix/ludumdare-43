@@ -1,7 +1,7 @@
 {
   "name": "Ludumdare-43",
   "description": "Ludumdare 43 project - You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year. Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Xesenix",
   "scripts": {
     "tsc": "tsc -p tsconfig.json --diagnostics --pretty",
