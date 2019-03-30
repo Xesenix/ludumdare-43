@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const webpackBase = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
 const { application, webpack } = require('xes-webpack-core');
 
 const app = application.getEnvApp();
@@ -13,17 +14,26 @@ const factoryConfig = {
 };
 
 const configureWebpack = (config) => {
-	console.log(chalk.bold.yellow('Base WEBPACK setup'));
+	console.log(chalk.bold.yellow('Base WEBPACK setup'), process.env.ENV);
 
 	config.output.filename = '[name].js';
 	config.output.chunkFilename = '[name].js';
 
-	config.resolve.alias = {
-		'react-dom': '@hot-loader/react-dom'
+	config.plugins.push(new webpackBase.ProgressPlugin());
+
+	config.optimization.splitChunks = {
+		chunks: 'all',
 	};
 
-	// if you are using moment you can reduce amount of locales here
-	// config.plugins.push(new webpackBase.ContextReplacementPlugin(/moment[\/\\]locale$/, /(en|pl)$/));
+	if (process.env.ENV === 'development') {
+		config.resolve.alias = {
+			'react-dom': '@hot-loader/react-dom'
+		};
+	} else if (process.env.ENV === 'production') {
+		config.plugins.push(new CompressionPlugin());
+		// if you are using moment you can reduce amount of locales here
+		config.plugins.push(new webpackBase.ContextReplacementPlugin(/moment[\/\\]locale$/, /(en|pl)$/));
+	}
 
 	return config;
 };
