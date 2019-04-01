@@ -5,13 +5,13 @@ import { AudioBufferRepository } from './audio-buffer-repository';
 import { audioLoaderProvider } from './audio-loader.provider';
 import { AudioMixer } from './audio-mixer';
 import { AudioMixerTrack } from './audio-mixer-track';
-import { IAudioConfigurationState, IAudioContextFactory, IAudioFileLoaderProvider, IAudioMixer, IAudioTrack } from './interfaces';
-import { phaserAudioLoaderProvider } from './phaser/phaser-audio-loader.provider';
-import { phaserAudioManagerPluginProvider } from './phaser/phaser-audio-manager-plugin.provider';
+import { IAudioContextFactory, IAudioFileLoaderProvider, IAudioMixer, IAudioTrack } from './interfaces';
+import { lazyPhaserAudioLoaderServiceProvider } from './phaser/phaser-audio-loader.provider';
+import { lazyPhaserAudioManagerPluginProvider } from './phaser/phaser-audio-manager-plugin.provider';
 
-export class SoundModule<T extends IAudioConfigurationState> {
-	public static register<T extends IAudioConfigurationState>(app: IApplication) {
-		app.bind<SoundModule<T>>('sound:module').toConstantValue(new SoundModule<T>(app));
+export class SoundModule {
+	public static register(app: IApplication) {
+		app.bind<SoundModule>('sound:module').toConstantValue(new SoundModule(app));
 	}
 
 	constructor(
@@ -28,7 +28,9 @@ export class SoundModule<T extends IAudioConfigurationState> {
 		});
 
 		if (phaser) {
-			this.app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(phaserAudioLoaderProvider);
+			// TODO: this factory returns class figure out how to correctly type this binding
+			this.app.bind('audio-manager-plugin:provider').toProvider(lazyPhaserAudioManagerPluginProvider);
+			this.app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(lazyPhaserAudioLoaderServiceProvider);
 		} else {
 			this.app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(audioLoaderProvider);
 		}
@@ -57,8 +59,5 @@ export class SoundModule<T extends IAudioConfigurationState> {
 			.bind<IAudioMixer>('audio-mixer')
 			.to(AudioMixer)
 			.inSingletonScope();
-
-		// TODO: this factory returns class figure out how to correctly type this binding
-		this.app.bind('audio-manager-plugin:provider').toProvider(phaserAudioManagerPluginProvider);
 	}
 }

@@ -7,6 +7,7 @@ export class AudioMixerTrack implements IStateAwareAudioTrack {
 	private soundLoop: AudioBufferSourceNode | null = null;
 
 	private trackGain: GainNode;
+
 	private trackAutomationGain: GainNode;
 
 	constructor(

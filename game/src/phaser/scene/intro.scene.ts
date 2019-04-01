@@ -1,3 +1,4 @@
+import { createClassProvider } from 'lib/di';
 import { __ } from 'lib/i18n';
 import { IEventEmitter } from 'lib/interfaces';
 import { IAudioManager } from 'lib/sound';
@@ -48,7 +49,11 @@ const action: ISoundtrack = {
 	},
 };
 
-export const phaserIntroSceneFactory = (
+export const IntroSceneProvider = createClassProvider('intro-scene', [
+	// prettier-ignore
+	'phaser:provider()',
+	'event-manager',
+], (
 	// prettier-ignore
 	Phaser,
 	em: IEventEmitter,
@@ -108,7 +113,7 @@ export const phaserIntroSceneFactory = (
 	}
 
 	public update(time: number, delta: number): void {
-		if (this.label) {
+		if (this.label && this.stm && this.sm) {
 			const currentSoundtrack = this.stm.soundtrackPlayer
 				.getCurrentScheduledSoundtrack()
 				.map(({ soundtrack: { name }, state, start, end }) => `${name}-${state}[${start.toFixed(2)}-${(end && end.toFixed(2)) || 'inf'}]`)
@@ -126,20 +131,20 @@ current sound: ${currentSoundtrack}`,
 	}
 
 	private checkIdleMode() {
-		if (this.mode !== 'idle' && this.idleTimeout < this.sm.context.currentTime) {
+		if (this.mode !== 'idle' && this.sm && this.idleTimeout < this.sm.context.currentTime) {
 			this.enterIdleMode();
 		}
 	}
 
 	private enterIdleMode() {
-		if (this.mode !== 'idle') {
+		if (this.mode !== 'idle' && this.stm) {
 			this.stm.soundtrackPlayer.scheduleNext(ambient, 0);
 			this.mode = 'idle';
 		}
 	}
 
 	private enterActionMode() {
-		if (this.mode !== 'action') {
+		if (this.mode !== 'action' && this.stm && this.sm) {
 			this.stm.soundtrackPlayer.scheduleNext(action, 0);
 			this.idleTimeout = this.sm.context.currentTime + note140 * 16;
 			this.mode = 'action';
@@ -147,18 +152,22 @@ current sound: ${currentSoundtrack}`,
 	}
 
 	private setupSoundTrack() {
-		this.idleTimeout = this.sm.context.currentTime;
+		if (this.sm) {
+			this.idleTimeout = this.sm.context.currentTime;
 
-		// this.input.on('pointerdown', (pointer) => {
-		// 	if (pointer.buttons === 1) {
-		// 		this.enterActionMode();
-		// 	} else {
-		// 		this.enterIdleMode();
-		// 	}
-		// });
+			// this.input.on('pointerdown', (pointer) => {
+			// 	if (pointer.buttons === 1) {
+			// 		this.enterActionMode();
+			// 	} else {
+			// 		this.enterIdleMode();
+			// 	}
+			// });
 
-		this.sm.preload().then(() => {
-			this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
-		});
+			this.sm.preload().then(() => {
+				if (this.stm) {
+					this.stm.soundtrackPlayer.scheduleAfterLast(ambient, 0);
+				}
+			});
+		}
 	}
-};
+});

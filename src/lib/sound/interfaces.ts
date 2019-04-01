@@ -31,6 +31,7 @@ export interface IAudioFileLoader {
 }
 
 export interface IAudioManager {
+	context: AudioContext;
 	loader?: Phaser.Loader.LoaderPlugin;
 	preloadAudioAsset(key: string, src: string): void;
 	playFxSound(key: string): Promise<AudioBufferSourceNode>;
@@ -61,7 +62,3 @@ export interface IAudioTrack {
 }
 
 export type IStateAwareAudioTrack = IAudioTrack & IStoreStateAware<{ muted: boolean; volume: number }>;
-
-export interface IAudioManagerPlugin<T extends IAudioConfigurationState> extends Phaser.Plugins.BasePlugin {
-	store: Store<T>;
-}

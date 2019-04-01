@@ -1,4 +1,4 @@
-import { inject } from 'lib/di';
+import { createProvider, inject } from 'lib/di';
 
 import {
 	// prettier-ignore
@@ -7,23 +7,27 @@ import {
 	IAudioFileLoader,
 } from '../interfaces';
 
-@inject(['phaser:provider', 'audio-repository', 'audio-context:factory', 'debug:console'])
-export class PhaserAudioLoaderService implements IAudioFileLoader {
+export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loader-service', [
+	// prettier-ignore
+	'phaser:provider()',
+	'debug:console',
+], (
+	// prettier-ignore
+	Phaser,
+	console: Console,
+) => @inject([
+	// prettier-ignore
+	'audio-repository',
+	'audio-context:factory',
+]) class PhaserAudioLoaderService implements IAudioFileLoader {
 	public loader?: Phaser.Loader.LoaderPlugin;
 	private loadQueue: boolean[] = [];
-	private promises: Promise<void>[] = [];
 
 	constructor(
 		// prettier-ignore
-		private phaserProvider: any,
 		private repository: IAudioBufferRepository,
 		private context: IAudioContextFactory,
-		private console: Console,
 	) {
-		this.phaserProvider = phaserProvider;
-		this.repository = repository;
-		this.context = context;
-		this.console = console;
 	}
 
 	/**
@@ -42,35 +46,32 @@ export class PhaserAudioLoaderService implements IAudioFileLoader {
 	}
 
 	public add(key: string, url: string): void {
-		this.console.log('add', key, url);
+		console.log('add', key, url);
 		if (!this.loadQueue[key]) {
 			this.loadQueue[key] = true;
 		}
 		if (this.loader) {
 			// TODO: phaser has mismatched interface for configuring audioContext so we need cast second argument to any
-			this.promises.push(this.phaserProvider().then((Phaser: any) => {
-				this.loader.addFile(
-					new Phaser.Loader.FileTypes.AudioFile(
-						this.loader,
-						{
-							key,
-							context: this.context,
-							xhrSettings: {
-								responseType: 'arraybuffer',
-							},
-						} as any,
-						{
-							type: 'audio',
-							url,
+			this.loader.addFile(
+				new Phaser.Loader.FileTypes.AudioFile(
+					this.loader,
+					{
+						key,
+						context: this.context,
+						xhrSettings: {
+							responseType: 'arraybuffer',
 						},
-					),
-				);
-			}));
+					} as any,
+					{
+						type: 'audio',
+						url,
+					},
+				),
+			);
 		}
 	}
 
 	public async loadAll(): Promise<void> {
-		await Promise.all(this.promises);
 		return await new Promise((resolve) => {
 			if (Object.values(this.loadQueue).some((loading) => loading)) {
 				if (this.loader) {
@@ -83,4 +84,4 @@ export class PhaserAudioLoaderService implements IAudioFileLoader {
 			}
 		});
 	}
-}
+});
