@@ -11,7 +11,7 @@ import {
 	ICreateSetLanguageReadyAction,
 	LanguageType,
 } from './actions';
-import { _$, __, i18n } from './i18n';
+import { _$, __ } from './i18n';
 import {
 	// prettier-ignore
 	I18nActionsProvider,

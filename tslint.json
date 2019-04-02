@@ -44,7 +44,8 @@
 		"jsx-curly-spacing": ["error", "always"],
 		"jsx-no-multiline-js": false,
 		"jsx-no-lambda": true,
-		"jsx-boolean-value": false
+		"jsx-boolean-value": false,
+		"no-var-requires": false
 	},
 	"rulesDirectory": []
 }

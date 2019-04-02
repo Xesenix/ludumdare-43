@@ -8,7 +8,6 @@ export type IDataStoreProvider<T, A extends Action> = () => Promise<Store<T, A>>
 export function DataStoreProvider<T, A extends Action>(context: interfaces.Context) {
 	const debug: boolean = process.env.DEBUG === 'true';
 	const debugRedux: boolean = debug && process.env.DEBUG_REDUX === 'true';
-	const console: Console = context.container.get<Console>('debug:console');
 	let store: Store<T, A>;
 
 	return (): Promise<Store<T, A>> => {
@@ -25,7 +24,7 @@ export function DataStoreProvider<T, A extends Action>(context: interfaces.Conte
 			});
 			// prettier-ignore
 			const composeEnhancers = debugRedux && typeof window === 'object'
-				&& typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ !== 'undefined'
+				&& typeof (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ !== 'undefined'
 				? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
 						// Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
 					})

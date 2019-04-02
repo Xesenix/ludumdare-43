@@ -15,7 +15,7 @@ export function inject(dependencies?: DependencyType[]): any {
 	}
 	return (target, key, descriptor) => {
 		if (process.env.DEBUG === 'true') {
-			console.debug('annotation:inject', target.name, dependencies, inversify.injectable(target));
+			console.debug('annotation:inject', target.name, dependencies);
 		}
 		helpers.annotate(target, dependencies);
 	};
@@ -24,7 +24,7 @@ export function inject(dependencies?: DependencyType[]): any {
 /**
  * Annotate classes that can be injected as dependencies.
  */
-export function injectable() {
+export function injectable(): any {
 	return (target, key, descriptor) => {
 		if (process.env.DEBUG === 'true') {
 			console.debug('annotation:injectable', target.name);

@@ -1,7 +1,7 @@
 import {
 	// prettier-ignore
-	getResourcesAmount,
 	getReservedResources,
+	getResourcesAmount,
 } from 'game/features/resources/resources';
 import { IGameState } from 'game/store';
 

@@ -15,7 +15,7 @@ export interface ILanguageSelectorProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface ILanguageSelectorInternalProps {
 	di?: Container;
-	dispatchSetCurrentLanguageAction: () => void;
+	dispatchSetCurrentLanguageAction: (...args: any[]) => void;
 	store?: Store<II18nState>;
 }
 

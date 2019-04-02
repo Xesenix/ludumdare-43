@@ -44,7 +44,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 
 	public render(): any {
 		const { } = this.state;
-		const { classes, __, consequences } = this.props;
+		const { classes, consequences } = this.props;
 
 		return (
 			<Paper className={classes.root} elevation={1}>

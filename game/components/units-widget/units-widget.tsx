@@ -47,7 +47,6 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 
 	public render(): any {
 		const {
-			__,
 			amount,
 			change,
 			children,

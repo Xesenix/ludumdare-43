@@ -47,7 +47,6 @@ interface IGameViewInternalProps {
 	di?: Container;
 	dispatchCreateSetMutedAction: (value: boolean) => void;
 	dispatchSetFullscreenAction: (value: boolean) => void;
-	dispatchSetPausedAction: (value: boolean) => void;
 	store?: Store<IUIState>;
 }
 
@@ -61,10 +60,6 @@ const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	dispatchSetFullscreenAction: {
 		dependencies: ['ui:actions'],
 		value: (actions: IUIActions) => Promise.resolve((value: boolean) => actions.setFullscreen(value)),
-	},
-	dispatchSetPausedAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((value: boolean) => actions.setPaused(value)),
 	},
 	dispatchCreateSetMutedAction: {
 		dependencies: ['ui:actions'],
@@ -112,7 +107,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	}
 
 	public render(): any {
-		const { tab = 'game', fullscreen, paused, mute, loading, compact } = this.state;
+		const { tab = 'game', fullscreen, mute, loading, compact } = this.state;
 		const { classes, __ } = this.props;
 
 		const menu = (
@@ -212,12 +207,6 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 		dispatchSetFullscreenAction(!fullscreen);
 	}
 
-	private togglePause = (): void => {
-		const { dispatchSetPausedAction } = this.props;
-		const { paused } = this.state;
-		dispatchSetPausedAction(!paused);
-	}
-
 	private toggleMute = (): void => {
 		const { dispatchCreateSetMutedAction } = this.props;
 		const { mute } = this.state;
@@ -232,7 +221,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	}
 
 	private renderLanguageSelector = (language: string, updateLanguage: any) => {
-		const { __, classes } = this.props;
+		const { classes } = this.props;
 		// tslint:disable:jsx-no-lambda
 		return (
 			<>

@@ -100,7 +100,7 @@ export class AppModule extends Container implements IApplication {
 		UIModule.register(this);
 
 		// game
-		const dataStore = new DataStore<IGameState>({}, this.eventManager);
+		const dataStore = new DataStore<IGameState>({} as any, this.eventManager);
 		const game = new Game(initialGameState, dataStore);
 
 		this.bind<Game>('game').toConstantValue(game);
@@ -129,7 +129,7 @@ export class AppModule extends Container implements IApplication {
 			.then(
 				() => {
 					this.banner();
-					this.get<EventEmitter>('event-manager').emit('app:boot');
+					this.get<IEventEmitter>('event-manager').emit('app:boot');
 
 					// const game = this.get<AncientMaze<IGameObjectState, IAncientMazeState<IGameObjectState>>>('game');
 					// game.boot();

@@ -1,5 +1,5 @@
 import { interfaces } from 'inversify';
-import { Gettext } from 'node-gettext';
+import Gettext from 'node-gettext';
 import { Store } from 'redux';
 
 import { IDataStoreProvider } from 'lib/data-store/data-store.provider';

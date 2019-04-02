@@ -1,4 +1,4 @@
-import { interfaces } from 'inversify-vanillajs-helpers';
+import { interfaces } from 'inversify';
 import { Store } from 'redux';
 
 import { IDataStoreProvider } from 'lib/data-store';

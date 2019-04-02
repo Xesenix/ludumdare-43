@@ -29,6 +29,14 @@ const configureWebpack = (config) => {
 		};
 	}
 
+	if (process.env.CHECK_TYPESCRIPT) {
+		config.module.rules[3] = {
+			test: /\.tsx?$/,
+			use: 'ts-loader',
+			exclude: /node_modules/,
+		};
+	}
+
 	if (process.env.ENV === 'development') {
 		config.resolve.alias = {
 			'react-dom': '@hot-loader/react-dom'

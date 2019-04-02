@@ -70,6 +70,7 @@ export interface ISoundScapeDebugViewProps {
 	soundtrackPlayer?: ISoundtrackPlayer;
 	eventsManager?: EventEmitter;
 	di?: Container;
+	console: Console;
 }
 
 export interface ISoundScapeDebugViewState {
@@ -132,8 +133,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 		if (viewContainer && !tl) {
 			console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl);
 			Promise.all([
-				import(// import('vis/lib/network/Network'),
-				'vis/lib/timeline/Timeline'),
+				import('vis/lib/timeline/Timeline'),
 				import('vis/lib/DataSet'),
 				import('moment'),
 				import('vis/dist/vis.min.css'),
@@ -234,7 +234,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 		const {
 			console,
 			soundtrackPlayer,
-			audioContext: { currentTime = 0 },
+			audioContext: { currentTime = 0 } = {},
 		} = this.props;
 		const { timeline, currentAudioTime } = this.state;
 		console.log('SoundScapeDebugViewComponent:componentDidMount:soundtrack:schedule-changed', { currentTime, soundtrackPlayer, timeline });
@@ -297,19 +297,19 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 export default hot(module)(
 	connectToInjector<ISoundScapeDebugViewProps>({
 		'sound-scape:soundtrack-player': {
-			name: 'soundtrackPlayer',
+			dependencies: ['soundtrackPlayer'],
 			value: (soundtrackPlayer: ISoundtrackPlayer) => Promise.resolve(soundtrackPlayer),
 		},
 		'event-manager': {
-			name: 'eventsManager',
+			dependencies: ['eventsManager'],
 			value: (eventsManager: EventEmitter) => Promise.resolve(eventsManager),
 		},
 		'audio-context': {
-			name: 'audioContext',
+			dependencies: ['audioContext'],
 			value: (audioContext: AudioContext) => Promise.resolve(audioContext),
 		},
 		'debug:console': {
-			name: 'console',
+			dependencies: ['console'],
 			value: (console: Console) => Promise.resolve(console),
 		},
 	})(withStyles(styles)(SoundScapeDebugViewComponent)),

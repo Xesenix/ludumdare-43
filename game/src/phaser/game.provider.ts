@@ -53,7 +53,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 				return Promise.resolve(game);
 			}
 
-			const backgroundColor = 0x000000;
+			const backgroundColor: any = 0x000000;
 
 			/** @see https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js */
 			const fps: FPSConfig = {

@@ -25,12 +25,15 @@ const Loader = () => <div>...</div>;
 const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../components/game-view/game-view') });
 
 interface IAppProps {
+}
+
+interface IAppInternalProps {
 	di?: Container;
 	store?: Store<IUIState, any>;
 	__: II18nTranslation;
 }
 
-const diDecorator = connectToInjector<IAppProps, IAppProps>({
+const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -45,7 +48,7 @@ interface IAppState {
 	loading: boolean;
 }
 
-class App extends React.Component<IAppProps & WithStyles<typeof styles>, IAppState & IUIState> {
+class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typeof styles>, IAppState & IUIState> {
 	private unsubscribe?: any;
 
 	constructor(props) {

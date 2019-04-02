@@ -1,6 +1,5 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
-import { memoize } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
@@ -40,13 +39,13 @@ export interface IConfigurationViewProps {
 interface IConfigurationViewInternalProps {
 	__: II18nTranslation;
 	di?: Container;
-	dispatchSetEffectsMutedAction: () => void;
-	dispatchSetEffectsVolumeAction: () => void;
-	dispatchSetMusicMutedAction: () => void;
-	dispatchSetMusicVolumeAction: () => void;
-	dispatchSetMutedAction: () => void;
-	dispatchSetThemeAction: () => void;
-	dispatchSetVolumeAction: () => void;
+	dispatchSetEffectsMutedAction: (event: any, checked: boolean) => void;
+	dispatchSetEffectsVolumeAction: (event: any, value: number) => void;
+	dispatchSetMusicMutedAction: (event: any, checked: boolean) => void;
+	dispatchSetMusicVolumeAction: (event: any, value: number) => void;
+	dispatchSetMutedAction: (event: any, checked: boolean) => void;
+	dispatchSetThemeAction: (event: any) => void;
+	dispatchSetVolumeAction: (event: any, value: number) => void;
 	store?: Store<IUIState & II18nState>;
 }
 
@@ -59,31 +58,31 @@ const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationVie
 	},
 	dispatchSetEffectsMutedAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, checked: boolean) => actions.setEffectsMuted(checked)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setEffectsMuted(checked)),
 	},
 	dispatchSetEffectsVolumeAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, value) => actions.setEffectsVolume(value)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setEffectsVolume(value)),
 	},
 	dispatchSetMusicMutedAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, checked: boolean) => actions.setMusicMuted(checked)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setMusicMuted(checked)),
 	},
 	dispatchSetMusicVolumeAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, value) => actions.setMusicVolume(value)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setMusicVolume(value)),
 	},
 	dispatchSetMutedAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, checked: boolean) => actions.setMuted(checked)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setMuted(checked)),
 	},
 	dispatchSetThemeAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event) => actions.setTheme(event.target.value)),
+		value: (actions: IUIActions) => Promise.resolve((event: any) => actions.setTheme(event.target.value)),
 	},
 	dispatchSetVolumeAction: {
 		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event, value) => actions.setVolume(value)),
+		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setVolume(value)),
 	},
 });
 

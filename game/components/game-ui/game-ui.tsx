@@ -66,7 +66,7 @@ const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import(/* 
 const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../sacrifices-widget/sacrifices-widget') });
 const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../status-widget/status-widget') });
 const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../train-widget/train-widget') });
-const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../turn-details/turn-details') });
+// const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../turn-details/turn-details') });
 const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../units-widget/units-widget') });
 
 /** Component public properties required to be provided by parent component. */

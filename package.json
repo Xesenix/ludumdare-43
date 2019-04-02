@@ -26,7 +26,8 @@
     "game:serve": "cross-env APP=game npm run serve",
     "game:build:dev": "cross-env APP=game npm run build:dev",
     "game:build:prod": "cross-env APP=game npm run build:prod",
-    "game:xi18n": "cross-env APP=game ts-node ./scripts/extract.ts"
+    "game:xi18n": "cross-env APP=game ts-node ./scripts/extract.ts",
+    "game:lint": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -72,7 +73,8 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "ts-loader": "^5.3.3"
   },
   "apps": {
     "game": {

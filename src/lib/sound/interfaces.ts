@@ -1,4 +1,3 @@
-import { Store } from 'redux';
 import { IStoreStateAware } from '../data-store/interface';
 
 export type IAudioContextFactory = AudioContext;

@@ -62,7 +62,6 @@ export const IntroSceneProvider = createClassProvider('intro-scene', [
 	private label?: Phaser.GameObjects.Text;
 
 	private mode: 'idle' | 'action' = 'idle';
-	private idleTimeout: number = 0;
 	private sm?: IAudioManager;
 	private stm?: ISoundtrackManager;
 
@@ -81,8 +80,9 @@ export const IntroSceneProvider = createClassProvider('intro-scene', [
 			(this.sm as any).setLoader(this.load);
 		}
 
-		this.sm.preloadAudioAsset('soundtrack', 'assets/soundtrack.ogg');
-
+		if (this.sm) {
+			this.sm.preloadAudioAsset('soundtrack', 'assets/soundtrack.ogg');
+		}
 		this.load.image('bg', 'assets/bg.png');
 	}
 
@@ -125,14 +125,6 @@ ${__('delta time')}: ${delta.toFixed(2)}ms\n
 ${__('audio time')}: ${this.sm.context.currentTime.toFixed(2)}s\n
 current sound: ${currentSoundtrack}`,
 			);
-		}
-
-		// this.checkIdleMode();
-	}
-
-	private checkIdleMode() {
-		if (this.mode !== 'idle' && this.sm && this.idleTimeout < this.sm.context.currentTime) {
-			this.enterIdleMode();
 		}
 	}
 
