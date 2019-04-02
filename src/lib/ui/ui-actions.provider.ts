@@ -1,4 +1,4 @@
-import { interfaces } from 'inversify-vanillajs-helpers';
+import { interfaces } from 'inversify';
 import { Store } from 'redux';
 
 import { ICreateSetAction } from '../interfaces';
@@ -23,7 +23,7 @@ export function UIActionsProvider(context: interfaces.Context) {
 
 	return () =>
 		context.container
-			.get<Store<any, any>>('data-store:provider')()
+			.get<() => Promise<Store<any, any>>>('data-store:provider')()
 			.then((store: Store<any, any>) => {
 				if (!context.container.isBound('ui:actions')) {
 					const createSetMutedAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-muted');

@@ -53,5 +53,5 @@ export class I18nModule {
 				.get<II18nProvider>('i18n:provider')()
 				.then(this.app.get<II18nActionsProvider>('i18n:actions:provider')),
 		]);
-	};
+	}
 }

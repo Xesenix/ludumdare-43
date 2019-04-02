@@ -86,9 +86,14 @@ const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationVie
 });
 
 /** Internal component state. */
-interface IConfigurationState {}
+interface IConfigurationViewState {}
 
-export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationState> {
+export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationViewState> {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
+
 	public render(): any {
 		const {
 			// prettier-ignore
