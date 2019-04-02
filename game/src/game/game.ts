@@ -48,6 +48,16 @@ import {
 	IGameState,
 } from './store';
 
+// prepare constant modifiers instead of recreating them with each method call
+const resetResourcesUsedInLastTurn = setResourcesUsedInLastTurn(0);
+const resetResourcesStolenInLastTurn = setResourcesStolenInLastTurn(0);
+const resetChildrenKilledInLastTurn = setChildrenKilledInLastTurn(0);
+const resetIdlesKilledInLastTurn = setIdlesKilledInLastTurn(0);
+const resetGuardsKilledInLastTurn = setGuardsKilledInLastTurn(0);
+const resetWorkersKilledInLastTurn = setWorkersKilledInLastTurn(0);
+const resetSacrificedPopulationInLastTurn = setSacrificedPopulationInLastTurn(0);
+const resetSacrificedResourcesInLastTurn = setSacrificedResourcesInLastTurn(0);
+
 export class Game {
 	constructor(
 		// prettier-ignore
@@ -127,20 +137,20 @@ export class Game {
 	}
 
 	private prepareNextTurn(state: IGameState): IGameState {
+		// prettier-ignore
 		return pipeline({
 				...state,
 				event: 'orcs',
 				immunity: false,
 			},
-			setResourcesUsedInLastTurn(0),
-			setResourcesStolenInLastTurn(0),
-			setChildrenKilledInLastTurn(0),
-			setIdlesKilledInLastTurn(0),
-			setGuardsKilledInLastTurn(0),
-			setWorkersKilledInLastTurn(0),
-			setSacrificedPopulationInLastTurn(0),
-			setSacrificedResourcesInLastTurn(0),
+			resetResourcesUsedInLastTurn,
+			resetResourcesStolenInLastTurn,
+			resetChildrenKilledInLastTurn,
+			resetIdlesKilledInLastTurn,
+			resetGuardsKilledInLastTurn,
+			resetWorkersKilledInLastTurn,
+			resetSacrificedPopulationInLastTurn,
+			resetSacrificedResourcesInLastTurn,
 		);
 	}
 }
-

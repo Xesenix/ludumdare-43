@@ -32,6 +32,9 @@ import {
 } from 'game/features/units/workers';
 import { IGameState } from 'game/store';
 
+const resetTrainedGuards = setTrainedGuards(0);
+const resetTrainedWorkers = setTrainedWorkers(0);
+
 /**
  *
  * @param IGameState state
@@ -61,7 +64,7 @@ export const trainWorkersRule = (state: IGameState) => {
 	return pipeline(
 		// prettier-ignore
 		state,
-		setTrainedWorkers(0),
+		resetTrainedWorkers,
 		changeAmountOfCurrentWorkers(trained),
 		changeAmountOfCurrentIdles(-trained),
 	);
@@ -100,10 +103,9 @@ export const trainGuardsRule = (state: IGameState) => {
 	return pipeline(
 		// prettier-ignore
 		state,
-		setTrainedGuards(0),
+		resetTrainedGuards,
 		changeAmountOfCurrentGuards(trained),
 		changeAmountOfCurrentIdles(-trained),
 		payReservedResources(reservedResources),
 	);
 };
-
