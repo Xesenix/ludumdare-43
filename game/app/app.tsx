@@ -22,7 +22,7 @@ import { appThemes } from './app.themes';
 
 const Loader = () => <div>...</div>;
 
-const GameView = Loadable({ loading: Loader, loader: () => import('../components/game-view/game-view') });
+const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../components/game-view/game-view') });
 
 interface IAppProps {
 	di?: Container;

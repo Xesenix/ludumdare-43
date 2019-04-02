@@ -33,9 +33,9 @@ import { styles } from './game-view.styles';
 
 const Loader = () => <LinearProgress />;
 
-const ConfigurationViewComponent = Loadable({ loading: Loader, loader: () => import('../configuration-view/configuration-view') });
-const GameUIComponent = Loadable({ loading: Loader, loader: () => import('../game-ui/game-ui') });
-const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import('../language-selector/language-selector') });
+const ConfigurationViewComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../configuration-view/configuration-view') });
+const GameUIComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../game-ui/game-ui') });
+const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../language-selector/language-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IGameViewProps {

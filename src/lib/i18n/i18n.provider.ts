@@ -22,7 +22,7 @@ const syncLocaleWithStore = (store: Store<any, any>, actions: II18nActions) => (
 		if (!languages[language].ready) {
 			if (localesPath) {
 				// This needs to be know at build time to prepare bundles with translations.
-				import(`${process.env.LOCALES_DIR}/messages.${language}.po`).then(
+				import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
 					(content) => {
 						i18n.addTranslations(language, 'messages', content);
 						i18n.setLocale(language);

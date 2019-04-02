@@ -60,14 +60,14 @@ import { styles } from './game-ui.styles';
 
 const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
 
-const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../buildings-widget/buildings-widget') });
-const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import('../event-widget/event-widget') });
-const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import('../phaser-view/phaser-view') });
-const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import('../sacrifices-widget/sacrifices-widget') });
-const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import('../status-widget/status-widget') });
-const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import('../train-widget/train-widget') });
-const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import('../turn-details/turn-details') });
-const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import('../units-widget/units-widget') });
+const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../buildings-widget/buildings-widget') });
+const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../event-widget/event-widget') });
+const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../phaser-view/phaser-view') });
+const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../sacrifices-widget/sacrifices-widget') });
+const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../status-widget/status-widget') });
+const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../train-widget/train-widget') });
+const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../turn-details/turn-details') });
+const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../units-widget/units-widget') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IGameUIProps {
