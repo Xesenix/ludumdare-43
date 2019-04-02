@@ -17,6 +17,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 
 		// preload phaser module that is needed by subsequential modules
 		// TODO: convert to observable so it can return progress on loading
+		// prettier-ignore
 		return createProvider('phaser:game', [
 			// prettier-ignore
 			'data-store:provider()',

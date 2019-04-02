@@ -47,6 +47,7 @@ export const reduceHandleOrcAttack = (state: IGameState) => {
 	power = Math.max(0, power - workersKilled);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		killGuards(guardsKilled),
 		killChildren(childrenKilled),

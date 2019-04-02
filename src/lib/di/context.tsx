@@ -1,7 +1,6 @@
 import { Container } from 'inversify';
 import * as React from 'react';
 
-
 // tslint:disable:max-classes-per-file
 
 export const DIContext = React.createContext<Container | null>(null);
@@ -45,7 +44,7 @@ export function connectToInjector<T, I = any>(
 
 				if (!!di) {
 					const keys = Object.keys(select);
-					const configs = Object.values<{ dependencies: string[], value?: (...dependencies: any[]) => Promise<any> }>(select);
+					const configs = Object.values<{ dependencies: string[]; value?: (...dependencies: any[]) => Promise<any> }>(select);
 
 					Promise.all(
 						configs.map(
@@ -55,15 +54,13 @@ export function connectToInjector<T, I = any>(
 								dependencies,
 							}) => value.apply({}, dependencies.map((key) => di.get<any>(key))),
 						),
-					).then(
-						(values: any[]) => {
-							const state = values.reduce((result, value, index) => {
-								result[keys[index]] = value;
-								return result;
-							}, {});
-							this.setState(state);
-						},
-					);
+					).then((values: any[]) => {
+						const state = values.reduce((result, value, index) => {
+							result[keys[index]] = value;
+							return result;
+						}, {});
+						this.setState(state);
+					});
 				}
 			}
 

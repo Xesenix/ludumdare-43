@@ -2,6 +2,7 @@ import { cloneDeep } from 'lodash';
 
 import { IGameState } from '../store';
 import {
+	// prettier-ignore
 	canTrainGuards,
 	scheduleTrainingGuards,
 	scheduleTrainingWorkers,

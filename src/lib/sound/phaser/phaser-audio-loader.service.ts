@@ -7,6 +7,7 @@ import {
 	IAudioFileLoader,
 } from '../interfaces';
 
+// prettier-ignore
 export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loader-service', [
 	// prettier-ignore
 	'phaser:provider()',

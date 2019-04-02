@@ -67,6 +67,7 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 
 	public render(): any {
 		const {
+			// prettier-ignore
 			__,
 			classes,
 			compact,
@@ -91,16 +92,20 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 					<Typography variant="display1" component="h3">
 						{__(`Sacrifices made %{count}`, { count: sacrificeCount })}:
 					</Typography>
-					{ compact ? null : (
+					{compact ? null : (
 						<Typography
 							variant="caption"
 							component="p"
 							dangerouslySetInnerHTML={{
-								__html: __(`Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>
+								__html: __(
+									// prettier-ignore
+									`Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>
 and every 5th by additional&nbsp;<strong>5</strong>.<br/>
-Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`, {
-									futureResourceCost,
-								}),
+Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
+									{
+										futureResourceCost,
+									},
+								),
 							}}
 						/>
 					)}
@@ -109,7 +114,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`, {
 					<Typography variant="title" component="h4">
 						{__(`Immunity`)}
 					</Typography>
-					{ compact ? null : (
+					{compact ? null : (
 						<Typography variant="caption" component="p">
 							{__(`Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year.`, {
 								resourceCost,
@@ -117,6 +122,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`, {
 						</Typography>
 					)}
 					<Button
+						// prettier-ignore
 						color="secondary"
 						variant="raised"
 						disabled={disabled || !canSacraficeForImmunity(currentState)}
@@ -131,7 +137,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`, {
 					<Typography variant="title" component="h4">
 						{__(`Weakness lvl %{weaknessLevel}`, { weaknessLevel })}
 					</Typography>
-					{ compact ? null : (
+					{compact ? null : (
 						<Typography
 							variant="caption"
 							component="p"

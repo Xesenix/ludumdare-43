@@ -16,7 +16,6 @@
     "xi18n": "ts-node ./scripts/extract.ts",
     "lint": "tslint -p ./",
     "lint:fix": "npm run prettier && tslint -p ./ --fix",
-    "lint:ec:fix": "eclint fix",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "pre-commit": "lint:fix",
     "game:analyze": "cross-env APP=game npm run analyze",

@@ -38,8 +38,7 @@ const GameUIComponent = Loadable({ loading: Loader, loader: () => import(/* webp
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../language-selector/language-selector') });
 
 /** Component public properties required to be provided by parent component. */
-export interface IGameViewProps {
-}
+export interface IGameViewProps {}
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IGameViewInternalProps {
@@ -107,24 +106,51 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	}
 
 	public render(): any {
-		const { tab = 'game', fullscreen, mute, loading, compact } = this.state;
-		const { classes, __ } = this.props;
+		const {
+			// prettier-ignore
+			compact,
+			fullscreen,
+			loading,
+			mute,
+			tab = 'game',
+		} = this.state;
+		const {
+			// prettier-ignore
+			__,
+			classes,
+		} = this.props;
 
 		const menu = (
 			<>
 				{tab === 'configuration' ? (
-					<Button variant="extendedFab" className={classes.button} onClick={this.backHandle}>
+					<Button
+						// prettier-ignore
+						variant="extendedFab"
+						className={classes.button}
+						onClick={this.backHandle}
+					>
 						<BackIcon className={classes.extendedIcon} />
 						{__('Back')}
 					</Button>
 				) : null}
 				{tab === 'game' ? (
-					<Button variant="extendedFab" className={classes.button} onClick={this.openConfigurationHandle}>
+					<Button
+						// prettier-ignore
+						variant="extendedFab"
+						className={classes.button}
+						onClick={this.openConfigurationHandle}
+					>
 						<ConfigIcon className={classes.extendedIcon} />
 						{__('Configuration')}
 					</Button>
 				) : null}
-				<Button color="secondary" variant="extendedFab" className={classes.button} onClick={this.toggleFullScreen}>
+				<Button
+					// prettier-ignore
+					color="secondary"
+					variant="extendedFab"
+					className={classes.button}
+					onClick={this.toggleFullScreen}
+				>
 					{fullscreen ? <FullScreenExitIcon className={classes.extendedIcon} /> : <FullScreenIcon className={classes.extendedIcon} />}
 					{__('Fullscreen')}
 				</Button>
@@ -132,15 +158,27 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 					{paused ? <PausedIcon className={classes.extendedIcon} /> : <PlayIcon className={classes.extendedIcon} />}
 					{__('Pause')}
 				</Button> */}
-				<Button color="primary" variant="extendedFab" className={classes.button} onClick={this.toggleMute}>
+				<Button
+					// prettier-ignore
+					color="primary"
+					variant="extendedFab"
+					className={classes.button}
+					onClick={this.toggleMute}
+				>
 					{mute ? <MuteOnIcon className={classes.extendedIcon} /> : <MuteOffIcon className={classes.extendedIcon} />}
 					{__('Mute')}
 				</Button>
-				<Button color={compact ? 'secondary' : 'default' } variant="extendedFab" className={classes.button} onClick={this.toggleCompactMode}>
+				<Button
+					// prettier-ignore
+					color={compact ? 'secondary' : 'default'}
+					variant="extendedFab"
+					className={classes.button}
+					onClick={this.toggleCompactMode}
+				>
 					{__('Compact')}
 				</Button>
 
-				<LanguageSelectorComponent view={this.renderLanguageSelector}/>
+				<LanguageSelectorComponent view={this.renderLanguageSelector} />
 			</>
 		);
 
@@ -163,7 +201,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 							{menu}
 						</Drawer>
 						{tab === 'configuration' ? <ConfigurationViewComponent /> : null}
-						{tab === 'game' ? <GameUIComponent compact={compact}/> : null}
+						{tab === 'game' ? <GameUIComponent compact={compact} /> : null}
 					</Paper>
 				</Grid>
 			</Grid>
@@ -226,6 +264,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 		return (
 			<>
 				<Button
+					// prettier-ignore
 					color={language === 'pl' ? 'secondary' : 'default' }
 					variant="extendedFab"
 					className={classes.button}
@@ -234,6 +273,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 					PL
 				</Button>
 				<Button
+					// prettier-ignore
 					color={language === 'en' ? 'secondary' : 'default' }
 					variant="extendedFab"
 					className={classes.button}

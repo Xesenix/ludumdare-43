@@ -46,9 +46,10 @@ export const scheduleTrainingWorkers = (amount: number) => (state: IGameState): 
 	const workers = getCurrentWorkers(state);
 	const alreadyTrainedWorkers = getTrainedWorkers(state);
 	const idles = getCurrentIdles(state);
-	const trainedWorkers = Math.max(- workers - alreadyTrainedWorkers, Math.min(idles - alreadyTrainedWorkers, amount));
+	const trainedWorkers = Math.max(-workers - alreadyTrainedWorkers, Math.min(idles - alreadyTrainedWorkers, amount));
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfTrainedWorkers(trainedWorkers),
 	);
@@ -58,6 +59,7 @@ export const trainWorkersRule = (state: IGameState) => {
 	const trained = getTrainedWorkers(state);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		setTrainedWorkers(0),
 		changeAmountOfCurrentWorkers(trained),
@@ -80,17 +82,11 @@ export const scheduleTrainingGuards = (amount: number) => (state: IGameState): I
 	const resourcesAmount = getResourcesAmount(state);
 	const freeResources = resourcesAmount - alreadyReservedResources;
 	const resourcesReservedForTrainingGuards = Math.max(alreadyTrainedGuards, 0);
-	const trainedGuards = Math.max(
-		- alreadyTrainedGuards - guards,
-		Math.min(
-			availableIdles,
-			freeResources,
-			amount,
-		),
-	);
+	const trainedGuards = Math.max(-alreadyTrainedGuards - guards, Math.min(availableIdles, freeResources, amount));
 	const resourcesChange = Math.max(-resourcesReservedForTrainingGuards, trainedGuards);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfTrainedGuards(trainedGuards),
 		changeAmountOfReservedResources(resourcesChange),
@@ -102,6 +98,7 @@ export const trainGuardsRule = (state: IGameState) => {
 	const reservedResources = Math.max(0, trained);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		setTrainedGuards(0),
 		changeAmountOfCurrentGuards(trained),

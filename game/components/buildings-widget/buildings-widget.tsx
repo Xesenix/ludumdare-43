@@ -64,7 +64,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 	}
 
 	public render(): any {
-		const { } = this.state;
+		const {} = this.state;
 		const { disabled, classes, game, compact, __ } = this.props;
 		const currentState = game.getState();
 		const wallsBuildCost = getWallsBuildCost(currentState)(1);
@@ -77,14 +77,14 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 			<Grid className={classes.root} container spacing={8}>
 				<Grid item xs={12}>
 					<Typography variant="display1" component="h3">
-					{__(`Buildings`)}:
+						{__(`Buildings`)}:
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant="title" component="h4">
 						{__(`Wall lvl %{wallLevel}`, { wallLevel })}
 					</Typography>
-					{ compact ? null : (
+					{compact ? null : (
 						<Typography variant="caption" component="p">
 							{__(`Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)`, {
 								wallsReduction,
@@ -93,6 +93,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 						</Typography>
 					)}
 					<Button
+						// prettier-ignore
 						color="secondary"
 						variant="raised"
 						disabled={disabled || !canBuildWalls(currentState)(1)}
@@ -106,7 +107,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 					<Typography variant="title" component="h4">
 						{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
 					</Typography>
-					{ compact ? null : (
+					{compact ? null : (
 						<Typography variant="caption" component="p">
 							{__(`Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)`, {
 								cottagesLevel,
@@ -115,6 +116,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 						</Typography>
 					)}
 					<Button
+						// prettier-ignore
 						color="secondary"
 						variant="raised"
 						disabled={disabled || !canBuildCottages(currentState)(1)}

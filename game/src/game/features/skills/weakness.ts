@@ -12,13 +12,11 @@ export const getWeaknessLevel = get<number>('weakness.level', 0);
 export const setWeaknessLevel = set<number>('weakness.level');
 export const changeAmountOfWeaknessLevel = changeAmountOf('weakness.level');
 
-
 // === WEAKNESS_PER_LEVEL_REDUCTION
 
 export const getWeaknessPerLevelReduction = get<number>('weakness.perLevelReduction', 0);
 export const setWeaknessPerLevelReduction = set<number>('weakness.perLevelReduction');
 export const changeAmountOfWeaknessPerLevelReduction = changeAmountOf('weakness.perLevelReduction');
-
 
 // === WEAKNESS_DAMAGE_REDUCTION
 

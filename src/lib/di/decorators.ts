@@ -11,7 +11,7 @@ type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.
  */
 export function inject(dependencies?: DependencyType[]): any {
 	if (process.env.DEBUG === 'true') {
-		console.debug('annotation:inject:decorate',dependencies, inversify.injectable());
+		console.debug('annotation:inject:decorate', dependencies, inversify.injectable());
 	}
 	return (target, key, descriptor) => {
 		if (process.env.DEBUG === 'true') {
@@ -51,19 +51,22 @@ export function createProvider(key, dependencies, factory, shouldResolve = true)
 		});
 	}
 	return memoize((context: ii.Context) => async () => {
-		const klass = factory(...await Promise.all(dependencies.map((dep: string) => {
-			const result = context.container.get<any>(dep.replace('()', ''));
-			if (dep.indexOf('()') > -1) {
-				try {
-					return result() as Promise<any>;
-				}
-				catch (err) {
-					console.error('error:', dep, result, err);
-					return Promise.reject(err);
-				}
-			}
-			return Promise.resolve(result);
-		})));
+		const klass = factory(
+			...(await Promise.all(
+				dependencies.map((dep: string) => {
+					const result = context.container.get<any>(dep.replace('()', ''));
+					if (dep.indexOf('()') > -1) {
+						try {
+							return result() as Promise<any>;
+						} catch (err) {
+							console.error('error:', dep, result, err);
+							return Promise.reject(err);
+						}
+					}
+					return Promise.resolve(result);
+				}),
+			)),
+		);
 
 		if (shouldResolve) {
 			if (!context.container.isBound(key)) {

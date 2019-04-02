@@ -3,8 +3,7 @@ import { createStyles } from '@material-ui/core/styles';
 
 export const styles = (theme: Theme) =>
 	createStyles({
-		root: {
-		},
+		root: {},
 		item: {
 			padding: '12px',
 		},

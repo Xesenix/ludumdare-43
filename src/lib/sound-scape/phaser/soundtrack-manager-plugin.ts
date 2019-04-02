@@ -2,6 +2,7 @@ import { createClassProvider } from 'lib/di';
 
 import { ISoundtrackPlayer } from '../interfaces';
 
+// prettier-ignore
 export const PhaserSoundtrackManagerPluginProvider = createClassProvider('phaser-soundtrack-manager-plugin', [
 	// prettier-ignore
 	'phaser:provider()',

@@ -30,6 +30,7 @@ export const requestFullScreen = (element: any = document.getElementsByTagName('
 	fscreen.requestFullscreen(element);
 };
 
+// prettier-ignore
 export const isFullScreen = () => !!(document as any).fullscreenElement
 	|| !!(document as any).webkitFullscreenElement
 	|| !!(document as any).mozFullScreenElement

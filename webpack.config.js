@@ -39,7 +39,7 @@ const configureWebpack = (config) => {
 
 	if (process.env.ENV === 'development') {
 		config.resolve.alias = {
-			'react-dom': '@hot-loader/react-dom'
+			'react-dom': '@hot-loader/react-dom',
 		};
 	} else if (process.env.ENV === 'production') {
 		config.plugins.push(new CompressionPlugin());

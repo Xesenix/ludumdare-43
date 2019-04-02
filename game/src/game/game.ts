@@ -1,6 +1,10 @@
 import { cloneDeep } from 'lodash';
 import pipeline from 'pipeline-operator';
-import { setSacrificedPopulationInLastTurn, setSacrificedResourcesInLastTurn } from './features/skills/sacrifice';
+import {
+	// prettier-ignore
+	setSacrificedPopulationInLastTurn,
+	setSacrificedResourcesInLastTurn,
+} from './features/skills/sacrifice';
 import { getCurrentPopulation } from './features/units/population';
 
 import {
@@ -29,7 +33,11 @@ import {
 	scheduleTrainingWorkers,
 	trainGuardsRule,
 } from './actions/training';
-import { setResourcesStolenInLastTurn, setResourcesUsedInLastTurn } from './features/resources/resources';
+import {
+	// prettier-ignore
+	setResourcesStolenInLastTurn,
+	setResourcesUsedInLastTurn,
+} from './features/resources/resources';
 import { setChildrenKilledInLastTurn } from './features/units/children';
 import { setGuardsKilledInLastTurn } from './features/units/guards';
 import { setIdlesKilledInLastTurn } from './features/units/idles';
@@ -42,6 +50,7 @@ import {
 
 export class Game {
 	constructor(
+		// prettier-ignore
 		private initialState: IGameState,
 		private dataStore: DataStore<IGameState>,
 	) {
@@ -92,6 +101,7 @@ export class Game {
 		const state = this.getState();
 
 		return pipeline(
+			// prettier-ignore
 			state,
 			this.progress,
 		);
@@ -99,6 +109,7 @@ export class Game {
 
 	private progress(state: IGameState): IGameState {
 		return pipeline(
+			// prettier-ignore
 			state,
 			reduceGatherResources,
 			reducePayGuards,

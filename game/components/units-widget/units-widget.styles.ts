@@ -22,12 +22,8 @@ export const styles = (theme: Theme) =>
 			margin: '0 auto 12px',
 			flexGrow: 1,
 		},
-		unitLabel: {
-
-		},
-		unitNameLabel: {
-
-		},
+		unitLabel: {},
+		unitNameLabel: {},
 		unitAmountLabel: {
 			display: 'flex',
 			justifyContent: 'center',

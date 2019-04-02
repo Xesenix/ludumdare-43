@@ -29,6 +29,7 @@ import {
 
 // === POPULATION_CURRENT
 
+// prettier-ignore
 export const getCurrentPopulation = (state: IGameState) => getCurrentIdles(state)
 	+ getCurrentWorkers(state)
 	+ getCurrentChildren(state)
@@ -36,6 +37,7 @@ export const getCurrentPopulation = (state: IGameState) => getCurrentIdles(state
 
 // === POPULATION_KILLED_IN_THIS_TURN
 
+// prettier-ignore
 export const getPopulationKilledInLastTurn = (state: IGameState) => getChildrenKilledInLastTurn(state)
 	+ getIdlesKilledInLastTurn(state)
 	+ getGuardsKilledInLastTurn(state)
@@ -43,6 +45,7 @@ export const getPopulationKilledInLastTurn = (state: IGameState) => getChildrenK
 
 // === POPULATION_KILLED_IN_TOTAL
 
+// prettier-ignore
 export const getPopulationKilledInTotal = (state: IGameState) => getChildrenKilledInTotal(state)
 	+ getIdlesKilledInTotal(state)
 	+ getGuardsKilledInTotal(state)
@@ -51,5 +54,7 @@ export const getPopulationKilledInTotal = (state: IGameState) => getChildrenKill
 // === POPULATION_MAX
 
 const getBaseMaxPopulation = get<number>('population.max', 0);
+
+// prettier-ignore
 export const getMaxPopulation = (state: IGameState) => getBaseMaxPopulation(state)
 	+ getCottagesLevel(state) * 20;

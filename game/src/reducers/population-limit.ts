@@ -17,6 +17,7 @@ export const reducePopulationLimit = (state: IGameState) => {
 	const maxIdles = Math.min(max - workers - guards - maxChildren, idles);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		setCurrentIdles(maxIdles),
 		setCurrentChildren(maxChildren),

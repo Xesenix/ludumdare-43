@@ -58,7 +58,11 @@ import {
 } from 'lib/i18n';
 import { styles } from './game-ui.styles';
 
-const Loader = () => <Grid container style={{justifyContent: 'center'}}><CircularProgress color="primary" size={64}/></Grid>;
+const Loader = () => (
+	<Grid container style={{ justifyContent: 'center' }}>
+		<CircularProgress color="primary" size={64} />
+	</Grid>
+);
 
 const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../buildings-widget/buildings-widget') });
 const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../event-widget/event-widget') });
@@ -148,6 +152,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 		const restartBlock = (
 			<Grid item xs={12} style={{ padding: '24px', textAlign: 'center' }}>
 				<Button
+					// prettier-ignore
 					color="default"
 					variant="extendedFab"
 					disabled={blockNextTurn}
@@ -174,17 +179,43 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 							{__(`Your village is safe everybody are in heaven now.`)}
 						</Typography>
 						<Typography variant="subheading" component="p" align="center">
-							{_$(currentState.turn, `Victory achieved in first year.`, `Victory achieved in %{turn} years.`, {
-								turn: currentState.turn,
-							})}
-							<br/>
-							{_$(sacrificedResources, `You have sacrificed one resource`, `You have sacrificed %{sacrificedResources}&nbsp;resources`, {
+							{_$(
+								// prettier-ignore
+								currentState.turn,
+								`Victory achieved in first year.`,
+								`Victory achieved in %{turn} years.`,
+								{
+									turn: currentState.turn,
+								},
+							)}
+							<br />
+							{_$(
+								// prettier-ignore
 								sacrificedResources,
-							})} {_$(sacrificedPopulation, `and one person`, `and %{sacrificedPopulation}&nbsp;people`, {
+								`You have sacrificed one resource`,
+								`You have sacrificed %{sacrificedResources}&nbsp;resources`,
+								{
+									sacrificedResources,
+								},
+							)}{' '}
+							{_$(
+								// prettier-ignore
 								sacrificedPopulation,
-							})} {_$(sacrificesCount, `in one sacrifice.`, `in %{sacrificesCount} sacrifices.`, {
+								`and one person`,
+								`and %{sacrificedPopulation}&nbsp;people`,
+								{
+									sacrificedPopulation,
+								},
+							)}{' '}
+							{_$(
+								// prettier-ignore
 								sacrificesCount,
-							})}
+								`in one sacrifice.`,
+								`in %{sacrificesCount} sacrifices.`,
+								{
+									sacrificesCount,
+								},
+							)}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -200,9 +231,13 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 					</Grid>
 					<Grid item xs={12}>
 						<Typography align="center" component="h1" variant="display1">
-							{__(`Your village has perished after %{turn} years`, {
-								turn: currentState.turn,
-							})}
+							{__(
+								// prettier-ignore
+								`Your village has perished after %{turn} years`,
+								{
+									turn: currentState.turn,
+								},
+							)}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -214,8 +249,9 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={compact ? 8 : 24}>
 					<Grid item sm={12} xs={12} style={{ marginBottom: '12px' }}>
-						{ compact ? null : <PhaserViewComponent keepInstanceOnRemove /> }
+						{compact ? null : <PhaserViewComponent keepInstanceOnRemove />}
 						<EventWidgetComponent
+							// prettier-ignore
 							consequences={consequences}
 							currentState={currentState}
 							game={game}
@@ -223,6 +259,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<StatusWidgetComponent
+							// prettier-ignore
 							compact={compact}
 							population={{
 								current: getCurrentPopulation(currentState),
@@ -238,6 +275,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							compact={compact}
 							label={__('Idlers')}
@@ -251,6 +289,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							compact={compact}
 							label={__('Children')}
@@ -265,6 +304,7 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							compact={compact}
 							label={__('Workers')}
@@ -278,6 +318,7 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					</Grid>
 					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
 						<UnitsWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							compact={compact}
 							label={__('Guards')}
@@ -292,6 +333,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<TrainWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							label={__('train/release workers')}
 							canTrain={canTrainWorkers(currentState)}
@@ -301,6 +343,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<TrainWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							label={__('train/release guards')}
 							canTrain={canTrainGuards(currentState)}
@@ -310,17 +353,20 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
 						<Button
+							// prettier-ignore
 							color="primary"
 							variant="extendedFab"
 							disabled={blockNextTurn}
 							onClick={this.progressToNextTurn}
 							size="large"
 						>
-							<ActionIcon/>{ currentState.immunity ? __('Continue') : __('Defend yourself') }
+							<ActionIcon />
+							{currentState.immunity ? __('Continue') : __('Defend yourself')}
 						</Button>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<SacrificesWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							game={game}
 							compact={compact}
@@ -328,6 +374,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<BuildingsWidgetComponent
+							// prettier-ignore
 							disabled={blockNextTurn}
 							game={game}
 							compact={compact}
@@ -335,19 +382,21 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
 						<Button
+							// prettier-ignore
 							color="primary"
 							variant="extendedFab"
 							disabled={blockNextTurn || !canMakeUltimateSacrifice(currentState)}
 							onClick={game.makeUltimateSacrificeAction}
 							size="large"
 						>
-							<WinIcon/> {__(`Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)`, {
+							<WinIcon />{' '}
+							{__(`Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)`, {
 								requiredPopulation: 1000,
 								requiredResources: 1000,
 							})}
 						</Button>
 					</Grid>
-					{ compact ? null : (
+					{compact ? null : (
 						<Grid item xs={12}>
 							{/* <TurnDetailsComponent consequences={consequences}/> */}
 						</Grid>
@@ -357,11 +406,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 			</Paper>
 		);
 
-		return currentState.win
-			? winBlock
-			: currentState.lose
-			? loseBlock
-			: gameBlock;
+		return currentState.win ? winBlock : currentState.lose ? loseBlock : gameBlock;
 	}
 
 	private progressToNextTurn = () => {

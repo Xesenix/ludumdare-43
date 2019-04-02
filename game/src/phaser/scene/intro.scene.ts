@@ -49,6 +49,7 @@ const action: ISoundtrack = {
 	},
 };
 
+// prettier-ignore
 export const IntroSceneProvider = createClassProvider('intro-scene', [
 	// prettier-ignore
 	'phaser:provider()',

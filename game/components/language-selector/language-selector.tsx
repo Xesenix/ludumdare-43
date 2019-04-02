@@ -39,6 +39,7 @@ class LanguageSelectorComponent extends React.Component<ILanguageSelectorProps &
 
 	public render() {
 		const {
+			// prettier-ignore
 			dispatchSetCurrentLanguageAction,
 			store = { getState: () => ({ ...defaultUIState, language: 'en' }) },
 			view,

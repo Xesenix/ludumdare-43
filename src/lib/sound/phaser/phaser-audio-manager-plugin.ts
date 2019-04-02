@@ -10,6 +10,7 @@ import {
 	IStateAwareAudioMixer,
 } from '../interfaces';
 
+// prettier-ignore
 export const AudioManagerPluginProvider = createClassProvider('audio-manager-plugin', [
 	// prettier-ignore
 	'phaser:provider()',

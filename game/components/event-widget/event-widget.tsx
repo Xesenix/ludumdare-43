@@ -58,14 +58,25 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 	}
 
 	public render(): any {
-		const { classes, currentState, consequences, __ } = this.props;
-		const { event, immunity } = currentState;
+		const {
+			// prettier-ignore
+			__,
+			classes,
+			consequences,
+			currentState,
+		} = this.props;
+		const {
+			// prettier-ignore
+			event,
+			immunity,
+		} = currentState;
 		let description;
 
 		if (immunity) {
 			description = (
 				<Paper className={classes.sacrifice}>
 					<Typography
+						// prettier-ignore
 						className={classes.sacrificeTitle}
 						component="p"
 						variant="display1"
@@ -78,6 +89,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 			description = (
 				<Paper elevation={0}>
 					<Typography
+						// prettier-ignore
 						className={classes.attackTitle}
 						component="p"
 						variant="display1"
@@ -88,17 +100,20 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 						})}
 					</Typography>
 					<Paper
+						// prettier-ignore
 						className={classes.attackContainer}
 						elevation={0}
 					>
 						<Grid container>
 							<Grid
+								// prettier-ignore
 								className={classes.powerContainer}
 								item
 								sm={4}
 								xs={12}
 							>
 								<Typography
+									// prettier-ignore
 									className={classes.powerDescription}
 									component="p"
 									variant="subheading"
@@ -108,6 +123,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									})}
 								</Typography>
 								<Typography
+									// prettier-ignore
 									className={classes.powerDescription}
 									component="span"
 									variant="caption"
@@ -118,6 +134,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									})}
 								</Typography>
 								<Typography
+									// prettier-ignore
 									className={classes.powerDescription}
 									component="span"
 									variant="caption"
@@ -129,6 +146,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 								</Typography>
 							</Grid>
 							<Grid
+								// prettier-ignore
 								className={classes.consequencesContainer}
 								container
 								item
@@ -137,6 +155,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 							>
 								<Grid item xs={12}>
 									<Typography
+										// prettier-ignore
 										className={classes.label}
 										variant="headline"
 										component="p"
@@ -146,6 +165,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 								</Grid>
 								<Grid item xs={6}>
 									<Typography
+										// prettier-ignore
 										className={classes.amountDescription}
 										component="p"
 										variant="headline"
@@ -153,6 +173,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 										{getPopulationKilledInLastTurn(consequences)}
 									</Typography>
 									<Typography
+										// prettier-ignore
 										className={classes.label}
 										component="p"
 										variant="caption"
@@ -162,6 +183,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 								</Grid>
 								<Grid item xs={6}>
 									<Typography
+										// prettier-ignore
 										className={classes.amountDescription}
 										component="p"
 										variant="headline"
@@ -169,6 +191,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 										{getResourcesStolenInLastTurn(consequences)}
 									</Typography>
 									<Typography
+										// prettier-ignore
 										className={classes.label}
 										component="p"
 										variant="caption"

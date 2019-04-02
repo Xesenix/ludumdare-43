@@ -39,7 +39,6 @@ export class I18nModule {
 
 		app.bind<ICreateSetAction<LanguageType>>('data-store:action:create:set-current-language').toConstantValue(createSetCurrentLanguageAction);
 		app.bind<ICreateSetLanguageReadyAction>('data-store:action:create:set-language-ready').toConstantValue(createLanguageReadyAction);
-
 	}
 
 	constructor(
@@ -54,5 +53,5 @@ export class I18nModule {
 				.get<II18nProvider>('i18n:provider')()
 				.then(this.app.get<II18nActionsProvider>('i18n:actions:provider')),
 		]);
-	}
+	};
 }

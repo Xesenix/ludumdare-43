@@ -17,8 +17,8 @@ import { styles } from './status-widget.styles';
 /** Component public properties required to be provided by parent component. */
 export interface IStatusWidgetProps {
 	compact: boolean;
-	population: { current: number, change: number, max: number };
-	resources: { current: number, income: number };
+	population: { current: number; change: number; max: number };
+	resources: { current: number; income: number };
 	turn: number;
 }
 
@@ -49,7 +49,7 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 	}
 
 	public render(): any {
-		const { } = this.state;
+		const {} = this.state;
 		const { classes, population, resources, turn, compact, __, _$ } = this.props;
 
 		return (
@@ -60,18 +60,16 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 						<Typography className={classes.resourcesAmountLabel} variant="display1">
 							{resources.current}
 							<Typography
+								// prettier-ignore
 								className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
 								variant="headline"
 								component="span"
 							>
-								({resources.income > 0 ? '+' : ''}{resources.income})
+								({resources.income > 0 ? '+' : ''}
+								{resources.income})
 							</Typography>
 						</Typography>
-						{ compact ? null : (
-							<Typography variant="caption">
-								{__(`Hire more workers to collect more resources.`)}
-							</Typography>
-						)}
+						{compact ? null : <Typography variant="caption">{__(`Hire more workers to collect more resources.`)}</Typography>}
 					</Grid>
 					<Grid className={classes.year} item xs={12} sm={4}>
 						<Typography variant="display1">{_$(turn + 1, `Year one`, `Year %{turn}`, { turn: turn + 1 })}</Typography>
@@ -81,6 +79,7 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 						<Typography className={classes.populationAmountLabel} variant="display1">
 							{population.current}
 							<Typography
+								// prettier-ignore
 								className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
 								variant="headline"
 								component="span"
@@ -89,11 +88,7 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 							</Typography>
 							/{population.max}
 						</Typography>
-						{ compact ? null : (
-							<Typography variant="caption">
-								{__(`Build more cottages to increase max population.`)}
-							</Typography>
-						)}
+						{compact ? null : <Typography variant="caption">{__(`Build more cottages to increase max population.`)}</Typography>}
 					</Grid>
 				</Grid>
 			</Paper>

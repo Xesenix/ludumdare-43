@@ -53,19 +53,19 @@ export const getFreeResourcesAmount = (state: IGameState) => {
 	return amount - reserved;
 };
 
-export const payReservedResources = (amount: number) => (state: IGameState) => {
-	return pipeline(
+export const payReservedResources = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
 		state,
 		useResources(amount),
 		changeAmountOfReservedResources(-amount),
 	);
-};
 
-export const useResources = (amount: number) => (state: IGameState) => {
-	return pipeline(
+export const useResources = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfResources(-amount),
 		changeAmountOfResourcesUsedInLastTurn(amount),
 		changeAmountOfResourcesUsedInTotal(amount),
 	);
-};

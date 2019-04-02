@@ -14,10 +14,12 @@ const tap = (cb: (st: IGameState) => void) => (state: IGameState) => {
 	return state;
 };
 
-export const stealResources = (amount: number) => (state: IGameState) => pipeline(
-	cloneDeep(state),
-	changeAmountOfResources(-amount),
-	changeAmountOfResourcesStolenInLastTurn(amount),
-	changeAmountOfResourcesStolenInTotal(amount),
-	tap((newState: IGameState) => console.log(`stealResources: ${amount}`, state.resources, newState.resources)),
-);
+export const stealResources = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		cloneDeep(state),
+		changeAmountOfResources(-amount),
+		changeAmountOfResourcesStolenInLastTurn(amount),
+		changeAmountOfResourcesStolenInTotal(amount),
+		tap((newState: IGameState) => console.log(`stealResources: ${amount}`, state.resources, newState.resources)),
+	);

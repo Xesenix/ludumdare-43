@@ -72,6 +72,7 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 		return (
 			<div className={classes.root}>
 				<Typography
+					// prettier-ignore
 					align="center"
 					className={classes.label}
 					variant="subheading"
@@ -80,6 +81,7 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 				</Typography>
 				<div className={classes.actions}>
 					<Button
+						// prettier-ignore
 						className={classes.actionButton}
 						color="primary"
 						disabled={!this.canTrain()}
@@ -90,6 +92,7 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 					</Button>
 					<span className={classes.actionLabelContainer}>
 						<Typography
+							// prettier-ignore
 							className={classes.actionLabel}
 							component="span"
 							variant="title"
@@ -97,6 +100,7 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 							{trained}
 						</Typography>
 						<Typography
+							// prettier-ignore
 							className={classes.actionLabel}
 							component="span"
 							variant="caption"
@@ -105,6 +109,7 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 						</Typography>
 					</span>
 					<Button
+						// prettier-ignore
 						className={classes.actionButton}
 						color="primary"
 						disabled={!this.canRelease()}

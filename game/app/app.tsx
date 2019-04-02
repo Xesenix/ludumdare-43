@@ -24,8 +24,7 @@ const Loader = () => <div>...</div>;
 
 const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../components/game-view/game-view') });
 
-interface IAppProps {
-}
+interface IAppProps {}
 
 interface IAppInternalProps {
 	di?: Container;
@@ -101,17 +100,15 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 						Ludumdare 43 edition
 					</Typography>
 					<Typography className={classes.headline} variant="headline" component="p" align="center">
-						{
-							__(`You are the leader of a small village in this very hostile world.`)
-						} {
-							__(`You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own.`)}<br/>
-						{
-							__(`Manage your villagers assign them to work so they can gather resources for sacrifices or village development.`)
-						} {
-							__(`or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.`)
-						}
+						{__(`You are the leader of a small village in this very hostile world.`)}{' '}
+						{__(`You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own.`)}
+						<br />
+						{__(`Manage your villagers assign them to work so they can gather resources for sacrifices or village development.`)}{' '}
+						{__(`or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.`)}
 					</Typography>
-					<Button className={classes.headline} href="https://ldjam.com/events/ludum-dare/43/$126387">Go to ludumdare 43 game page</Button>
+					<Button className={classes.headline} href="https://ldjam.com/events/ludum-dare/43/$126387">
+						Go to ludumdare 43 game page
+					</Button>
 					{gameView}
 				</Paper>
 			</MuiThemeProvider>

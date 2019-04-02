@@ -32,8 +32,7 @@ import { styles } from './configuration-view.styles';
 import LanguageSelectorComponent from '../language-selector/language-selector';
 
 /** Component public properties required to be provided by parent component. */
-export interface IConfigurationViewProps {
-}
+export interface IConfigurationViewProps {}
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IConfigurationViewInternalProps {
@@ -92,6 +91,7 @@ interface IConfigurationState {}
 export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationState> {
 	public render(): any {
 		const {
+			// prettier-ignore
 			classes,
 			store = { getState: () => ({ ...defaultUIState, language: 'en' }) },
 			dispatchSetEffectsMutedAction,
@@ -103,6 +103,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 			__,
 		} = this.props;
 		const {
+			// prettier-ignore
 			mute,
 			musicMuted,
 			effectsMuted,

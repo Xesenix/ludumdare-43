@@ -19,6 +19,7 @@ export const reducePayGuards = (state: IGameState) => {
 	const guardsPaid = Math.min(guards, resourcesAmount);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		setCurrentGuards(guardsPaid),
 		changeAmountOfCurrentIdles(guards - guardsPaid),

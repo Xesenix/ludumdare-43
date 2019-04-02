@@ -28,6 +28,7 @@ export const buildCottages = (amount: number = 1) => (state: IGameState) => {
 	const cost = getCottagesBuildCost(state)(amount);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfResources(-cost),
 		changeCottagesLevel(1),
@@ -45,6 +46,7 @@ export const buildWalls = (amount: number = 1) => (state: IGameState) => {
 	const cost = getWallsBuildCost(state)(amount);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfResources(-cost),
 		changeWallsLevel(1),

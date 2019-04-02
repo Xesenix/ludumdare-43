@@ -112,15 +112,14 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 
 		if (audioContext) {
 			this.subscription.add(
-				interval(250, animationFrame)
-					.pipe(
-						map(() => Math.floor(audioContext.currentTime * 4) * 0.25),
-						distinctUntilChanged(),
-						map((currentAudioTime) => ({
-							currentAudioTime,
-						})),
-					)
-					.subscribe(this.setState.bind(this)),
+				interval(250, animationFrame).pipe(
+					// prettier-ignore
+					map(() => Math.floor(audioContext.currentTime * 4) * 0.25),
+					distinctUntilChanged(),
+					map((currentAudioTime) => ({
+						currentAudioTime,
+					})),
+				).subscribe(this.setState.bind(this)),
 			);
 		}
 	}
@@ -133,12 +132,14 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 		if (viewContainer && !tl) {
 			console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl);
 			Promise.all([
+				// prettier-ignore
 				import('vis/lib/timeline/Timeline'),
 				import('vis/lib/DataSet'),
 				import('moment'),
 				import('vis/dist/vis.min.css'),
 			]).then(
 				([
+					// prettier-ignore
 					// { default: Network },
 					{ default: Timeline },
 					{ default: DataSet },
@@ -148,7 +149,13 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 					console.log('SoundScapeDebugViewComponent:componentDidUpdate:then', Timeline, DataSet);
 					if (!timelineIsInitialized) {
 						const nodes = new DataSet([]);
-						const groups = [{ id: 'loop', content: 'loop' }, { id: 'intro', content: 'intro' }, { id: 'outro', content: 'outro' }, { id: 'endless', content: 'endless' }];
+						const groups = [
+							// prettier-ignore
+							{ id: 'loop', content: 'loop' },
+							{ id: 'intro', content: 'intro' },
+							{ id: 'outro', content: 'outro' },
+							{ id: 'endless', content: 'endless' },
+						];
 						const options = {
 							minHeight: '240px',
 							maxHeight: '480px',
@@ -232,6 +239,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 
 	private updateTimeline = (): void => {
 		const {
+			// prettier-ignore
 			console,
 			soundtrackPlayer,
 			audioContext: { currentTime = 0 } = {},
@@ -242,6 +250,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 			const schedule = soundtrackPlayer.getSchedule();
 			const newItems = schedule.map((block: IScheduledSoundtrack, id: number) => {
 				const {
+					// prettier-ignore
 					soundtrack: { name },
 					state,
 					start,

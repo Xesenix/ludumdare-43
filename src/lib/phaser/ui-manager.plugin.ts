@@ -12,6 +12,7 @@ export interface IUIState {
 	volume: number;
 }
 
+// prettier-ignore
 export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', [
 	// prettier-ignore
 	'phaser:provider()',

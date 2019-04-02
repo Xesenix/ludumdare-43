@@ -47,6 +47,7 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 
 	public render(): any {
 		const {
+			// prettier-ignore
 			amount,
 			change,
 			children,
@@ -57,10 +58,12 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 
 		return (
 			<Paper
+				// prettier-ignore
 				className={classes.root}
 				elevation={0}
 			>
 				<Typography
+					// prettier-ignore
 					className={classes.unitNameLabel}
 					variant="headline"
 					align="center"
@@ -68,36 +71,34 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 					{label}
 				</Typography>
 				<Typography
+					// prettier-ignore
 					className={classes.unitAmountLabel}
 					variant="display2"
 					align="center"
 				>
 					{amount}
-					{ change === 0
-						? null
-						: (
-							<Typography
-								className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
-								variant="display1"
-								component="span"
-							>
-								({change > 0 ? '+' : ''}{change})
-							</Typography>
-						)
-					}
-				</Typography>
-				{ compact
-					? null
-					: (
+					{change === 0 ? null : (
 						<Typography
-							className={classes.description}
-							variant="caption"
-							align="center"
+							// prettier-ignore
+							className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
+							variant="display1"
+							component="span"
 						>
-							{children}
+							({change > 0 ? '+' : ''}
+							{change})
 						</Typography>
-					)
-				}
+					)}
+				</Typography>
+				{compact ? null : (
+					<Typography
+						// prettier-ignore
+						className={classes.description}
+						variant="caption"
+						align="center"
+					>
+						{children}
+					</Typography>
+				)}
 			</Paper>
 		);
 	}

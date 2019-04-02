@@ -408,9 +408,12 @@ describe('SoundtrackPlayer', () => {
 
 			it('should return last scheduled soundtrack', () => {
 				service.scheduleAfterLast(soundtrackA, 10);
-				expect(service.getLastScheduledSoundtrack().soundtrack).toBe(soundtrackA);
+				let result: any = service.getLastScheduledSoundtrack() || {};
+				expect(result.soundtrack).toBe(soundtrackA);
+
 				service.scheduleAfterLast(soundtrackB, 15);
-				expect(service.getLastScheduledSoundtrack().soundtrack).toBe(soundtrackB);
+				result = service.getLastScheduledSoundtrack() || {};
+				expect(result.soundtrack).toBe(soundtrackB);
 			});
 		});
 	});

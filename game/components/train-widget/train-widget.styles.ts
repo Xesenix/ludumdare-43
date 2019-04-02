@@ -11,9 +11,7 @@ export const styles = (theme: Theme) =>
 			minWidth: '260px',
 			margin: '0 12px',
 		},
-		label: {
-
-		},
+		label: {},
 		actions: {
 			display: 'flex',
 			justifyContent: 'space-between',

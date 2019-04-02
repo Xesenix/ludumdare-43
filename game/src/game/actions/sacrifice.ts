@@ -36,6 +36,7 @@ export const sacrificeResourcesForImmunity = (state: IGameState): IGameState => 
 	}
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfSacrificeCount(1),
 		changeAmountOfResources(-cost),
@@ -55,6 +56,7 @@ export const sacrificeIdlesForEnemiesWeakness = (state: IGameState): IGameState 
 	const cost = getSacrificePopulationCost(state);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfSacrificeCount(1),
 		changeAmountOfCurrentIdles(-cost),
@@ -76,6 +78,7 @@ export const makeUltimateSacrifice = (state: IGameState): IGameState => {
 	const cost = getUltimateSacrificeCost(state);
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfSacrificeCount(1),
 		changeAmountOfCurrentIdles(-cost),

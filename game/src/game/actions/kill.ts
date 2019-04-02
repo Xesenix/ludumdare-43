@@ -28,57 +28,72 @@ import { IGameState } from 'game/store';
 
 // === CHILDREN
 
-const changeAmountOfChildrenKilled = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfChildrenKilledInLastTurn(amount),
-	changeAmountOfChildrenKilledInTotal(amount),
-);
+const changeAmountOfChildrenKilled = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfChildrenKilledInLastTurn(amount),
+		changeAmountOfChildrenKilledInTotal(amount),
+	);
 
 // === GUARDS
 
-const changeAmountOfGuardsKilled = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfGuardsKilledInLastTurn(amount),
-	changeAmountOfGuardsKilledInTotal(amount),
-);
+const changeAmountOfGuardsKilled = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfGuardsKilledInLastTurn(amount),
+		changeAmountOfGuardsKilledInTotal(amount),
+	);
 
 // === IDLES
 
-const changeAmountOfIdlesKilled = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfIdlesKilledInLastTurn(amount),
-	changeAmountOfIdlesKilledInTotal(amount),
-);
+const changeAmountOfIdlesKilled = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfIdlesKilledInLastTurn(amount),
+		changeAmountOfIdlesKilledInTotal(amount),
+	);
 
 // === WORKERS
 
-const changeAmountOfWorkersKilled = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfWorkersKilledInLastTurn(amount),
-	changeAmountOfWorkersKilledInTotal(amount),
-);
+const changeAmountOfWorkersKilled = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfWorkersKilledInLastTurn(amount),
+		changeAmountOfWorkersKilledInTotal(amount),
+	);
 
+export const killIdles = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfCurrentIdles(-amount),
+		changeAmountOfIdlesKilled(amount),
+	);
 
-export const killIdles = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfCurrentIdles(-amount),
-	changeAmountOfIdlesKilled(amount),
-);
+export const killGuards = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfCurrentGuards(-amount),
+		changeAmountOfGuardsKilled(amount),
+	);
 
-export const killGuards = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfCurrentGuards(-amount),
-	changeAmountOfGuardsKilled(amount),
-);
+export const killWorkers = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfCurrentWorkers(-amount),
+		changeAmountOfWorkersKilled(amount),
+	);
 
-export const killWorkers = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfCurrentWorkers(-amount),
-	changeAmountOfWorkersKilled(amount),
-);
-
-export const killChildren = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfCurrentChildren(-amount),
-	changeAmountOfChildrenKilled(amount),
-);
+export const killChildren = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfCurrentChildren(-amount),
+		changeAmountOfChildrenKilled(amount),
+	);

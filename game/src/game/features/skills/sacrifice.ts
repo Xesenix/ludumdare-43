@@ -56,15 +56,18 @@ export const getUltimateSacrificeCost = (state: IGameState) => {
 	return 1000;
 };
 
+export const changeAmountOfSacrificedPopulation = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfSacrificedPopulationInLastTurn(amount),
+		changeAmountOfSacrificedPopulationInTotal(amount),
+	);
 
-export const changeAmountOfSacrificedPopulation = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfSacrificedPopulationInLastTurn(amount),
-	changeAmountOfSacrificedPopulationInTotal(amount),
-);
-
-export const changeAmountOfSacrificedResources = (amount: number) => (state: IGameState) => pipeline(
-	state,
-	changeAmountOfSacrificedResourcesInLastTurn(amount),
-	changeAmountOfSacrificedResourcesInTotal(amount),
-);
+export const changeAmountOfSacrificedResources = (amount: number) => (state: IGameState) =>
+	pipeline(
+		// prettier-ignore
+		state,
+		changeAmountOfSacrificedResourcesInLastTurn(amount),
+		changeAmountOfSacrificedResourcesInTotal(amount),
+	);

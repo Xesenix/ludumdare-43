@@ -9,6 +9,7 @@ export const reduceGatherResources = (state: IGameState) => {
 	const resourceGathered = workers;
 
 	return pipeline(
+		// prettier-ignore
 		state,
 		changeAmountOfResources(resourceGathered),
 	);
