@@ -26,7 +26,7 @@
     "game:build:dev": "cross-env APP=game npm run build:dev",
     "game:build:prod": "cross-env APP=game npm run build:prod",
     "game:xi18n": "cross-env APP=game ts-node ./scripts/extract.ts",
-    "game:lint": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test"
+    "game:check": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -53,16 +53,19 @@
     "@types/inversify": "^2.0.33",
     "@types/jasmine": "^3.3.9",
     "@types/lodash": "^4.14.123",
+    "@types/moment": "^2.13.0",
     "@types/node-gettext": "^2.0.1",
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.3",
+    "@types/vis": "^4.21.12",
     "compression-webpack-plugin": "^2.0.0",
     "eventemitter3": "^3.1.0",
     "fscreen": "^1.0.2",
     "html-decoder": "^1.0.2",
-    "inversify": "^4.13.0",
+    "inversify": "^5.0.1",
     "inversify-vanillajs-helpers": "^2.0.0",
     "lodash": "^4.17.11",
+    "moment": "^2.24.0",
     "phaser": "^3.16.2",
     "pipeline-operator": "^1.1.0",
     "react": "^16.8.5",
@@ -73,7 +76,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "reflect-metadata": "^0.1.13",
-    "ts-loader": "^5.3.3"
+    "ts-loader": "^5.3.3",
+    "vis": "^4.21.0"
   },
   "apps": {
     "game": {
