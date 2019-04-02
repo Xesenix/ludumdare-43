@@ -16,8 +16,5 @@ contextMain
 	.forEach(contextMain);
 
 // add libraries that need to work with main application
-// {
-//   const contextLib = require.context('../path/to/lib', true, /\.(t|j)sx?$/);
-//   contextLib.keys().filter((p: string) => !excludeRegexp.test(p)).forEach(contextLib);
-// }
+require('../src/lib/main.test');
 // ...

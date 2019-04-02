@@ -22,7 +22,7 @@ describe('localize', () => {
 				translations: {
 					'': {
 						abc: { msgid: 'abc', msgstr: ['xyz'] },
-						ABC: { msgid: 'ABC', msgstr: ['%{placeholder}QWERTY'] },
+						'ABC %{placeholder}': { msgid: 'ABC %{placeholder}', msgstr: ['%{placeholder}QWERTY'] },
 					},
 				},
 			});
@@ -43,7 +43,7 @@ describe('localize', () => {
 				},
 				translations: {
 					'': {
-						abc: { msgid: 'abc one', msgstr: ['xyz jeden raz', 'xyz %{count} razy', 'xyz %{count} razów'] },
+						'abc one time': { msgid: 'abc one time', msgstr: ['xyz jeden raz', 'xyz %{count} razy', 'xyz %{count} razów'] },
 						ABC: { msgid: 'ABC', msgstr: ['QWERTY'] },
 					},
 				},
