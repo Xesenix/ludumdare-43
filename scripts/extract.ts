@@ -1,7 +1,7 @@
 import { JsExtractors } from 'gettext-extractor';
-import xesBdf from 'xes-webpack-core';
+import { i18n } from 'xes-webpack-core';
 
-xesBdf.i18n.extract({
+i18n.extract({
 	getJsParser: (xi18n) =>
 		xi18n.createJsParser([
 			JsExtractors.callExpression('__', {
