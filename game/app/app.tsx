@@ -96,7 +96,7 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 					<Typography className={classes.title} variant="display4" component="h1" align="center">
 						The greatest sacrifice
 					</Typography>
-					<Typography className={classes.title} variant="display1" component="h2" align="center">
+					<Typography className={classes.subtitle} variant="display1" component="h2" align="center">
 						Ludumdare 43 edition
 					</Typography>
 					<Typography className={classes.headline} variant="headline" component="p" align="center">
