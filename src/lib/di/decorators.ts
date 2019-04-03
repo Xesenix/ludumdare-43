@@ -43,18 +43,17 @@ export function injectable(): any {
  * @returns provider function
  */
 export function createProvider(key, dependencies, factory, shouldResolve = true) {
-	if (process.env.DEBUG_DI === 'true') {
+	return memoize(({ container }: ii.Context) => async () => {
+		const console = container.get<Console>('debug:console:DEBUG_DI');
 		console.debug('annotation:injectDecorator', {
 			key,
 			dependencies,
 			factory,
 		});
-	}
-	return memoize((context: ii.Context) => async () => {
 		const klass = factory(
 			...(await Promise.all(
 				dependencies.map((dep: string) => {
-					const result = context.container.get<any>(dep.replace('()', ''));
+					const result = container.get<any>(dep.replace('()', ''));
 					if (dep.indexOf('()') > -1) {
 						try {
 							return result() as Promise<any>;
@@ -69,13 +68,13 @@ export function createProvider(key, dependencies, factory, shouldResolve = true)
 		);
 
 		if (shouldResolve) {
-			if (!context.container.isBound(key)) {
-				context.container
+			if (!container.isBound(key)) {
+				container
 					.bind(key)
 					.to(klass)
 					.inSingletonScope();
 			}
-			return context.container.get(key);
+			return container.get(key);
 		}
 
 		return klass;

@@ -17,7 +17,7 @@ export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', 
 	// prettier-ignore
 	'phaser:provider()',
 	'data-store:provider()',
-	'debug:console',
+	'debug:console:DEBUG_PHASER',
 ], (
 	// prettier-ignore
 	Phaser,
@@ -32,23 +32,23 @@ export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', 
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:constructor'); }
+		console.log('UIManagerPlugin:constructor');
 	}
 
 	public start() {
-		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:start', this); }
+		console.log('UIManagerPlugin:start', this);
 		this.unsubscribe = this.store.subscribe(this.syncGameWithUIState);
 		this.syncGameWithUIState();
 	}
 
 	public stop() {
-		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:stop'); }
+		console.log('UIManagerPlugin:stop');
 		this.unsubscribe();
 	}
 
 	private syncGameWithUIState = () => {
 		const state = this.store.getState();
-		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:syncGameWithUIState', state); }
+		console.log('UIManagerPlugin:syncGameWithUIState', state);
 		this.game.sound.mute = state.mute;
 		this.game.sound.volume = state.volume;
 

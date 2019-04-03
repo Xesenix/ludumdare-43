@@ -1,4 +1,4 @@
-import { ContainerModule, interfaces } from 'inversify';
+import { Container, ContainerModule, interfaces } from 'inversify';
 
 import { UIManagerPluginProvider } from 'lib/phaser/ui-manager.plugin';
 
@@ -9,7 +9,7 @@ import { IntroSceneProvider } from './scene/intro.scene';
 export type IPhaserProvider = () => Promise<any>;
 
 // prettier-ignore
-export const PhaserGameModule = () => new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
+export const PhaserGameModule = (container: Container) => new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
 	bind<IPhaserProvider>('phaser:provider')
 		.toProvider(() => () => import(/* webpackChunkName: "phaser" */ 'phaser')
 			.then(({ default: Phaser }) => Phaser),

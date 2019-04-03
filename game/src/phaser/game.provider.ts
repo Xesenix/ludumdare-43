@@ -9,7 +9,7 @@ export type IPhaserGameProvider = (forceNew?: boolean) => Promise<Phaser.Game>;
 let game: Phaser.Game | null = null;
 
 export function PhaserGameProvider(context: interfaces.Context) {
-	const console: Console = context.container.get<Console>('debug:console');
+	const console: Console = context.container.get<Console>('debug:console:DEBUG_PHASER');
 	console.debug('PhaserGameProvider');
 
 	return (forceNew: boolean = false): Promise<Phaser.Game> => {

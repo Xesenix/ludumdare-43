@@ -16,29 +16,26 @@ import {
  * Also load translations if needed.
  */
 const syncLocaleWithStore = (store: Store<any, any>, actions: II18nActions) => () => {
-	return new Promise((resolve, reject) => {
-		const { language, languages } = store.getState();
-		const localesPath = process.env.LOCALES_DIR;
-		if (!languages[language].ready) {
-			if (localesPath) {
-				// This needs to be know at build time to prepare bundles with translations.
-				import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
-					(content) => {
-						i18n.addTranslations(language, 'messages', content);
-						i18n.setLocale(language);
-						actions.setLanguageReady(language, true);
-						resolve();
-					},
-					(err) => reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
-				);
-			} else {
-				reject('ERROR localesPath not set in env LOCALES_DIR');
-			}
+	const { language, languages } = store.getState();
+	const localesPath = process.env.LOCALES_DIR;
+	if (!languages[language].ready) {
+		if (localesPath) {
+			// This needs to be know at build time to prepare bundles with translations.
+			return import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
+				(content) => {
+					i18n.addTranslations(language, 'messages', content);
+					i18n.setLocale(language);
+					actions.setLanguageReady(language, true);
+				},
+				(err) => Promise.reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
+			);
 		} else {
-			i18n.setLocale(language);
-			resolve();
+			return Promise.reject('ERROR localesPath not set in env LOCALES_DIR');
 		}
-	});
+	} else {
+		i18n.setLocale(language);
+		return Promise.resolve();
+	}
 };
 
 export type II18nProvider = () => Promise<Gettext>;
@@ -46,27 +43,16 @@ export type II18nProvider = () => Promise<Gettext>;
 /**
  * Listens to application boot and then connects to data store to react to changes in current language.
  */
-export function I18nProvider(context: interfaces.Context) {
-	const console: Console = context.container.get<Console>('debug:console');
+export function I18nProvider({ container }: interfaces.Context) {
+	const console: Console = container.get<Console>('debug:console:DEBUG_DI');
 	console.debug('I18nProvider');
 
-	return () =>
-		new Promise((resolve, reject) => {
-			try {
-				const storeProvider = context.container.get<IDataStoreProvider<any, any>>('data-store:provider');
-				const actionsProvider = context.container.get<II18nActionsProvider>('i18n:actions:provider');
-				return Promise.all([
-					// prettier-ignore
-					storeProvider(),
-					actionsProvider(),
-				]).then(([store, actions]: [Store<any, any>, II18nActions]) => {
-					store.subscribe(syncLocaleWithStore(store, actions));
-					return syncLocaleWithStore(store, actions)().then(() => {
-						resolve(i18n);
-					});
-				});
-			} catch (error) {
-				return reject(error);
-			}
-		});
+	return () => Promise.all([
+		// prettier-ignore
+		container.get<IDataStoreProvider<any, any>>('data-store:provider')(),
+		container.get<II18nActionsProvider>('i18n:actions:provider')(),
+	]).then(([store, actions]: [Store<any, any>, II18nActions]) => {
+		store.subscribe(syncLocaleWithStore(store, actions));
+		return syncLocaleWithStore(store, actions)().then(() => i18n);
+	});
 }

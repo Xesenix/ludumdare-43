@@ -53,8 +53,18 @@ export type IStateAwareAudioMixer = IAudioMixer & IStoreStateAware<IAudioConfigu
  */
 export interface IAudioTrack {
 	create(key: string): AudioBufferSourceNode;
-	playLoop(key: string, when?: number, offset?: number, duration?: number | undefined): AudioBufferSourceNode;
-	play(key: string, when?: number, offset?: number, duration?: number | undefined): AudioBufferSourceNode;
+	playLoop(
+		key: string,
+		when?: number,
+		offset?: number,
+		duration?: number | undefined,
+	): AudioBufferSourceNode;
+	play(
+		key: string,
+		when?: number,
+		offset?: number,
+		duration?: number | undefined,
+	): AudioBufferSourceNode;
 	stop(when?: number): void;
 	connect(node: AudioNode): AudioNode;
 	getNode(): AudioNode;

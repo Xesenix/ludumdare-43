@@ -7,10 +7,12 @@ export const PhaserSoundtrackManagerPluginProvider = createClassProvider('phaser
 	// prettier-ignore
 	'phaser:provider()',
 	'sound-scape:soundtrack-player',
+	'debug:console:DEBUG_SOUND',
 ], (
 	// prettier-ignore
 	Phaser,
 	soundtrackPlayer: ISoundtrackPlayer,
+	console: Console,
 ) => class PhaserSoundtrackManagerPlugin extends Phaser.Plugins.BasePlugin {
 	public soundtrackPlayer: ISoundtrackPlayer = soundtrackPlayer;
 
@@ -19,14 +21,14 @@ export const PhaserSoundtrackManagerPluginProvider = createClassProvider('phaser
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:constructor'); }
+		console.log('PhaserSoundtrackManagerPlugin:constructor');
 	}
 
 	public start(): void {
-		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:start', this); }
+		console.log('PhaserSoundtrackManagerPlugin:start', this);
 	}
 
 	public stop() {
-		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:stop'); }
+		console.log('PhaserSoundtrackManagerPlugin:stop');
 	}
 });

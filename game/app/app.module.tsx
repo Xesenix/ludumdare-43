@@ -37,21 +37,29 @@ export class AppModule extends Container implements IApplication {
 		super();
 
 		// console
-		if (process.env.DEBUG === 'true') {
-			this.bind<Console>('debug:console').toConstantValue(console);
-		} else {
-			// tslint:disable:no-empty
-			const noop = () => {};
-			this.bind<Console>('debug:console').toConstantValue({
-				assert: noop,
-				debug: noop,
-				error: noop,
-				log: noop,
-				trace: noop,
-				group: noop,
-				groupEnd: noop,
-			} as Console);
-		}
+		const noop = () => {};
+		const noopConsole = {
+			assert: noop,
+			debug: noop,
+			error: noop,
+			log: noop,
+			trace: noop,
+			group: noop,
+			groupEnd: noop,
+		} as Console;
+
+		[
+			'DEBUG_REDUX',
+			'DEBUG_DI',
+			'DEBUG_STORE',
+			'DEBUG_PHASER',
+			'DEBUG_PHASER_SOUND',
+			'DEBUG_SOUND',
+		].forEach((key: string) => {
+			this.bind<Console>(`debug:console:${key}`).toConstantValue(process.env.DEBUG === 'true' && process.env[key] === 'true' ? console : noopConsole);
+		});
+
+		this.bind<Console>('debug:console').toConstantValue(process.env.DEBUG ? console : noopConsole);
 
 		// event manager
 		this.bind<IEventEmitter>('event-manager').toConstantValue(this.eventManager);
@@ -69,20 +77,20 @@ export class AppModule extends Container implements IApplication {
 		I18nModule.register(this);
 
 		// phaser
-		this.load(PhaserGameModule());
+		this.load(PhaserGameModule(this));
 
 		// data store
 		this.load(
 			DataStoreModule<IAppState, AppAction>(
+				this,
 				{
 					...defaultUIState,
 					...defaultI18nState,
 				},
 				(state: IAppState, action: AppAction) => {
-					if (process.env.DEBUG_STORE === 'true') {
-						const console = this.get<Console>('debug:console');
-						console.log('reduce', state, action);
-					}
+					const console = this.get<Console>('debug:console:DEBUG_STORE');
+					console.log('reduce', state, action);
+
 					// TODO: configure store
 					state = uiReducer<IAppState, AppAction>(state, action);
 					state = i18nReducer<IAppState, AppAction>(state, action);

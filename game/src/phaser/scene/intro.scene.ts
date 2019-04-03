@@ -54,10 +54,12 @@ export const IntroSceneProvider = createClassProvider('intro-scene', [
 	// prettier-ignore
 	'phaser:provider()',
 	'event-manager',
+	'debug:console:DEBUG_PHASER',
 ], (
 	// prettier-ignore
 	Phaser,
 	em: IEventEmitter,
+	console: Console,
 ) => class IntroScene extends Phaser.Scene {
 	private soundtrack?: Phaser.Sound.BaseSound;
 	private label?: Phaser.GameObjects.Text;
@@ -75,7 +77,7 @@ export const IntroSceneProvider = createClassProvider('intro-scene', [
 	public preload(): void {
 		this.sm = this.sys.plugins.get('audio-manager') as any;
 		this.stm = this.sys.plugins.get('soundtrack-manager') as any;
-		if (process.env.DEBUG_PHASER === 'true') { console.log('IntroScene:preload'); }
+		console.log('IntroScene:preload');
 		// TODO: use scene plugin
 		if (!!(this.sm as any).setLoader) {
 			(this.sm as any).setLoader(this.load);

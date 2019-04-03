@@ -15,8 +15,6 @@ export class AudioMixerTrack implements IStateAwareAudioTrack {
 		private context: AudioContext,
 		private sounds: IAudioBufferRepository,
 	) {
-		this.sounds = sounds;
-		this.context = context;
 		this.trackGain = this.context.createGain();
 		this.trackAutomationGain = this.context.createGain();
 		this.trackAutomationGain.connect(this.trackGain);
@@ -39,7 +37,12 @@ export class AudioMixerTrack implements IStateAwareAudioTrack {
 		return source;
 	}
 
-	public play(key: string, when?: number, offset?: number, duration?: number): AudioBufferSourceNode {
+	public play(
+		key: string,
+		when?: number,
+		offset?: number,
+		duration?: number,
+	): AudioBufferSourceNode {
 		const source = this.create(key);
 
 		source.loop = false;
@@ -55,7 +58,12 @@ export class AudioMixerTrack implements IStateAwareAudioTrack {
 		}
 	}
 
-	public playLoop(key: string, when?: number, offset?: number, duration?: number): AudioBufferSourceNode {
+	public playLoop(
+		key: string,
+		when?: number,
+		offset?: number,
+		duration?: number,
+	): AudioBufferSourceNode {
 		const source = this.create(key);
 
 		source.loop = true;

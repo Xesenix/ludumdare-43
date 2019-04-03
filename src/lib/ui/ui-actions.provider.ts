@@ -17,38 +17,36 @@ export interface IUIActions {
 
 export type IUIActionsProvider = () => Promise<IUIActions>;
 
-export function UIActionsProvider(context: interfaces.Context) {
-	const console: Console = context.container.get<Console>('debug:console');
+export function UIActionsProvider({ container }: interfaces.Context) {
+	const console: Console = container.get<Console>('debug:console');
 	console.debug('UIActionsProvider');
 
-	return () =>
-		context.container
-			.get<() => Promise<Store<any, any>>>('data-store:provider')()
-			.then((store: Store<any, any>) => {
-				if (!context.container.isBound('ui:actions')) {
-					const createSetMutedAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-muted');
-					const createSetMusicMutedAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-music-muted');
-					const createSetEffectsMutedAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-effects-muted');
-					const createSetPausedAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-paused');
-					const createSetVolumeAction = context.container.get<ICreateSetAction<number>>('data-store:action:create:set-volume');
-					const createSetEffectsVolumeAction = context.container.get<ICreateSetAction<number>>('data-store:action:create:set-effects-volume');
-					const createSetMusicVolumeAction = context.container.get<ICreateSetAction<number>>('data-store:action:create:set-music-volume');
-					const createSetThemeAction = context.container.get<ICreateSetAction<string>>('data-store:action:create:set-theme');
-					const createSetFullscreenAction = context.container.get<ICreateSetAction<boolean>>('data-store:action:create:set-fullscreen');
+	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
+		.then((store: Store<any, any>) => {
+			if (!container.isBound('ui:actions')) {
+				const createSetMutedAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-muted');
+				const createSetMusicMutedAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-music-muted');
+				const createSetEffectsMutedAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-effects-muted');
+				const createSetPausedAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-paused');
+				const createSetVolumeAction = container.get<ICreateSetAction<number>>('data-store:action:create:set-volume');
+				const createSetEffectsVolumeAction = container.get<ICreateSetAction<number>>('data-store:action:create:set-effects-volume');
+				const createSetMusicVolumeAction = container.get<ICreateSetAction<number>>('data-store:action:create:set-music-volume');
+				const createSetThemeAction = container.get<ICreateSetAction<string>>('data-store:action:create:set-theme');
+				const createSetFullscreenAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-fullscreen');
 
-					context.container.bind<IUIActions>('ui:actions').toConstantValue({
-						setMuted: (value: boolean) => store.dispatch(createSetMutedAction(value)),
-						setMusicMuted: (value: boolean) => store.dispatch(createSetMusicMutedAction(value)),
-						setEffectsMuted: (value: boolean) => store.dispatch(createSetEffectsMutedAction(value)),
-						setPaused: (value: boolean) => store.dispatch(createSetPausedAction(value)),
-						setVolume: (value: number) => store.dispatch(createSetVolumeAction(value)),
-						setEffectsVolume: (value: number) => store.dispatch(createSetEffectsVolumeAction(value)),
-						setMusicVolume: (value: number) => store.dispatch(createSetMusicVolumeAction(value)),
-						setTheme: (value: string) => store.dispatch(createSetThemeAction(value)),
-						setFullscreen: (value: boolean) => store.dispatch(createSetFullscreenAction(value)),
-					});
-				}
+				container.bind<IUIActions>('ui:actions').toConstantValue({
+					setMuted: (value: boolean) => store.dispatch(createSetMutedAction(value)),
+					setMusicMuted: (value: boolean) => store.dispatch(createSetMusicMutedAction(value)),
+					setEffectsMuted: (value: boolean) => store.dispatch(createSetEffectsMutedAction(value)),
+					setPaused: (value: boolean) => store.dispatch(createSetPausedAction(value)),
+					setVolume: (value: number) => store.dispatch(createSetVolumeAction(value)),
+					setEffectsVolume: (value: number) => store.dispatch(createSetEffectsVolumeAction(value)),
+					setMusicVolume: (value: number) => store.dispatch(createSetMusicVolumeAction(value)),
+					setTheme: (value: string) => store.dispatch(createSetThemeAction(value)),
+					setFullscreen: (value: boolean) => store.dispatch(createSetFullscreenAction(value)),
+				});
+			}
 
-				return context.container.get<IUIActions>('ui:actions');
-			});
+			return container.get<IUIActions>('ui:actions');
+		});
 }
