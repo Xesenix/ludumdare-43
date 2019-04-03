@@ -47,7 +47,6 @@ export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loa
 	}
 
 	public add(key: string, url: string): void {
-		console.log('add', key, url);
 		if (!this.loadQueue[key]) {
 			this.loadQueue[key] = true;
 		}

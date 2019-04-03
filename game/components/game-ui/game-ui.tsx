@@ -453,14 +453,11 @@ Each one requires 1 resource per year to be operational if there are no enough r
 		const { em } = this.props;
 
 		if (!this.unsubscribeEventManager && em) {
-			console.log('GameUIComponent:bindToEventManager:subscribe');
 			const handle = (state: IGameState) => {
-				console.log('GameUIComponent:bindToEventManager:state', state);
 				this.setState({ currentState: state });
 			};
 			em.addListener('state:update', handle);
 			this.unsubscribeEventManager = () => {
-				console.log('GameUIComponent:bindToEventManager:unsubscribe');
 				em.removeListener('state:update', handle);
 			};
 		}

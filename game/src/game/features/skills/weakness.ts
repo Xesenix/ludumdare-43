@@ -26,7 +26,6 @@ export const applyWeaknessToAttackPower = (state: IGameState) => {
 	const reduction = getWeaknessDamageReduction(state);
 
 	return (power: number) => {
-		console.log('applyWeaknessToAttackPower', power, reduction);
 		return power * (1 - reduction);
 	};
 };

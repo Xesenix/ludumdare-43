@@ -98,7 +98,9 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 
 	public componentDidMount(): void {
 		const { eventsManager, audioContext, console } = this.props;
-		console.log('SoundScapeDebugViewComponent:componentDidMount', eventsManager);
+		if (process.env.DEBUG_SOUND === 'true') {
+			console.log('SoundScapeDebugViewComponent:componentDidMount', eventsManager);
+		}
 
 		if (eventsManager) {
 			this.subscription.add(
@@ -127,10 +129,12 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 	public componentDidUpdate(): void {
 		const { viewContainer, timeline: tl } = this.state;
 		const { console } = this.props;
-		// console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl);
+		// if (process.env.DEBUG_SOUND === 'true') { console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl); }
 
 		if (viewContainer && !tl) {
-			console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl);
+			if (process.env.DEBUG_SOUND === 'true') {
+				console.log('SoundScapeDebugViewComponent:componentDidUpdate', viewContainer, tl);
+			}
 			Promise.all([
 				// prettier-ignore
 				import('vis/lib/timeline/Timeline'),
@@ -146,7 +150,9 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 					{ default: moment },
 				]) => {
 					const { timeline: timelineIsInitialized } = this.state;
-					console.log('SoundScapeDebugViewComponent:componentDidUpdate:then', Timeline, DataSet);
+					if (process.env.DEBUG_SOUND === 'true') {
+						console.log('SoundScapeDebugViewComponent:componentDidUpdate:then', Timeline, DataSet);
+					}
 					if (!timelineIsInitialized) {
 						const nodes = new DataSet([]);
 						const groups = [
@@ -209,7 +215,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 					}
 				},
 				(err) => {
-					console.log('SoundScapeDebugViewComponent:componentDidUpdate:error', err);
+					console.error('SoundScapeDebugViewComponent:componentDidUpdate:error', err);
 				},
 			);
 		}
@@ -245,7 +251,9 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 			audioContext: { currentTime = 0 } = {},
 		} = this.props;
 		const { timeline, currentAudioTime } = this.state;
-		console.log('SoundScapeDebugViewComponent:componentDidMount:soundtrack:schedule-changed', { currentTime, soundtrackPlayer, timeline });
+		if (process.env.DEBUG_SOUND === 'true') {
+			console.log('SoundScapeDebugViewComponent:componentDidMount:soundtrack:schedule-changed', { currentTime, soundtrackPlayer, timeline });
+		}
 		if (soundtrackPlayer && timeline) {
 			const schedule = soundtrackPlayer.getSchedule();
 			const newItems = schedule.map((block: IScheduledSoundtrack, id: number) => {
@@ -287,7 +295,9 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 					};
 				})
 				.concat(newItems);
-			console.log('SoundScapeDebugViewComponent:componentDidMount:soundtrack:schedule-changed', currentAudioTime, newItems, items);
+			if (process.env.DEBUG_SOUND === 'true') {
+				console.log('SoundScapeDebugViewComponent:componentDidMount:soundtrack:schedule-changed', currentAudioTime, newItems, items);
+			}
 			timeline.setCustomTime(currentAudioTime * 1000, 'now');
 			timeline.setItems(items);
 			this.setState({});

@@ -19,14 +19,14 @@ export const PhaserSoundtrackManagerPluginProvider = createClassProvider('phaser
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		console.log('PhaserSoundtrackManagerPlugin:constructor');
+		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:constructor'); }
 	}
 
 	public start(): void {
-		console.log('PhaserSoundtrackManagerPlugin:start', this);
+		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:start', this); }
 	}
 
 	public stop() {
-		console.log('PhaserSoundtrackManagerPlugin:stop');
+		if (process.env.DEBUG_SOUND === 'true') { console.log('PhaserSoundtrackManagerPlugin:stop'); }
 	}
 });

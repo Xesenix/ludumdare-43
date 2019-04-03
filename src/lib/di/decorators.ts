@@ -10,11 +10,11 @@ type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.
  * Annotate class with constructor dependency injection.
  */
 export function inject(dependencies?: DependencyType[]): any {
-	if (process.env.DEBUG === 'true') {
+	if (process.env.DEBUG_DI === 'true') {
 		console.debug('annotation:inject:decorate', dependencies, inversify.injectable());
 	}
 	return (target, key, descriptor) => {
-		if (process.env.DEBUG === 'true') {
+		if (process.env.DEBUG_DI === 'true') {
 			console.debug('annotation:inject', target.name, dependencies);
 		}
 		helpers.annotate(target, dependencies);
@@ -26,7 +26,7 @@ export function inject(dependencies?: DependencyType[]): any {
  */
 export function injectable(): any {
 	return (target, key, descriptor) => {
-		if (process.env.DEBUG === 'true') {
+		if (process.env.DEBUG_DI === 'true') {
 			console.debug('annotation:injectable', target.name);
 		}
 		return inversify.decorate(inversify.injectable(), target);
@@ -43,7 +43,7 @@ export function injectable(): any {
  * @returns provider function
  */
 export function createProvider(key, dependencies, factory, shouldResolve = true) {
-	if (process.env.DEBUG === 'true') {
+	if (process.env.DEBUG_DI === 'true') {
 		console.debug('annotation:injectDecorator', {
 			key,
 			dependencies,

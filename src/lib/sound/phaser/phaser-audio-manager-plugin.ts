@@ -43,7 +43,9 @@ export const AudioManagerPluginProvider = createClassProvider('audio-manager-plu
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		console.log('PhaserAudioManagerPlugin:constructor');
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:constructor');
+		}
 	}
 
 	/**
@@ -59,13 +61,17 @@ export const AudioManagerPluginProvider = createClassProvider('audio-manager-plu
 	}
 
 	public start(): void {
-		console.log('PhaserAudioManagerPlugin:start', this);
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:start', this);
+		}
 		this.unsubscribe = this.store.subscribe(this.syncWithState);
 		this.syncWithState();
 	}
 
 	public stop() {
-		console.log('PhaserAudioManagerPlugin:stop');
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:stop');
+		}
 		this.unsubscribe();
 	}
 
@@ -78,17 +84,23 @@ export const AudioManagerPluginProvider = createClassProvider('audio-manager-plu
 	}
 
 	public playFxSound(key: string): Promise<AudioBufferSourceNode> {
-		console.log('PhaserAudioManagerPlugin:playFxSound', key);
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:playFxSound', key);
+		}
 		return Promise.resolve(this.audioMixer.getTrack('effects').play(key));
 	}
 
 	public stopSound(key: string): void {
-		console.log('PhaserAudioManagerPlugin:stopSound', key);
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:stopSound', key);
+		}
 		this.audioMixer.getTrack('music').stop();
 	}
 
 	public playLoop(key: string): Promise<AudioBufferSourceNode> {
-		console.log('PhaserAudioManagerPlugin:playLoop', key);
+		if (process.env.DEBUG_PHASER === 'true' && process.env.DEBUG_SOUND === 'true') {
+			console.log('PhaserAudioManagerPlugin:playLoop', key);
+		}
 		return Promise.resolve(this.audioMixer.getTrack('effects').playLoop(key));
 	}
 

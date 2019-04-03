@@ -37,7 +37,6 @@ export const getWallsBuildCost = (state: IGameState) => (amount: number) => {
 export const applyWallReductionToAttackPower = (state: IGameState) => {
 	const reduction = getWallsReduction(state);
 	return (power: number) => {
-		console.log('applyWallReductionToAttackPower', power, reduction);
 		return Math.max(0, power - reduction);
 	};
 };

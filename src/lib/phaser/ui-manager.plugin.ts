@@ -32,23 +32,23 @@ export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', 
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		console.log('UIManagerPlugin:constructor');
+		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:constructor'); }
 	}
 
 	public start() {
-		console.log('UIManagerPlugin:start', this);
+		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:start', this); }
 		this.unsubscribe = this.store.subscribe(this.syncGameWithUIState);
 		this.syncGameWithUIState();
 	}
 
 	public stop() {
-		console.log('UIManagerPlugin:stop');
+		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:stop'); }
 		this.unsubscribe();
 	}
 
 	private syncGameWithUIState = () => {
 		const state = this.store.getState();
-		console.log('UIManagerPlugin:syncGameWithUIState', state);
+		if (process.env.DEBUG_PHASER === 'true') { console.log('UIManagerPlugin:syncGameWithUIState', state); }
 		this.game.sound.mute = state.mute;
 		this.game.sound.volume = state.volume;
 

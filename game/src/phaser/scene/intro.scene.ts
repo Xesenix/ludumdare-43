@@ -75,7 +75,7 @@ export const IntroSceneProvider = createClassProvider('intro-scene', [
 	public preload(): void {
 		this.sm = this.sys.plugins.get('audio-manager') as any;
 		this.stm = this.sys.plugins.get('soundtrack-manager') as any;
-		console.log('IntroScene:preload');
+		if (process.env.DEBUG_PHASER === 'true') { console.log('IntroScene:preload'); }
 		// TODO: use scene plugin
 		if (!!(this.sm as any).setLoader) {
 			(this.sm as any).setLoader(this.load);

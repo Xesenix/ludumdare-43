@@ -79,8 +79,10 @@ export class AppModule extends Container implements IApplication {
 					...defaultI18nState,
 				},
 				(state: IAppState, action: AppAction) => {
-					const console = this.get<Console>('debug:console');
-					console.log('reduce', state, action);
+					if (process.env.DEBUG_STORE === 'true') {
+						const console = this.get<Console>('debug:console');
+						console.log('reduce', state, action);
+					}
 					// TODO: configure store
 					state = uiReducer<IAppState, AppAction>(state, action);
 					state = i18nReducer<IAppState, AppAction>(state, action);
@@ -88,6 +90,10 @@ export class AppModule extends Container implements IApplication {
 				},
 			),
 		);
+
+		if ((window as any).__inversifyDevtools__) {
+			(window as any).__inversifyDevtools__(this);
+		}
 
 		// rendering DOM - from outside of react
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
