@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
 
+const DotenvWebpackPlugin = require('dotenv-webpack');
 const webpackBase = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const { application, webpack } = require('xes-webpack-core');
@@ -20,6 +21,8 @@ const configureWebpack = (config) => {
 	config.output.chunkFilename = '[name].js';
 
 	config.plugins.push(new webpackBase.ProgressPlugin());
+
+	config.plugins = [new DotenvWebpackPlugin({ path: `.env.${process.env.ENV}`, silent: true }), ...config.plugins];
 
 	if (process.env.ENV !== 'test') {
 		// this option doesn't work well with tests
