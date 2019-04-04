@@ -4,7 +4,9 @@ const fs = require('fs');
 
 const DotenvWebpackPlugin = require('dotenv-webpack');
 const webpackBase = require('webpack');
+const WebpackPwaManifestPlugin = require('webpack-pwa-manifest')
 const CompressionPlugin = require('compression-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const { application, webpack } = require('xes-webpack-core');
 
 const app = application.getEnvApp();
@@ -16,13 +18,39 @@ const factoryConfig = {
 
 const configureWebpack = (config) => {
 	console.log(chalk.bold.yellow('Base WEBPACK setup'), process.env.ENV);
+	const packageConfig = application.getPackageConfig();
+	const appConfig = application.extractAppConfig();
+
+	config.entry.sw = path.resolve('./game/sw.js');
 
 	config.output.filename = '[name].js';
 	config.output.chunkFilename = '[name].js';
 
 	config.plugins.push(new webpackBase.ProgressPlugin());
 
-	config.plugins = [new DotenvWebpackPlugin({ path: `.env.${process.env.ENV}`, silent: true }), ...config.plugins];
+	config.plugins = [
+		new DotenvWebpackPlugin({ path: `.env.${process.env.ENV}`, silent: true }),
+		...config.plugins,
+		new WorkboxPlugin.GenerateSW(),
+		new WebpackPwaManifestPlugin({
+			background_color: appConfig.templateData.themeColor,
+			description: packageConfig.description,
+
+			icons: [
+				{
+					sizes: [32],
+					src: path.resolve('./game/assets/icons/favicon-32x32.png'),
+				},
+				{
+					sizes: [256, 512, 1024],
+					src: path.resolve('./game/assets/thumb.png'),
+				},
+			],
+			name: packageConfig.name,
+			short_name: packageConfig.name,
+			theme_color: appConfig.templateData.themeColor,
+		}),
+	];
 
 	if (process.env.ENV !== 'test') {
 		// this option doesn't work well with tests

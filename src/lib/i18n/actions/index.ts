@@ -1,6 +1,4 @@
-import { IValueAction } from 'lib/interfaces';
-
-export type LanguageType = 'en' | 'pl';
+import { IValueAction, LanguageType } from 'lib/interfaces';
 
 export const SET_CURRENT_LANGUAGE = 'I18N_SET_CURRENT_LANGUAGE';
 

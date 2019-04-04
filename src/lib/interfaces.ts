@@ -17,3 +17,5 @@ export interface IEventEmitter {
 	emit(name: string, payload?: any): void;
 	on(name: string, cb: (...params: any[]) => any): void;
 }
+
+export type LanguageType = 'en' | 'pl';
