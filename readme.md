@@ -61,3 +61,12 @@ Links:
 * easy way to add service worker caching with [workbox](https://developers.google.com/web/tools/workbox/) actually used in this project
 * article about [service worker](https://css-tricks.com/serviceworker-for-offline/) on CSS Tricks
 * for generating ssl certificates research [mkcert](https://github.com/FiloSottile/mkcert)
+
+
+### Game development
+
+* [MDN web docs - game development](https://developer.mozilla.org/en-US/docs/Games)
+
+### TODO:
+
+* [Large-Allocation header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation)

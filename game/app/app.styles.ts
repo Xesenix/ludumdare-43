@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 export const styles = (theme: Theme) => {
 	const title = {
 		...theme.typography.title,
-		marginBottom: '16px',
+		marginBottom: '.5em',
 	};
 
 	return createStyles({
@@ -17,7 +17,11 @@ export const styles = (theme: Theme) => {
 			margin: theme.spacing.unit,
 			position: 'relative',
 		},
-		title,
+		title: {
+			...title,
+			fontSize: '2em',
+			marginBottom: '.25em',
+		},
 		subtitle: {
 			...theme.typography.subheading,
 			...title,
@@ -25,8 +29,7 @@ export const styles = (theme: Theme) => {
 		headline: {
 			...theme.typography.body1,
 			padding: '0 24px',
-			marginBottom: '8px',
-			maxWidth: '800px',
+			marginBottom: '1.5em',
 			textAlign: 'justify',
 		},
 		[theme.breakpoints.up('sm')]: {
@@ -43,6 +46,18 @@ export const styles = (theme: Theme) => {
 		[theme.breakpoints.up('md')]: {
 			headline: {
 				fontSize: '2vw',
+				maxWidth: '90%',
+			},
+		},
+		[theme.breakpoints.up('lg')]: {
+			title: {
+				fontSize: '6.5em',
+			},
+			subtitle: {
+				fontSize: '4em',
+			},
+			headline: {
+				fontSize: '2em',
 			},
 		},
 	});

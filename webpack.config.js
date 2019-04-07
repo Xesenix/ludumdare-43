@@ -31,6 +31,9 @@ const configureWebpack = (config) => {
 	config.plugins = [
 		new DotenvWebpackPlugin({ path: `.env.${process.env.ENV}`, silent: true }),
 		...config.plugins,
+		/**
+		 * @see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
+		 */
 		new WorkboxPlugin.GenerateSW(),
 		new WebpackPwaManifestPlugin({
 			background_color: appConfig.templateData.themeColor,
