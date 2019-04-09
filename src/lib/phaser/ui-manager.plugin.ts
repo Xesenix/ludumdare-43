@@ -1,4 +1,5 @@
 import { Store } from 'redux';
+import { onFullScreenChange } from './../fullscreen/fullscreen';
 
 import { createClassProvider } from 'lib/di';
 
@@ -13,6 +14,10 @@ export interface IUIState {
 }
 
 // prettier-ignore
+/**
+ * TODO: Should handle full screen transition.
+ * @see https://phaser.io/phaser3/devlog/138
+ */
 export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', [
 	// prettier-ignore
 	'phaser:provider()',
@@ -32,12 +37,21 @@ export const UIManagerPluginProvider = createClassProvider('ui-manager-plugin', 
 		public pluginManager: Phaser.Plugins.PluginManager,
 	) {
 		super(pluginManager);
-		console.log('UIManagerPlugin:constructor');
+		console.log('UIManagerPlugin:constructor', process.env.DEBUG_PHASER);
 	}
 
 	public start() {
 		console.log('UIManagerPlugin:start', this);
 		this.unsubscribe = this.store.subscribe(this.syncGameWithUIState);
+		// patch Phaser fullscreen capabilities to be able to react on mode changes triggered from outside of phaser
+		this.game.scale.onFullScreenChange = () => {
+			console.log('UIManagerPlugin:onFullScreenChange', this.game.scale.fullscreen);
+			if (!this.game.scale.fullscreen.active) {
+				this.game.scale.stopFullscreen();
+			} else {
+				this.game.scale.startFullscreen();
+			}
+		};
 		this.syncGameWithUIState();
 	}
 

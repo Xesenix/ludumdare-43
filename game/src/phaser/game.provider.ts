@@ -127,6 +127,11 @@ export function PhaserGameProvider(context: interfaces.Context) {
 					],
 				},
 				scene: [IntroScene],
+				scale: {
+					mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
+					width: 768,
+					height: 300,
+				},
 			};
 
 			game = new Phaser.Game(config);

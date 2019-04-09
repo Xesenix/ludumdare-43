@@ -9,8 +9,9 @@ import { isFullScreen, onFullScreenChange, setFullscreen } from './fullscreen';
  * Connect application fullscreen state with datastore.
  */
 export class FullScreenModule {
-	public static register(app: IApplication) {
+	public static register(app: IApplication, root: HTMLElement): void {
 		app.bind<FullScreenModule>('fullscreen:module').toConstantValue(new FullScreenModule(app));
+		app.bind<HTMLElement>('ui:fullscreen-root').toConstantValue(root);
 	}
 
 	constructor(
@@ -40,7 +41,7 @@ export class FullScreenModule {
 					const currentFullScreenState: boolean = isFullScreen();
 
 					if (fullscreen !== currentFullScreenState) {
-						setFullscreen(fullscreen);
+						setFullscreen(fullscreen, this.app.get<HTMLElement>('ui:fullscreen-root'));
 					}
 				});
 			});

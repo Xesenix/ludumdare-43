@@ -1,8 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Oswald');
 
+// FF fullscreen
+html {
+	overflow: auto;
+}
+
 body {
 	padding-top: 64px;
 	padding-bottom: 32px;
+
+	// FF fullscreen
+	&:fullscreen {
+		overflow: auto;
+	}
+
+	// Chrome fullscreen
+	&:-webkit-full-screen {
+		overflow: auto;
+	}
 }
 
 .footer {

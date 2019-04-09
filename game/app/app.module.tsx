@@ -72,7 +72,7 @@ export class AppModule extends Container implements IApplication {
 		// load modules
 
 		// fullscreen bindings
-		FullScreenModule.register(this);
+		FullScreenModule.register(this, document.querySelector('body') as HTMLElement);
 
 		// sound
 		SoundModule.register(this);

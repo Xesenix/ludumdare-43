@@ -4,12 +4,18 @@ import Extend from 'phaser/src/utils/object/Extend';
 const Phaser = Extend(
 	false,
 	{
+		// Actions: require('phaser/src/actions'),
 		// Animation: require('phaser/src/animations'),
 		Cache: require('phaser/src/cache'),
 		Cameras: { Scene2D: require('phaser/src/cameras/2d') },
+		// Core: require('phaser/src/core'),
 		Class: require('phaser/src/utils/Class'),
+		// Create: require('phaser/src/create'),
+		// Curves: require('phaser/src/curves'),
+		Device: require('phaser/src/device'),
 		// Data: require('phaser/src/data'),
 		Display: { Masks: require('phaser/src/display/mask') },
+		// DOM: require('phaser/src/dom'),
 		Events: require('phaser/src/events'),
 		Game: require('phaser/src/core/Game'),
 		GameObjects: {
@@ -41,6 +47,7 @@ const Phaser = Extend(
 			},
 			// Particles: require('phaser/src/gameobjects/particles'),
 		},
+		// Geom: require('phaser/src/geom'),
 		Input: require('phaser/src/input'),
 		Loader: {
 			FileTypes: {
@@ -74,15 +81,19 @@ const Phaser = Extend(
 		// 	RadToDeg: require('phaser/src/math/RadToDeg'),
 		// 	Vector2: require('phaser/src/math/Vector2'),
 		// },
+		// Physics: require('phaser/src/physics'),
 		Plugins: require('phaser/src/plugins'),
 		// Renderer: require('phaser/src/renderer'),
+		Scale: require('phaser/src/scale'),
 		Scene: require('phaser/src/scene/Scene'),
 		Scenes: require('phaser/src/scene'),
 		// Sound: require('phaser/src/sound'),
 		// Structs: require('phaser/src/structs'),
 		// Textures: require('phaser/src/textures'),
+		// Tilemaps: require('phaser/src/tilemaps'),
 		// Time: require('phaser/src/time'),
 		// Tweens: require('phaser/src/tweens'),
+		// Utils: require('phaser/src/utils'),
 	},
 	CONST,
 );
