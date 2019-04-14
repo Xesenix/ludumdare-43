@@ -11,6 +11,7 @@ import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
 import { defaultI18nState, I18nModule, i18nReducer, II18nState } from 'lib/i18n';
 import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
+import { ServiceWorkerModule } from 'lib/service-worker';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
 import { defaultUIState, IUIState, UIModule, uiReducer } from 'lib/ui';
@@ -68,6 +69,8 @@ export class AppModule extends Container implements IApplication {
 
 		// event manager
 		this.bind<IEventEmitter>('event-manager').toConstantValue(this.eventManager);
+
+		ServiceWorkerModule.register();
 
 		// load modules
 
