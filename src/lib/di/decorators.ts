@@ -42,8 +42,9 @@ export function injectable(): any {
  * @param shouldResolve if true will try resolve factory result from DIC else will return result of factory without further modifications
  * @returns provider function
  */
-export function createProvider(key, dependencies, factory, shouldResolve = true) {
-	return memoize(({ container }: ii.Context) => async () => {
+export function createProvider(key, dependencies, factory, shouldResolve = true, cache = true) {
+	const cacheResult = cache ? memoize : (cb) => cb;
+	return cacheResult(({ container }: ii.Context) => async () => {
 		const console = container.get<Console>('debug:console:DEBUG_DI');
 		console.debug('annotation:injectDecorator', {
 			key,

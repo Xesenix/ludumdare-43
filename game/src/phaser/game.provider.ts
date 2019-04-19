@@ -50,6 +50,10 @@ export function PhaserGameProvider(context: interfaces.Context) {
 			if (!forceNew && game !== null) {
 				console.debug('PhaserGameProvider:swap parent', game);
 				parent.appendChild(game.canvas);
+				// fix canvas size after changing parent component
+				game.scale.parent = parent;
+				game.scale.getParentBounds();
+				game.scale.refresh();
 
 				return Promise.resolve(game);
 			}
@@ -144,6 +148,6 @@ export function PhaserGameProvider(context: interfaces.Context) {
 				console.debug('PhaserGameProvider:error', parent, error);
 				return Promise.reject(error);
 			}
-		}, false)(context)();
+		}, false, false)(context)();
 	};
 }

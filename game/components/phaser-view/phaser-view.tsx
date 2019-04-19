@@ -45,13 +45,11 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaser
 	public componentDidMount(): void {
 		const { di } = this.props;
 
-		if (!!di && gameContainer) {
-			if (game && game.isBooted) {
-				gameContainer.appendChild(game.canvas);
-			} else {
-				di.bind<HTMLElement | null>('phaser:container').toDynamicValue(() => gameContainer);
-				di.get<IPhaserGameProvider>('phaser:game-provider')().then((result: Phaser.Game) => (game = result));
-			}
+		if (!!di && !!gameContainer) {
+			di.bind<HTMLElement | null>('phaser:container').toDynamicValue(() => gameContainer);
+			di.get<IPhaserGameProvider>('phaser:game-provider')().then((result: Phaser.Game) => {
+				game = result;
+			});
 		}
 
 		this.bindToStore();
@@ -62,8 +60,19 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaser
 	}
 
 	public componentWillUnmount(): void {
+		const { di } = this.props;
+
 		if (this.unsubscribe) {
 			this.unsubscribe();
+		}
+
+		if (!!gameContainer) {
+			gameContainer.removeChild(game.canvas);
+			gameContainer = null;
+		}
+
+		if (!!di) {
+			di.unbind('phaser:container');
 		}
 	}
 
