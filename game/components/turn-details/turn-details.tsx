@@ -48,12 +48,12 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 
 		return (
 			<Paper className={classes.root} elevation={1}>
-				<Typography variant="headline" component="h2">
+				<Typography variant="h5" component="h2">
 					Next turn result details
 				</Typography>
 				<Grid container spacing={8}>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Villagers {consequences.population}
 						</Typography>
 						<Typography className={classes.negative} variant="caption" component="p">
@@ -64,7 +64,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 						</Typography>
 					</Grid>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Workers {consequences.workers}
 						</Typography>
 						<Typography className={classes.positive} variant="caption" component="p">
@@ -78,7 +78,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 						</Typography>
 					</Grid>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Guards {consequences.guards}
 						</Typography>
 						<Typography className={classes.positive} variant="caption" component="p">
@@ -92,7 +92,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 						</Typography>
 					</Grid>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Idle {consequences.idle}
 						</Typography>
 						<Typography className={classes.positive} variant="caption" component="p">
@@ -109,7 +109,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 						</Typography>
 					</Grid>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Children {consequences.babies}
 						</Typography>
 						<Typography className={classes.positive} variant="caption" component="p">
@@ -123,7 +123,7 @@ class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDeta
 						</Typography>
 					</Grid>
 					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subheading" component="h3">
+						<Typography variant="subtitle1" component="h3">
 							Resources {consequences.resources}
 						</Typography>
 						<Typography className={classes.positive} variant="caption" component="p">

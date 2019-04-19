@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
 // elements
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
@@ -75,27 +75,27 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 					// prettier-ignore
 					align="center"
 					className={classes.label}
-					variant="subheading"
+					variant="subtitle1"
 				>
 					{label}
 				</Typography>
 				<div className={classes.actions}>
-					<Button
+					<Fab
 						// prettier-ignore
 						className={classes.actionButton}
 						color="primary"
 						disabled={!this.canTrain()}
 						onClick={this.train}
-						variant="extendedFab"
+						variant="extended"
 					>
 						+
-					</Button>
+					</Fab>
 					<span className={classes.actionLabelContainer}>
 						<Typography
 							// prettier-ignore
 							className={classes.actionLabel}
 							component="span"
-							variant="title"
+							variant="h6"
 						>
 							{trained}
 						</Typography>
@@ -108,16 +108,16 @@ class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps &
 							{__(`+/-%{step} hold ctrl/alt`, { step })}
 						</Typography>
 					</span>
-					<Button
+					<Fab
 						// prettier-ignore
 						className={classes.actionButton}
 						color="primary"
 						disabled={!this.canRelease()}
 						onClick={this.release}
-						variant="extendedFab"
+						variant="extended"
 					>
 						-
-					</Button>
+					</Fab>
 				</div>
 			</div>
 		);

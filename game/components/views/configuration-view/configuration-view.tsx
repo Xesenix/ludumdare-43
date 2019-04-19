@@ -2,6 +2,7 @@ import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
+import Loadable from 'react-loadable';
 import { Store } from 'redux';
 
 // elements
@@ -10,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
@@ -29,7 +31,8 @@ import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 
 import { styles } from './configuration-view.styles';
 
-import LanguageSelectorComponent from '../language-selector/language-selector';
+const Loader = () => <LinearProgress />;
+const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/language-selector/language-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewProps {}
@@ -119,10 +122,10 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 
 		return (
 			<form className={classes.root}>
-				<Typography variant="headline" component="h1">
+				<Typography variant="h5" component="h1" className={classes.section}>
 					{__('Sound configuration')}
 				</Typography>
-				<Grid container spacing={0} alignItems="stretch" component="section">
+				<Grid container spacing={0} alignItems="stretch" component="section" className={classes.section}>
 					<Grid item xs={6} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
@@ -177,10 +180,10 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 						</Grid>
 					</Grid>
 				</Grid>
-				<Typography variant="headline" component="h1">
+				<Typography variant="h5" component="h1" className={classes.section}>
 					{__('User interface configuration')}
 				</Typography>
-				<Grid item xs={12} container component="section">
+				<Grid item xs={12} container component="section" className={classes.section}>
 					<FormControl className={classes.formControl}>
 						<InputLabel>{__('language')}</InputLabel>
 						<LanguageSelectorComponent view={this.renderLanguageSelector}/>

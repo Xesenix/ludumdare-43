@@ -76,12 +76,12 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 		return (
 			<Grid className={classes.root} container spacing={8}>
 				<Grid item xs={12}>
-					<Typography variant="display1" component="h3">
+					<Typography variant="h4" component="h3">
 						{__(`Buildings`)}:
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Typography variant="title" component="h4">
+					<Typography variant="h6" component="h4">
 						{__(`Wall lvl %{wallLevel}`, { wallLevel })}
 					</Typography>
 					{compact ? null : (
@@ -95,7 +95,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 					<Button
 						// prettier-ignore
 						color="secondary"
-						variant="raised"
+						variant="contained"
 						disabled={disabled || !canBuildWalls(currentState)(1)}
 						onClick={this.buildWall}
 					>
@@ -104,7 +104,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 				</Grid>
 
 				<Grid item xs={12}>
-					<Typography variant="title" component="h4">
+					<Typography variant="h6" component="h4">
 						{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
 					</Typography>
 					{compact ? null : (
@@ -118,7 +118,7 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 					<Button
 						// prettier-ignore
 						color="secondary"
-						variant="raised"
+						variant="contained"
 						disabled={disabled || !canBuildCottages(currentState)(1)}
 						onClick={this.buildCottage}
 					>

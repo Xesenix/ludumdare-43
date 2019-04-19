@@ -21,10 +21,14 @@ const configureWebpack = (config) => {
 	const packageConfig = application.getPackageConfig();
 	const appConfig = application.extractAppConfig();
 
-	config.entry.sw = path.resolve('./game/sw.js');
+	// config.entry.sw = path.resolve('./game/sw.js');
 
 	config.output.filename = '[name].js';
 	config.output.chunkFilename = '[name].js';
+
+	// handle SPA routing redirecting any path to root index.html
+	// config.output.publicPath = '/';
+	config.devServer.historyApiFallback = true;
 
 	config.plugins.push(new webpackBase.ProgressPlugin());
 

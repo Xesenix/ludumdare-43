@@ -7,8 +7,8 @@ import Loadable from 'react-loadable';
 import { Store } from 'redux';
 
 // elements
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -56,7 +56,17 @@ import {
 	II18nPluralTranslation,
 	II18nTranslation,
 } from 'lib/i18n';
-import { styles } from './game-ui.styles';
+
+import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
+import EventWidgetComponent from 'components/event-widget/event-widget';
+import PhaserViewComponent from 'components/phaser-view/phaser-view';
+import SacrificesWidgetComponent from 'components/sacrifices-widget/sacrifices-widget';
+import StatusWidgetComponent from 'components/status-widget/status-widget';
+import TrainWidgetComponent from 'components/train-widget/train-widget';
+// import TurnDetailsComponent from 'components/turn-details/turn-details';
+import UnitsWidgetComponent from 'components/units-widget/units-widget';
+
+import { styles } from './game-view.styles';
 
 const Loader = () => (
 	<Grid container style={{ justifyContent: 'center' }}>
@@ -64,22 +74,13 @@ const Loader = () => (
 	</Grid>
 );
 
-const BuildingsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../buildings-widget/buildings-widget') });
-const EventWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../event-widget/event-widget') });
-const PhaserViewComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../phaser-view/phaser-view') });
-const SacrificesWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../sacrifices-widget/sacrifices-widget') });
-const StatusWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../status-widget/status-widget') });
-const TrainWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../train-widget/train-widget') });
-// const TurnDetailsComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../turn-details/turn-details') });
-const UnitsWidgetComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../units-widget/units-widget') });
-
 /** Component public properties required to be provided by parent component. */
-export interface IGameUIProps {
+export interface IGameViewProps {
 	compact: boolean;
 }
 
 /** Internal component properties include properties injected via dependency injection. */
-interface IGameUIInternalProps {
+interface IGameViewInternalProps {
 	__: II18nTranslation;
 	_$: II18nPluralTranslation;
 	di?: Container;
@@ -88,7 +89,7 @@ interface IGameUIInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<IGameUIProps, IGameUIInternalProps>({
+const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
@@ -107,11 +108,11 @@ const diDecorator = connectToInjector<IGameUIProps, IGameUIInternalProps>({
 });
 
 /** Internal component state. */
-interface IGameUIState {
+interface IGameViewState {
 	currentState: IGameState | null;
 }
 
-class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternalProps & WithStyles<typeof styles>, IGameUIState> {
+class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewInternalProps & WithStyles<typeof styles>, IGameViewState> {
 	private unsubscribeDataStore?: any;
 	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
@@ -151,16 +152,16 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 
 		const restartBlock = (
 			<Grid item xs={12} style={{ padding: '24px', textAlign: 'center' }}>
-				<Button
+				<Fab
 					// prettier-ignore
 					color="default"
-					variant="extendedFab"
+					variant="extended"
 					disabled={blockNextTurn}
 					onClick={game.resetGame}
 					size="large"
 				>
 					{__('Restart')}
-				</Button>
+				</Fab>
 			</Grid>
 		);
 
@@ -175,10 +176,10 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 						<PhaserViewComponent keepInstanceOnRemove />
 					</Grid>
 					<Grid item xs={12}>
-						<Typography variant="display1" component="h3" align="center">
+						<Typography variant="h4" component="h3" align="center">
 							{__(`Your village is safe everybody are in heaven now.`)}
 						</Typography>
-						<Typography variant="subheading" component="p" align="center">
+						<Typography variant="subtitle1" component="p" align="center">
 							{_$(
 								// prettier-ignore
 								currentState.turn,
@@ -230,7 +231,7 @@ class GameUIComponent extends React.PureComponent<IGameUIProps & IGameUIInternal
 						<PhaserViewComponent keepInstanceOnRemove />
 					</Grid>
 					<Grid item xs={12}>
-						<Typography align="center" component="h1" variant="display1">
+						<Typography align="center" component="h1" variant="h4">
 							{__(
 								// prettier-ignore
 								`Your village has perished after %{turn} years`,
@@ -352,17 +353,17 @@ Each one requires 1 resource per year to be operational if there are no enough r
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
-						<Button
+						<Fab
 							// prettier-ignore
 							color="primary"
-							variant="extendedFab"
+							variant="extended"
 							disabled={blockNextTurn}
 							onClick={this.progressToNextTurn}
 							size="large"
 						>
 							<ActionIcon />
 							{currentState.immunity ? __('Continue') : __('Defend yourself')}
-						</Button>
+						</Fab>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<SacrificesWidgetComponent
@@ -381,10 +382,10 @@ Each one requires 1 resource per year to be operational if there are no enough r
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
-						<Button
+						<Fab
 							// prettier-ignore
 							color="primary"
-							variant="extendedFab"
+							variant="extended"
 							disabled={blockNextTurn || !canMakeUltimateSacrifice(currentState)}
 							onClick={game.makeUltimateSacrificeAction}
 							size="large"
@@ -394,7 +395,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 								requiredPopulation: 1000,
 								requiredResources: 1000,
 							})}
-						</Button>
+						</Fab>
 					</Grid>
 					{compact ? null : (
 						<Grid item xs={12}>
@@ -464,4 +465,4 @@ Each one requires 1 resource per year to be operational if there are no enough r
 	}
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(GameUIComponent)));
+export default hot(module)(withStyles(styles)(diDecorator(GameViewComponent)));

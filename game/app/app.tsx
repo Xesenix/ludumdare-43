@@ -4,47 +4,44 @@ import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { Store } from 'redux';
 
 // elements
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import { defaultUIState, IUIState } from 'lib/ui';
+
+import PrimaryLayoutComponent from 'components/primary-layout/primary-layout';
 
 import { styles } from './app.styles';
 import { appThemes } from './app.themes';
 
 const Loader = () => <div>...</div>;
 
-const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game-components" */ '../components/game-view/game-view') });
+const MenuComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "menu" */ 'components/menu/menu') });
+const IntroView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view') });
+const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game" */ 'components/views/game-view/game-view') });
+const ConfigurationView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "config" */ 'components/views/configuration-view/configuration-view') });
 
 interface IAppProps {}
 
 interface IAppInternalProps {
 	di?: Container;
 	store?: Store<IUIState, any>;
-	__: II18nTranslation;
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
-	__: {
-		dependencies: ['i18n:translate'],
-	},
 });
 
 interface IAppState {
-	ready: boolean;
-	viewReady: boolean;
-	loading: boolean;
 }
 
 class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typeof styles>, IAppState & IUIState> {
@@ -54,9 +51,6 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 		super(props);
 		this.state = {
 			...defaultUIState,
-			ready: false,
-			viewReady: true,
-			loading: false,
 		};
 	}
 
@@ -75,50 +69,31 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 	}
 
 	public render() {
-		const { classes, __ } = this.props;
-		const { loading, ready, viewReady, theme = 'light' } = this.state;
+		const { fullscreen = false, theme = 'light' } = this.state;
 
-		const gameView = ready ? (
-			<GameView />
-		) : viewReady ? (
-			<Button color="primary" variant="extendedFab" onClick={this.start} size="large">
-				{__('Start')}
-			</Button>
-		) : (
-			<Typography component="p">{`${__('loading')}: please wait`}</Typography>
+		const routing = (
+			<>
+				<Route exact path="/" component={IntroView}/>
+				<Route path="/game" component={GameView}/>
+				<Route path="/config" component={ConfigurationView}/>
+			</>
 		);
 
 		return (
 			<MuiThemeProvider theme={appThemes[theme]}>
 				<CssBaseline />
-				<Paper className={classes.root} elevation={1}>
-					{loading ? <LinearProgress /> : null}
-					<Typography className={classes.title} variant="display4" component="h1" align="center">
-						The greatest sacrifice
-					</Typography>
-					<Typography className={classes.subtitle} variant="display1" component="h2" align="center">
-						Ludumdare 43 edition
-					</Typography>
-					<Typography className={classes.headline} variant="headline" component="p" align="center">
-						{__(`You are the leader of a small village in this very hostile world.`)}{' '}
-						{__(`You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own.`)}
-						<br />
-						{__(`Manage your villagers assign them to work so they can gather resources for sacrifices or village development.`)}{' '}
-						{__(`or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.`)}
-					</Typography>
-					<Button className={classes.headline} href="https://ldjam.com/events/ludum-dare/43/$126387">
-						Go to ludumdare 43 game page
-					</Button>
-					{gameView}
-				</Paper>
+				<MemoryRouter>
+					<React.StrictMode>
+					{fullscreen ? <><MenuComponent/>{routing}</> : (
+						<PrimaryLayoutComponent
+							menu={<MenuComponent/>}
+							content={routing}
+						/>
+					)}
+					</React.StrictMode>
+				</MemoryRouter>
 			</MuiThemeProvider>
 		);
-	}
-
-	private start = () => {
-		this.setState({ loading: true });
-		// TODO: wrong type definition for preload
-		(GameView.preload() as any).then(() => this.setState({ ready: true, loading: false }));
 	}
 
 	private bindToStore(): void {

@@ -4,9 +4,10 @@ export const appThemes = {
 	light: createMuiTheme({
 		typography: {
 			htmlFontSize: 16,
-			display4: {
+			h1: {
 				fontWeight: 'bold',
 			},
+			useNextVariants: true,
 		},
 		palette: {
 			type: 'light',
@@ -27,6 +28,7 @@ export const appThemes = {
 	dark: createMuiTheme({
 		typography: {
 			htmlFontSize: 16,
+			useNextVariants: true,
 		},
 		palette: {
 			type: 'dark',

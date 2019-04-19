@@ -131,12 +131,13 @@ export class AppModule extends Container implements IApplication {
 
 					const container = this.get<HTMLElement>('ui:root');
 
-					ReactDOM.render(
-						<DIContext.Provider value={this}>
-							<App />
-						</DIContext.Provider>,
-						container,
-					);
+					ReactDOM.render((
+							<DIContext.Provider value={this}>
+								<App />
+							</DIContext.Provider>
+						),
+							container,
+						);
 					// ReactDOM.render(<App/>, container);
 
 					return this;

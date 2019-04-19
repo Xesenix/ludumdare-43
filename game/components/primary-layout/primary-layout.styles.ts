@@ -4,7 +4,7 @@ export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
 			minHeight: '600px',
-			padding: '0',
+			padding: '64px 0 0',
 		},
 		button: {
 			margin: theme.spacing.unit,

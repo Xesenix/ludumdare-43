@@ -65,7 +65,7 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 				<Typography
 					// prettier-ignore
 					className={classes.unitNameLabel}
-					variant="headline"
+					variant="h5"
 					align="center"
 				>
 					{label}
@@ -73,7 +73,7 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 				<Typography
 					// prettier-ignore
 					className={classes.unitAmountLabel}
-					variant="display2"
+					variant="h3"
 					align="center"
 				>
 					{amount}
@@ -81,7 +81,7 @@ class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnit
 						<Typography
 							// prettier-ignore
 							className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
-							variant="display1"
+							variant="h4"
 							component="span"
 						>
 							({change > 0 ? '+' : ''}

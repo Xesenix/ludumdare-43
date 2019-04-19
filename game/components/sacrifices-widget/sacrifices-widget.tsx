@@ -89,7 +89,7 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 		return (
 			<Grid className={classes.root} container spacing={8}>
 				<Grid item xs={12}>
-					<Typography variant="display1" component="h3">
+					<Typography variant="h4" component="h3">
 						{__(`Sacrifices made %{count}`, { count: sacrificeCount })}:
 					</Typography>
 					{compact ? null : (
@@ -111,7 +111,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 					)}
 				</Grid>
 				<Grid item xs={12}>
-					<Typography variant="title" component="h4">
+					<Typography variant="h6" component="h4">
 						{__(`Immunity`)}
 					</Typography>
 					{compact ? null : (
@@ -124,7 +124,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 					<Button
 						// prettier-ignore
 						color="secondary"
-						variant="raised"
+						variant="contained"
 						disabled={disabled || !canSacraficeForImmunity(currentState)}
 						onClick={game.sacrificeResourcesForImmunityAction}
 						size="small"
@@ -134,7 +134,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 				</Grid>
 
 				<Grid item xs={12}>
-					<Typography variant="title" component="h4">
+					<Typography variant="h6" component="h4">
 						{__(`Weakness lvl %{weaknessLevel}`, { weaknessLevel })}
 					</Typography>
 					{compact ? null : (
@@ -159,7 +159,7 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 					/>
 					<Button
 						color="secondary"
-						variant="raised"
+						variant="contained"
 						disabled={disabled || !canSacraficeForEnemiesWeakness(currentState)}
 						onClick={game.sacrificeIdlesForEnemiesWeaknessAction}
 						size="small"

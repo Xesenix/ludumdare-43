@@ -79,7 +79,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 						// prettier-ignore
 						className={classes.sacrificeTitle}
 						component="p"
-						variant="display1"
+						variant="h4"
 					>
 						{__(`You have prevented attack with resource sacrifice.`)}
 					</Typography>
@@ -92,7 +92,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 						// prettier-ignore
 						className={classes.attackTitle}
 						component="p"
-						variant="display1"
+						variant="h4"
 					>
 						{__(`%{event} attack power %{attackPower}`, {
 							event,
@@ -116,7 +116,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									// prettier-ignore
 									className={classes.powerDescription}
 									component="p"
-									variant="subheading"
+									variant="subtitle1"
 								>
 									{__(`Original power %{baseAttackPower}`, {
 										baseAttackPower: Math.floor(getBaseAttackPower(currentState)),
@@ -157,7 +157,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 									<Typography
 										// prettier-ignore
 										className={classes.label}
-										variant="headline"
+										variant="h5"
 										component="p"
 									>
 										{__(`Attack consequences`)}
@@ -168,7 +168,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 										// prettier-ignore
 										className={classes.amountDescription}
 										component="p"
-										variant="headline"
+										variant="h5"
 									>
 										{getPopulationKilledInLastTurn(consequences)}
 									</Typography>
@@ -186,7 +186,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEven
 										// prettier-ignore
 										className={classes.amountDescription}
 										component="p"
-										variant="headline"
+										variant="h5"
 									>
 										{getResourcesStolenInLastTurn(consequences)}
 									</Typography>
