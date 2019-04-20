@@ -19,6 +19,9 @@ interface ILanguageSelectorInternalProps {
 	store?: Store<II18nState>;
 }
 
+/** Internal component state. */
+interface ILanguageSelectorState {}
+
 const diDecorator = connectToInjector<ILanguageSelectorProps, ILanguageSelectorInternalProps>({
 	store: {
 		dependencies: ['data-store'],
@@ -28,9 +31,6 @@ const diDecorator = connectToInjector<ILanguageSelectorProps, ILanguageSelectorI
 		value: (actions: II18nActions) => Promise.resolve((locale) => actions.setCurrentLanguage(locale)),
 	},
 });
-
-/** Internal component state. */
-interface ILanguageSelectorState {}
 
 class LanguageSelectorComponent extends React.Component<ILanguageSelectorProps & ILanguageSelectorInternalProps, ILanguageSelectorState> {
 	constructor(props) {

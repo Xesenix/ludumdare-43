@@ -33,6 +33,7 @@ import { styles } from './configuration-view.styles';
 
 const Loader = () => <LinearProgress />;
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/language-selector/language-selector') });
+const ThemeSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/theme-selector/theme-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewProps {}
@@ -188,18 +189,33 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 						<InputLabel>{__('language')}</InputLabel>
 						<LanguageSelectorComponent view={this.renderLanguageSelector}/>
 					</FormControl>
+					<FormControl className={classes.formControl}>
+						<InputLabel>{__('theme')}</InputLabel>
+						<ThemeSelectorComponent view={this.renderThemeSelector}/>
+					</FormControl>
 				</Grid>
 			</form>
 		);
 	}
 
-	private renderLanguageSelector = (language: string, updateLanguage: any) => {
+	private renderLanguageSelector = (value: string, update: any) => {
 		const { __ } = this.props;
 		// tslint:disable:jsx-no-lambda
 		return (
-			<Select value={language} onChange={(event) => updateLanguage(event.target.value)}>
+			<Select value={value} onChange={(event) => update(event.target.value)}>
 				<MenuItem value={'en'}>{__('english')}</MenuItem>
 				<MenuItem value={'pl'}>{__('polish')}</MenuItem>
+			</Select>
+		);
+	}
+
+	private renderThemeSelector = (value: string, update: any) => {
+		const { __ } = this.props;
+		// tslint:disable:jsx-no-lambda
+		return (
+			<Select value={value} onChange={(event) => update(event.target.value)}>
+				<MenuItem value={'light'}>{__('light')}</MenuItem>
+				<MenuItem value={'dark'}>{__('dark')}</MenuItem>
 			</Select>
 		);
 	}
