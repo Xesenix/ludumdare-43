@@ -9,14 +9,12 @@ import { Store } from 'redux';
 
 // elements
 import CssBaseline from '@material-ui/core/CssBaseline';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
 
-import { connectToInjector } from 'lib/di';
-import { II18nTranslation } from 'lib/i18n';
+import { connectToInjector } from 'lib/di/context';
 import { defaultUIState, IUIState } from 'lib/ui';
 
-import PrimaryLayoutComponent from 'components/primary-layout/primary-layout';
+import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
+import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
 
 import { styles } from './app.styles';
 import { appThemes } from './app.themes';
@@ -84,7 +82,14 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 				<CssBaseline />
 				<MemoryRouter>
 					<React.StrictMode>
-					{fullscreen ? <><MenuComponent/>{routing}</> : (
+					{fullscreen
+					? (
+						<FullscreenLayoutComponent
+							menu={<MenuComponent/>}
+							content={routing}
+						/>
+					)
+					: (
 						<PrimaryLayoutComponent
 							menu={<MenuComponent/>}
 							content={routing}

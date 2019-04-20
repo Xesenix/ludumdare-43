@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 // elements
 import Button from '@material-ui/core/Button';
+import Fab, { FabProps } from '@material-ui/core/Fab';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
@@ -54,12 +55,18 @@ class IntroViewComponent extends React.Component<IIntroViewProps & IIntroViewInt
 				<Button className={classes.h5} href="https://ldjam.com/events/ludum-dare/43/$126387">
 					{__( `Go to ludumdare 43 game page` )}
 				</Button>
-				<Button className={classes.h5} component={RouterLink} to="/game">
+				<Fab
+					component={this.renderGameLink}
+					className={classes.h5}
+					variant="extended"
+				>
 					{__( `Play` )}
-				</Button>
+				</Fab>
 			</Paper>
 		);
 	}
+
+	private renderGameLink = (props: FabProps) => <RouterLink to="/game" {...props}/>;
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(IntroViewComponent)));

@@ -61,14 +61,23 @@ class PrimaryLayoutComponent extends React.Component<IPrimaryLayoutProps & IPrim
 							<Toolbar>
 								<Hidden xsDown>{menu}</Hidden>
 								<Hidden smUp>
-									<Button color="primary" variant="extended" className={classes.button} onClick={this.toggleDrawer}>
-										<MenuIcon />
+									<Button
+										className={classes.button}
+										color="primary"
+										onClick={this.toggleDrawer}
+										variant="extendedFab"
+									>
+										<MenuIcon/>
 									</Button>
 								</Hidden>
 							</Toolbar>
-							{loading ? <LinearProgress /> : null}
+							{loading ? <LinearProgress/> : null}
 						</AppBar>
-						<Drawer anchor="left" open={this.state.drawer} onClose={this.toggleDrawer}>
+						<Drawer
+							anchor="left"
+							onClose={this.toggleDrawer}
+							open={this.state.drawer}
+						>
 							{menu}
 						</Drawer>
 						{content}

@@ -24,6 +24,11 @@ export const appThemes = {
 				contrastText: '#ffffff',
 			},
 		},
+		layout: {
+			container: {
+				width: '1200px',
+			},
+		},
 	}),
 	dark: createMuiTheme({
 		typography: {
@@ -43,6 +48,11 @@ export const appThemes = {
 				main: '#8030a0',
 				dark: '#602080',
 				contrastText: '#ffffff',
+			},
+		},
+		layout: {
+			container: {
+				width: '1200px',
 			},
 		},
 	}),

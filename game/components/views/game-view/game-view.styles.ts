@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core';
 export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
-			maxWidth: '800px',
+			maxWidth: theme.layout.container.width,
 			margin: '24px auto 24px',
 			padding: '16px',
 		},

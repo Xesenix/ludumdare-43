@@ -89,6 +89,11 @@ interface IGameViewInternalProps {
 	store?: Store<any, any>;
 }
 
+/** Internal component state. */
+interface IGameViewState {
+	currentState: IGameState | null;
+}
+
 const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	store: {
 		dependencies: ['data-store'],
@@ -106,11 +111,6 @@ const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 		dependencies: ['game'],
 	},
 });
-
-/** Internal component state. */
-interface IGameViewState {
-	currentState: IGameState | null;
-}
 
 class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewInternalProps & WithStyles<typeof styles>, IGameViewState> {
 	private unsubscribeDataStore?: any;

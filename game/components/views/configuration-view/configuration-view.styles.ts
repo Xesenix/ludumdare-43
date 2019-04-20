@@ -33,7 +33,7 @@ export const styles = (theme: Theme) =>
 		},
 		section: {
 			padding: '24px 0',
-			maxWidth: '800px',
+			maxWidth: theme.layout.container.width,
 			margin: '0 auto',
 		},
 	});
