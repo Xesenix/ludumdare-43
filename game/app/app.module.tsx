@@ -86,10 +86,6 @@ export class AppModule extends Container implements IApplication {
 
 		// rendering DOM - from outside of react
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
-		// this.bind<React.ComponentFactory<any, any>>('ui:outlet-component').toConstantValue(React.createFactory(OutletComponent));
-		// this.bind<IRenderer>('ui:renderer')
-		// 	.to(ReactRenderer)
-		// 	.inSingletonScope();
 
 		// ui
 		UIModule.register(this);
@@ -136,8 +132,8 @@ export class AppModule extends Container implements IApplication {
 								<App />
 							</DIContext.Provider>
 						),
-							container,
-						);
+						container,
+					);
 					// ReactDOM.render(<App/>, container);
 
 					return this;

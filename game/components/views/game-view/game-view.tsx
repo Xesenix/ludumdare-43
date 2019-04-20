@@ -144,7 +144,14 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	}
 
 	public render(): any {
-		const { game, compact, classes, __, _$ } = this.props;
+		const {
+			// prettier-ignore
+			game,
+			compact,
+			classes,
+			__,
+			_$,
+		} = this.props;
 		const blockNextTurn = false;
 
 		const currentState = game.getState();

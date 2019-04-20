@@ -81,7 +81,7 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 			<MuiThemeProvider theme={appThemes[theme]}>
 				<CssBaseline />
 				<MemoryRouter>
-					<React.StrictMode>
+					{/* <React.StrictMode> */}
 					{fullscreen
 					? (
 						<FullscreenLayoutComponent
@@ -95,7 +95,7 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 							content={routing}
 						/>
 					)}
-					</React.StrictMode>
+					{/* </React.StrictMode> */}
 				</MemoryRouter>
 			</MuiThemeProvider>
 		);

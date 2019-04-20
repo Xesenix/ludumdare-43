@@ -155,20 +155,20 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 				</Fab> */}
 				<Fab
 					// prettier-ignore
-					color="primary"
-					variant="extended"
 					className={classes.button}
+					color="primary"
 					onClick={this.toggleMute}
+					variant="extended"
 				>
 					{mute ? <MuteOnIcon className={classes.extendedIcon} /> : <MuteOffIcon className={classes.extendedIcon} />}
 					{__('Mute')}
 				</Fab>
 				<Fab
 					// prettier-ignore
-					color={compact ? 'secondary' : 'default'}
-					variant="extended"
 					className={classes.button}
+					color={compact ? 'secondary' : 'default'}
 					onClick={this.toggleCompactMode}
+					variant="extended"
 				>
 					{__('Compact')}
 				</Fab>
@@ -185,7 +185,6 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 	private toggleFullScreen = (): void => {
 		const { dispatchSetFullscreenAction, store } = this.props;
 		const { fullscreen = false } = store ? store.getState() : {};
-		console.log('toggleFullScreen', fullscreen);
 		dispatchSetFullscreenAction(!fullscreen);
 	}
 
