@@ -39,6 +39,9 @@ export class I18nModule {
 
 		app.bind<ICreateSetAction<LanguageType>>('data-store:action:create:set-current-language').toConstantValue(createSetCurrentLanguageAction);
 		app.bind<ICreateSetLanguageReadyAction>('data-store:action:create:set-language-ready').toConstantValue(createLanguageReadyAction);
+
+		// add data store keys that should be persisted between page refresh
+		app.bind<string>('data-store:persist:state').toConstantValue('language');
 	}
 
 	constructor(
@@ -48,10 +51,8 @@ export class I18nModule {
 
 	public boot = () => {
 		// TODO: consider creating provider for whole module
-		return Promise.all([
-			this.app
-				.get<II18nProvider>('i18n:provider')()
-				.then(this.app.get<II18nActionsProvider>('i18n:actions:provider')),
-		]);
+		return this.app
+			.get<II18nProvider>('i18n:provider')()
+			.then(this.app.get<II18nActionsProvider>('i18n:actions:provider'));
 	}
 }

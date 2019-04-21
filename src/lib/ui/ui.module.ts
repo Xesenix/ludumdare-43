@@ -40,6 +40,15 @@ export class UIModule {
 		app.bind<ICreateSetAction<number>>('data-store:action:create:set-music-volume').toConstantValue(createSetMusicVolumeAction);
 		app.bind<ICreateSetAction<string>>('data-store:action:create:set-theme').toConstantValue(createSetThemeAction);
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-fullscreen').toConstantValue(createSetFullscreenAction);
+
+		// add data store keys that should be persisted between page refresh
+		app.bind<string>('data-store:persist:state').toConstantValue('effectsMuted');
+		app.bind<string>('data-store:persist:state').toConstantValue('effectsVolume');
+		app.bind<string>('data-store:persist:state').toConstantValue('musicMuted');
+		app.bind<string>('data-store:persist:state').toConstantValue('musicVolume');
+		app.bind<string>('data-store:persist:state').toConstantValue('mute');
+		app.bind<string>('data-store:persist:state').toConstantValue('theme');
+		app.bind<string>('data-store:persist:state').toConstantValue('volume');
 	}
 
 	constructor(
