@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di/context';
+import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './intro-view.styles';
 
@@ -17,6 +18,7 @@ export interface IIntroViewProps {
 }
 
 interface IIntroViewInternalProps {
+	__: II18nTranslation;
 }
 
 interface IIntroViewState {

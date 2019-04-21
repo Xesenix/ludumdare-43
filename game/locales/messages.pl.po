@@ -13,34 +13,34 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
 
-#: game/components/event-widget/event-widget.tsx:85
+#: game/components/event-widget/event-widget.tsx:97
 msgid "%{event} attack power %{attackPower}"
 msgstr "%{event} siła ataku %{attackPower}"
 
-#: game/components/train-widget/train-widget.tsx:104
+#: game/components/train-widget/train-widget.tsx:108
 msgid "+/-%{step} hold ctrl/alt"
 msgstr "+/-%{step} przytrzymaj ctrl/alt"
 
-#: game/components/game-ui/game-ui.tsx:183
+#: game/components/views/game-view/game-view.tsx:212
 msgid "and one person"
 msgid_plural "and %{sacrificedPopulation}&nbsp;people"
 msgstr[0] "oraz jedną osobę"
 msgstr[1] "oraz %{sacrificedPopulation}&nbsp;osoby"
 msgstr[2] "oraz %{sacrificedPopulation}&nbsp;osób"
 
-#: game/components/event-widget/event-widget.tsx:144
+#: game/components/event-widget/event-widget.tsx:163
 msgid "Attack consequences"
 msgstr "Konsekwencje ataku"
 
-#: game/src/phaser/scene/intro.scene.ts:124
+#: game/src/phaser/scene/intro.scene.ts:128
 msgid "audio time"
 msgstr "czas dzwięku"
 
-#: game/components/game-view/game-view.tsx:124
+#: game/components/menu/menu.tsx:136
 msgid "Back"
 msgstr "Wróć"
 
-#: game/components/buildings-widget/buildings-widget.tsx:111
+#: game/components/buildings-widget/buildings-widget.tsx:112
 msgid ""
 "Build cottage (%{cottagesLevel}) (+20 max population cost "
 "%{cottagesBuildCost} resources)"
@@ -48,11 +48,11 @@ msgstr ""
 "Zbuduj chatę (%{cottagesLevel}) (+20 do limitu populacji koszt "
 "%{cottagesBuildCost} zasobów)"
 
-#: game/components/buildings-widget/buildings-widget.tsx:123
+#: game/components/buildings-widget/buildings-widget.tsx:125
 msgid "Build cottage %{cottagesBuildCost} resources"
 msgstr "Zbuduj chatę %{cottagesBuildCost}  zasobów"
 
-#: game/components/status-widget/status-widget.tsx:94
+#: game/components/status-widget/status-widget.tsx:91
 msgid "Build more cottages to increase max population."
 msgstr "Zbuduj więcej chat aby zwiększyć limit populacji wioski."
 
@@ -64,7 +64,7 @@ msgstr ""
 "Zbuduj palisadę (obecna redukcja: %{wallsReduction}) (+30 redukcji siły "
 "przeciwników koszt %{wallsBuildCost} zasobów)"
 
-#: game/components/buildings-widget/buildings-widget.tsx:101
+#: game/components/buildings-widget/buildings-widget.tsx:102
 msgid "Build wall %{wallsBuildCost} resources"
 msgstr "Zbuduj palisadę %{wallsBuildCost} zasobów"
 
@@ -72,43 +72,47 @@ msgstr "Zbuduj palisadę %{wallsBuildCost} zasobów"
 msgid "Buildings"
 msgstr "Budynki"
 
-#: game/components/event-widget/event-widget.tsx:160
+#: game/components/event-widget/event-widget.tsx:181
 msgid "casualties"
 msgstr "zabici"
 
-#: game/components/game-ui/game-ui.tsx:256
+#: game/components/views/game-view/game-view.tsx:306
 msgid "Children"
 msgstr "Dzieci"
 
-#: game/components/game-view/game-view.tsx:146
+#: game/components/menu/menu.tsx:172
 msgid "Compact"
 msgstr "Tryb kompaktowy"
 
-#: game/components/game-view/game-view.tsx:130
+#: game/components/menu/menu.tsx:123
 msgid "Configuration"
 msgstr "Konfiguracja"
 
-#: game/components/game-ui/game-ui.tsx:319
+#: game/components/views/game-view/game-view.tsx:375
 msgid "Continue"
 msgstr "Kontynuuj"
 
-#: game/components/buildings-widget/buildings-widget.tsx:107
+#: game/components/buildings-widget/buildings-widget.tsx:108
 msgid "Cottage lvl %{cottagesLevel}"
 msgstr "Chata poziom %{cottagesLevel}"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:149
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:155
 msgid "Current enemy power reduction <strong>%{powerReduction}%</strong>"
 msgstr "Obecna redukcja siły przeciwników <strong>%{powerReduction}%</strong>"
 
-#: game/components/game-ui/game-ui.tsx:319
+#: game/components/views/configuration-view/configuration-view.tsx:218
+msgid "dark"
+msgstr "ciemny"
+
+#: game/components/views/game-view/game-view.tsx:375
 msgid "Defend yourself"
 msgstr "Broń się"
 
-#: game/src/phaser/scene/intro.scene.ts:123
+#: game/src/phaser/scene/intro.scene.ts:127
 msgid "delta time"
 msgstr "różnica czasu"
 
-#: game/components/game-ui/game-ui.tsx:276
+#: game/components/views/game-view/game-view.tsx:327
 msgid ""
 "Each one will collect 1 resource per turn. Newly trained workers will start "
 "collecting resources in next year."
@@ -116,7 +120,7 @@ msgstr ""
 "Każdy robotnik wytwarza 1&nbsp;porcje zasobów co roku. Nowo trenowani "
 "robotnicy zaczynają produkować zasoby dopiero w kolejnym roku."
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:99
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:100
 msgid ""
 "Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</"
 "strong> every turn increases cost by&nbsp;<strong>1</strong>\n"
@@ -128,19 +132,23 @@ msgstr ""
 "każdy piąty rok dodatkowo&nbsp;<strong>5</strong>.<br/>\n"
 "W kolejnym roku koszt wzrośnie do&nbsp;<strong>%{futureResourceCost}</strong>"
 
-#: game/components/configuration-view/configuration-view.tsx:193
+#: game/components/views/configuration-view/configuration-view.tsx:206
 msgid "english"
 msgstr "angielski"
 
-#: game/components/game-view/game-view.tsx:135
+#: game/components/menu/menu.tsx:149
 msgid "Fullscreen"
 msgstr "Pełny ekran"
 
-#: game/components/configuration-view/configuration-view.tsx:138
+#: game/components/views/configuration-view/configuration-view.tsx:147
 msgid "fx mute"
 msgstr "wycisz efekty"
 
-#: game/components/game-ui/game-ui.tsx:283
+#: game/components/views/intro-view/intro-view.tsx:56
+msgid "Go to ludumdare 43 game page"
+msgstr "Przejź do strony gry na portalu ludumdare"
+
+#: game/components/views/game-view/game-view.tsx:335
 msgid "Guards"
 msgstr "Strażnicy"
 
@@ -148,30 +156,34 @@ msgstr "Strażnicy"
 msgid "Hire more workers to collect more resources."
 msgstr "Zatrudnij więcej robotników by zdobywać więcej zasobów."
 
-#: game/components/game-ui/game-ui.tsx:243
+#: game/components/views/game-view/game-view.tsx:292
 msgid "Idlers"
 msgstr "Cywile"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:110
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:115
 msgid "Immunity"
 msgstr "Niewrażliwość"
 
-#: game/components/game-ui/game-ui.tsx:185
+#: game/components/views/game-view/game-view.tsx:221
 msgid "in one sacrifice."
 msgid_plural "in %{sacrificesCount} sacrifices."
 msgstr[0] "w jedym ofiarowaniu. "
 msgstr[1] "w %{sacrificesCount} ofiarowaniach."
 msgstr[2] "w %{sacrificesCount} ofiarowaniach."
 
-#: game/components/configuration-view/configuration-view.tsx:180
+#: game/components/views/configuration-view/configuration-view.tsx:189
 msgid "language"
 msgstr "język"
 
-#: game/app/app.tsx:95
-msgid "loading"
-msgstr "ładowanie"
+#: game/components/views/configuration-view/configuration-view.tsx:217
+msgid "light"
+msgstr "jasny"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:114
+#: game/components/views/intro-view/intro-view.tsx:46
+msgid "Ludumdare 43 edition"
+msgstr "Ludumdare edycja 43"
+
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:119
 msgid ""
 "Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). "
 "Enemies will ignore you in this year."
@@ -179,7 +191,7 @@ msgstr ""
 "Złóż ofiarę za niewrażliwość na atak w tym roku (%{resourceCost}&nbsp;"
 "zasobów). Przeciwnicy ominą twoją wioskę w tym roku."
 
-#: game/components/game-ui/game-ui.tsx:344
+#: game/components/views/game-view/game-view.tsx:404
 msgid ""
 "Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle "
 "population and %{requiredResources}&nbsp;resources)"
@@ -187,7 +199,7 @@ msgstr ""
 "Dokonaj ostatecznej ofiary by ocalić wszystkich (%{requiredPopulation}&nbsp;"
 "cywili oraz %{requiredResources}&nbsp;zasobów)"
 
-#: game/app/app.tsx:115
+#: game/components/views/intro-view/intro-view.tsx:52
 msgid ""
 "Manage your villagers assign them to work so they can gather resources for "
 "sacrifices or village development."
@@ -195,27 +207,27 @@ msgstr ""
 "Zarządzaj mieszkańcami wioski przydzielaj im zadania i decyduj czy zebrane "
 "przez nich zasoby poświęcisz bogom czy też wykorzystasz do rozbudowy wioski."
 
-#: game/components/configuration-view/configuration-view.tsx:124
+#: game/components/views/configuration-view/configuration-view.tsx:133
 msgid "master mute"
 msgstr "wycisz dźwięki"
 
-#: game/components/configuration-view/configuration-view.tsx:144
+#: game/components/views/configuration-view/configuration-view.tsx:153
 msgid "master volume"
 msgstr "głośność dźwięków"
 
-#: game/components/configuration-view/configuration-view.tsx:131
+#: game/components/views/configuration-view/configuration-view.tsx:140
 msgid "music mute"
 msgstr "wycisz muzykę"
 
-#: game/components/configuration-view/configuration-view.tsx:154
+#: game/components/views/configuration-view/configuration-view.tsx:163
 msgid "music volume"
 msgstr "głośność muzyki"
 
-#: game/components/game-view/game-view.tsx:143
+#: game/components/menu/menu.tsx:163
 msgid "Mute"
 msgstr "Wycisz"
 
-#: game/app/app.tsx:117
+#: game/components/views/intro-view/intro-view.tsx:53
 msgid ""
 "or leave them idle so they can multiply and sacrifice them to permanently "
 "weaken creatures disturbing this world."
@@ -224,19 +236,23 @@ msgstr ""
 "część populacji wioski w zamian za trwałe osłabienie plag nękających ten "
 "świat."
 
-#: game/components/event-widget/event-widget.tsx:106
+#: game/components/event-widget/event-widget.tsx:121
 msgid "Original power %{baseAttackPower}"
 msgstr "Oryginalna siła %{baseAttackPower}"
 
-#: game/components/configuration-view/configuration-view.tsx:194
+#: game/components/views/intro-view/intro-view.tsx:63
+msgid "Play"
+msgstr "Graj"
+
+#: game/components/views/configuration-view/configuration-view.tsx:207
 msgid "polish"
 msgstr "polski"
 
-#: game/components/status-widget/status-widget.tsx:80
+#: game/components/status-widget/status-widget.tsx:78
 msgid "Population"
 msgstr "Populacja"
 
-#: game/components/game-ui/game-ui.tsx:249
+#: game/components/views/game-view/game-view.tsx:298
 msgid ""
 "Population without occupation will produce children in rate 1 child per "
 "every 2 idle persons."
@@ -248,15 +264,15 @@ msgstr ""
 msgid "Resources"
 msgstr "Zasoby"
 
-#: game/components/event-widget/event-widget.tsx:176
+#: game/components/event-widget/event-widget.tsx:199
 msgid "resources stolen"
 msgstr "skradzione zasoby"
 
-#: game/components/game-ui/game-ui.tsx:157
+#: game/components/views/game-view/game-view.tsx:173
 msgid "Restart"
 msgstr "Restartuj"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:161
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:167
 msgid ""
 "Sacrifice %{populationCost}&nbsp;idle population (next level "
 "%{nextLevelWeaknessReduction}%)"
@@ -264,27 +280,31 @@ msgstr ""
 "Ofiaruj %{populationCost}&nbsp;cywili (kolejny poziom "
 "%{nextLevelWeaknessReduction}%)"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:126
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:132
 msgid "Sacrifice %{resourceCost}&nbsp;resources"
 msgstr "Ofiaruj %{resourceCost}&nbsp;zasobów"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:92
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:93
 msgid "Sacrifices made %{count}"
 msgstr "Liczba ofiarowań %{count}"
 
-#: game/components/configuration-view/configuration-view.tsx:118
+#: game/components/views/configuration-view/configuration-view.tsx:127
 msgid "Sound configuration"
 msgstr "Konfiguracja dźwięku"
 
-#: game/components/configuration-view/configuration-view.tsx:166
+#: game/components/views/configuration-view/configuration-view.tsx:175
 msgid "sound volume"
 msgstr "głośność efektów"
 
-#: game/app/app.tsx:92
-msgid "Start"
-msgstr "Start"
+#: game/components/views/intro-view/intro-view.tsx:43
+msgid "The greatest sacrifice"
+msgstr "Największa poświęcenie"
 
-#: game/components/game-ui/game-ui.tsx:289
+#: game/components/views/configuration-view/configuration-view.tsx:193
+msgid "theme"
+msgstr "motyw"
+
+#: game/components/views/game-view/game-view.tsx:341
 msgid ""
 "They will protect other units from being attacked and resources from being "
 "stolen.\n"
@@ -297,7 +317,7 @@ msgstr ""
 "zasobów w ciągu roku do utrzymania gdy braknie zasobów zostaną "
 "przekształceni spowrotem w cywili."
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:139
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:145
 msgid ""
 "This sacrifice permanently weakness enemies by -"
 "%{perLevelWeaknessReduction}% multiplicative for every level."
@@ -305,7 +325,7 @@ msgstr ""
 "Ta ofiara trwale osłabia siłę ataków o -%{perLevelWeaknessReduction}% "
 "multiplikatywnie za każdy poziom."
 
-#: game/components/game-ui/game-ui.tsx:262
+#: game/components/views/game-view/game-view.tsx:312
 msgid ""
 "Those young villagers will become idle population in next year (if they "
 "survive next year attack).\n"
@@ -316,23 +336,23 @@ msgstr ""
 "Są wyjątkowo wrażliwe na ataki i jeśli przeciwnicy nie znajdą wystarczająco "
 "zasobów by zaspokoić swoje grabierzcze potrzeby zaatakują dzieci."
 
-#: game/src/phaser/scene/intro.scene.ts:122
+#: game/src/phaser/scene/intro.scene.ts:126
 msgid "total time"
 msgstr "czas całkowity"
 
-#: game/components/game-ui/game-ui.tsx:305
+#: game/components/views/game-view/game-view.tsx:359
 msgid "train/release guards"
 msgstr "trenuj/zwolnij strażników"
 
-#: game/components/game-ui/game-ui.tsx:296
+#: game/components/views/game-view/game-view.tsx:349
 msgid "train/release workers"
 msgstr "trenuj/zwolnij robotników"
 
-#: game/components/configuration-view/configuration-view.tsx:176
+#: game/components/views/configuration-view/configuration-view.tsx:185
 msgid "User interface configuration"
 msgstr "Konfiguracja interfejsu użytkownika"
 
-#: game/components/game-ui/game-ui.tsx:177
+#: game/components/views/game-view/game-view.tsx:193
 msgid "Victory achieved in first year."
 msgid_plural "Victory achieved in %{turn} years."
 msgstr[0] "Zwycięstwo osiągnięte w pierwszym roku."
@@ -343,45 +363,45 @@ msgstr[2] "Zwycięstwo osiągnięte w %{turn} roku."
 msgid "Wall lvl %{wallLevel}"
 msgstr "Palisada poziom %{wallLevel}"
 
-#: game/components/event-widget/event-widget.tsx:125
+#: game/components/event-widget/event-widget.tsx:142
 msgid "wall lvl %{weaknessLvl} reduced it by %{wallsReduction}"
 msgstr "mór poziom %{weaknessLvl}  redukuje je o %{wallsReduction}"
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:132
+#: game/components/sacrifices-widget/sacrifices-widget.tsx:138
 msgid "Weakness lvl %{weaknessLevel}"
 msgstr "Słabość poziom %{weaknessLevel}"
 
-#: game/components/event-widget/event-widget.tsx:115
+#: game/components/event-widget/event-widget.tsx:131
 msgid "weakness lvl %{weaknessLvl} reduced it by %{weaknessDamageReduction}%"
 msgstr "słabość poziom %{weaknessLvl} obniża je o %{weaknessDamageReduction}%"
 
-#: game/components/game-ui/game-ui.tsx:270
+#: game/components/views/game-view/game-view.tsx:321
 msgid "Workers"
 msgstr "Robotnicy"
 
-#: game/components/status-widget/status-widget.tsx:77
+#: game/components/status-widget/status-widget.tsx:75
 msgid "Year one"
 msgid_plural "Year %{turn}"
 msgstr[0] "Rok pierwszy"
 msgstr[1] "Rok %{turn}"
 msgstr[2] "Rok %{turn}"
 
-#: game/app/app.tsx:111
+#: game/components/views/intro-view/intro-view.tsx:49
 msgid "You are the leader of a small village in this very hostile world."
 msgstr "Jesteś przywódcą małej wioski w tym jakże wrogim świecie."
 
-#: game/components/event-widget/event-widget.tsx:73
+#: game/components/event-widget/event-widget.tsx:84
 msgid "You have prevented attack with resource sacrifice."
 msgstr "Zapobiegłeś/łaś atakowi poświęcając część zasobów."
 
-#: game/components/game-ui/game-ui.tsx:181
+#: game/components/views/game-view/game-view.tsx:203
 msgid "You have sacrificed one resource"
 msgid_plural "You have sacrificed %{sacrificedResources}&nbsp;resources"
 msgstr[0] "poświęciłeś/aś jeden zasób"
 msgstr[1] "poświęciłeś/aś %{sacrificedResources}&nbsp;zasoby"
 msgstr[2] "poświęciłeś/aś %{sacrificedResources}&nbsp;zasobów"
 
-#: game/app/app.tsx:113
+#: game/components/views/intro-view/intro-view.tsx:50
 msgid ""
 "You must decide whether you will offer sacrifices to the gods or face the "
 "dangers that plague this world on your own."
@@ -389,13 +409,19 @@ msgstr ""
 "Musisz zdecydować czy będziesz składać ofiary bogom czy stawisz czoła "
 "niebezpieczeństwom nękającym ten świat na własną rękę."
 
-#: game/components/game-ui/game-ui.tsx:203
+#: game/components/views/game-view/game-view.tsx:245
 msgid "Your village has perished after %{turn} years"
 msgstr "Twoja wioska znikneła po %{turn} latach"
 
-#: game/components/game-ui/game-ui.tsx:174
+#: game/components/views/game-view/game-view.tsx:190
 msgid "Your village is safe everybody are in heaven now."
 msgstr "Twoja wioska jest bezpieczna wszyscy odeszli w zaswiaty."
+
+#~ msgid "loading"
+#~ msgstr "ładowanie"
+
+#~ msgid "Start"
+#~ msgstr "Start"
 
 #~ msgid ""
 #~ "Victory achieved in year %{turn}.\n"
@@ -408,20 +434,11 @@ msgstr "Twoja wioska jest bezpieczna wszyscy odeszli w zaswiaty."
 #~ "oraz %{sacrificedPopulation}&nbsp;obywateli\n"
 #~ "w&nbsp;%{sacrificesCount}&nbsp;ofiarach."
 
-#~ msgid "dark"
-#~ msgstr "ciemny"
-
-#~ msgid "light"
-#~ msgstr "jasny"
-
 #~ msgid "Pause"
 #~ msgstr "Pauza"
 
 #~ msgid "PHASER 3 Game Test"
 #~ msgstr "PHASER 3 test gry"
-
-#~ msgid "theme"
-#~ msgstr "motyw"
 
 #~ msgid "Command"
 #~ msgstr "Polecenie"
