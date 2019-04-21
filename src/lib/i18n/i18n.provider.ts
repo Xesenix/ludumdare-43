@@ -18,24 +18,25 @@ import {
 const syncLocaleWithStore = (store: Store<any, any>, actions: II18nActions) => () => {
 	const { language, languages } = store.getState();
 	const localesPath = process.env.LOCALES_DIR;
-	if (!languages[language].ready) {
-		if (localesPath) {
-			// This needs to be know at build time to prepare bundles with translations.
-			return import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
-				(content) => {
-					i18n.addTranslations(language, 'messages', content);
-					i18n.setLocale(language);
-					actions.setLanguageReady(language, true);
-				},
-				(err) => Promise.reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
-			);
-		} else {
-			return Promise.reject('ERROR localesPath not set in env LOCALES_DIR');
-		}
-	} else {
+
+	if (!!languages[language] && languages[language].ready) {
 		i18n.setLocale(language);
 		return Promise.resolve();
 	}
+
+	if (!localesPath) {
+		return Promise.reject('ERROR localesPath not set in env LOCALES_DIR');
+	}
+
+	// This needs to be know at build time to prepare bundles with translations.
+	return import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
+		(content) => {
+			i18n.addTranslations(language, 'messages', content);
+			i18n.setLocale(language);
+			actions.setLanguageReady(language, true);
+		},
+		(err) => Promise.reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
+	);
 };
 
 export type II18nProvider = () => Promise<Gettext>;
@@ -52,7 +53,8 @@ export function I18nProvider({ container }: interfaces.Context) {
 		container.get<IDataStoreProvider<any, any>>('data-store:provider')(),
 		container.get<II18nActionsProvider>('i18n:actions:provider')(),
 	]).then(([store, actions]: [Store<any, any>, II18nActions]) => {
-		store.subscribe(syncLocaleWithStore(store, actions));
-		return syncLocaleWithStore(store, actions)().then(() => i18n);
+		const sync = syncLocaleWithStore(store, actions);
+		store.subscribe(sync);
+		return sync().then(() => i18n);
 	});
 }

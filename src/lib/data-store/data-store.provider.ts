@@ -1,5 +1,6 @@
 import { interfaces } from 'inversify';
 import { Action, applyMiddleware, compose, createStore, DeepPartial, Store } from 'redux';
+import { load, save } from 'redux-localstorage-simple';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
@@ -30,7 +31,35 @@ export function DataStoreProvider<T, A extends Action>(context: interfaces.Conte
 					})
 				: compose;
 
-			store = createStore<T | undefined, A, any, any>(reducer, initialState, composeEnhancers(debugRedux ? applyMiddleware(logger, thunk) : applyMiddleware(thunk)));
+			const states = [
+				'effectsMuted',
+				'effectsVolume',
+				'language',
+				'musicMuted',
+				'musicVolume',
+				'mute',
+				'theme',
+				'volume',
+			];
+
+			const namespace = 'ui';
+
+			const persist = save({
+				debounce: 1000,
+				namespace,
+				states,
+			});
+
+			store = createStore<T | undefined, A, any, any>(
+				// prettier-ignore
+				reducer,
+				load({
+					namespace,
+					preloadedState: initialState,
+					states,
+				}),
+				composeEnhancers(debugRedux ? applyMiddleware(logger, thunk, persist) : applyMiddleware(thunk, persist)),
+			);
 
 			context.container.bind<Store<T, A>>('data-store').toConstantValue(store);
 
