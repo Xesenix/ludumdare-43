@@ -52,6 +52,9 @@ interface IConfigurationViewInternalProps {
 	store?: Store<IUIState & II18nState>;
 }
 
+/** Internal component state. */
+interface IConfigurationViewState {}
+
 const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
@@ -60,37 +63,34 @@ const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationVie
 		dependencies: ['data-store'],
 	},
 	dispatchSetEffectsMutedAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setEffectsMuted(checked)),
+		dependencies: ['ui:actions@setEffectsMuted'],
+		value: (setEffectsMuted: (value: boolean) => void) => Promise.resolve((event: any, checked: boolean) => setEffectsMuted(checked)),
 	},
 	dispatchSetEffectsVolumeAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setEffectsVolume(value)),
+		dependencies: ['ui:actions@setEffectsVolume'],
+		value: (setEffectsVolume: (value: number) => void) => Promise.resolve((event: any, value: number) => setEffectsVolume(value)),
 	},
 	dispatchSetMusicMutedAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setMusicMuted(checked)),
+		dependencies: ['ui:actions@setMusicMuted'],
+		value: (setMusicMuted: (value: boolean) => void) => Promise.resolve((event: any, checked: boolean) => setMusicMuted(checked)),
 	},
 	dispatchSetMusicVolumeAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setMusicVolume(value)),
+		dependencies: ['ui:actions@setMusicVolume'],
+		value: (setMusicVolume: (value: number) => void) => Promise.resolve((event: any, value: number) => setMusicVolume(value)),
 	},
 	dispatchSetMutedAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, checked: boolean) => actions.setMuted(checked)),
+		dependencies: ['ui:actions@setMuted'],
+		value: (setMuted: (value: boolean) => void) => Promise.resolve((event: any, checked: boolean) => setMuted(checked)),
 	},
 	dispatchSetThemeAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any) => actions.setTheme(event.target.value)),
+		dependencies: ['ui:actions@setTheme'],
+		value: (setTheme: (value: string) => void) => Promise.resolve((event: any) => setTheme(event.target.value)),
 	},
 	dispatchSetVolumeAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((event: any, value: number) => actions.setVolume(value)),
+		dependencies: ['ui:actions@setVolume'],
+		value: (setVolume: (value: number) => void) => Promise.resolve((event: any, value: number) => setVolume(value)),
 	},
 });
-
-/** Internal component state. */
-interface IConfigurationViewState {}
 
 export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationViewState> {
 	constructor(props) {

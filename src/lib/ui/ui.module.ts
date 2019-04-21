@@ -16,11 +16,7 @@ import {
 	createSetThemeAction,
 	createSetVolumeAction,
 } from './actions';
-import {
-	// prettier-ignore
-	IUIActionsProvider,
-	UIActionsProvider,
-} from './ui-actions.provider';
+import { UIActionsBootProvider } from './ui-actions.provider';
 
 /**
  * Connect application fullscreen state with datastore.
@@ -29,8 +25,10 @@ export class UIModule {
 	public static register(app: IApplication) {
 		app.bind<UIModule>('ui:module').toConstantValue(new UIModule(app));
 
-		app.bind<IUIActionsProvider>('ui:actions:provider').toProvider(UIActionsProvider);
+		// define logic needed to bootstrap ui module
+		app.bind('ui:boot').toProvider(UIActionsBootProvider);
 
+		// redux action creators
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-muted').toConstantValue(createSetMutedAction);
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-music-muted').toConstantValue(createSetMusicMutedAction);
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-effects-muted').toConstantValue(createSetEffectsMutedAction);
@@ -54,10 +52,11 @@ export class UIModule {
 	constructor(
 		// prettier-ignore
 		private app: IApplication,
-	) {}
+	) {
+	}
 
 	public boot = () => {
 		// TODO: consider creating provider for whole module
-		return this.app.get<IUIActionsProvider>('ui:actions:provider')();
+		return Promise.all(this.app.getAll('ui:boot').map((provider: any) => provider()));
 	}
 }

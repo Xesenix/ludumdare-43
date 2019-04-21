@@ -56,6 +56,7 @@ import {
 	II18nPluralTranslation,
 	II18nTranslation,
 } from 'lib/i18n';
+import { IUIState } from 'ui';
 
 import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
 import EventWidgetComponent from 'components/event-widget/event-widget';
@@ -90,7 +91,7 @@ interface IGameViewInternalProps {
 }
 
 /** Internal component state. */
-interface IGameViewState {
+interface IGameViewState extends IUIState {
 	currentState: IGameState | null;
 }
 
@@ -147,11 +148,13 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 		const {
 			// prettier-ignore
 			game,
-			compact,
 			classes,
 			__,
 			_$,
 		} = this.props;
+		const {
+			compactMode,
+		} = this.state;
 		const blockNextTurn = false;
 
 		const currentState = game.getState();
@@ -255,9 +258,9 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 
 		const gameBlock = (
 			<Paper className={classes.root} elevation={0}>
-				<Grid container spacing={compact ? 8 : 24}>
+				<Grid container spacing={compactMode ? 8 : 24}>
 					<Grid item sm={12} xs={12} style={{ marginBottom: '12px' }}>
-						{compact ? null : <PhaserViewComponent keepInstanceOnRemove />}
+						{compactMode ? null : <PhaserViewComponent keepInstanceOnRemove />}
 						<EventWidgetComponent
 							// prettier-ignore
 							consequences={consequences}
@@ -268,7 +271,7 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 					<Grid item xs={12} sm={12}>
 						<StatusWidgetComponent
 							// prettier-ignore
-							compact={compact}
+							compact={compactMode}
 							population={{
 								current: getCurrentPopulation(currentState),
 								change: getCurrentPopulation(consequences) - getCurrentPopulation(currentState),
@@ -281,11 +284,11 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 							turn={currentState.turn}
 						/>
 					</Grid>
-					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
+					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							compact={compact}
+							compact={compactMode}
 							label={__('Idlers')}
 							amount={getCurrentIdles(currentState)}
 							hideActionBar={true}
@@ -295,11 +298,11 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 							{__(`Population without occupation will produce children in rate 1 child per every 2 idle persons.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
+					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							compact={compact}
+							compact={compactMode}
 							label={__('Children')}
 							amount={getCurrentChildren(currentState)}
 							hideActionBar={true}
@@ -310,11 +313,11 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
+					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							compact={compact}
+							compact={compactMode}
 							label={__('Workers')}
 							amount={getCurrentWorkers(currentState)}
 							trained={getTrainedWorkers(currentState)}
@@ -324,11 +327,11 @@ They are also most vulnerable for attacks and will die in first order if attacke
 							{__(`Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compact ? 6 : 12} sm={compact ? 3 : 6}>
+					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							compact={compact}
+							compact={compactMode}
 							label={__('Guards')}
 							amount={getCurrentGuards(currentState)}
 							trained={getTrainedGuards(currentState)}
@@ -377,7 +380,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 							// prettier-ignore
 							disabled={blockNextTurn}
 							game={game}
-							compact={compact}
+							compact={compactMode}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -385,7 +388,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 							// prettier-ignore
 							disabled={blockNextTurn}
 							game={game}
-							compact={compact}
+							compact={compactMode}
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item xs={12} justify="center">
@@ -404,7 +407,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 							})}
 						</Fab>
 					</Grid>
-					{compact ? null : (
+					{compactMode ? null : (
 						<Grid item xs={12}>
 							{/* <TurnDetailsComponent consequences={consequences}/> */}
 						</Grid>

@@ -5,11 +5,11 @@ import Loadable from 'react-loadable';
 import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
+import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
-import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
-import { Store } from 'redux';
+import { defaultUIState, IUIState } from 'ui/reducers';
 
 // elements
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -31,7 +31,6 @@ const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => impo
 
 /** Component public properties required to be provided by parent component. */
 export interface IMenuProps extends RouteComponentProps {
-
 }
 
 /** Internal component properties include properties injected via dependency injection. */
@@ -39,13 +38,12 @@ interface IMenuInternalProps {
 	__: II18nTranslation;
 	dispatchCreateSetMutedAction: (value: boolean) => void;
 	dispatchSetFullscreenAction: (value: boolean) => void;
+	dispatchCreateSetCompactModeAction: (value: boolean) => void;
 	store?: Store<IUIState>;
 }
 
 /** Internal component state. */
 interface IMenuState extends IUIState {
-	compact: boolean;
-	loading: boolean;
 }
 
 const diDecorator = connectToInjector<IMenuProps, IMenuInternalProps>({
@@ -53,12 +51,16 @@ const diDecorator = connectToInjector<IMenuProps, IMenuInternalProps>({
 		dependencies: ['i18n:translate'],
 	},
 	dispatchSetFullscreenAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((value: boolean) => actions.setFullscreen(value)),
+		dependencies: ['ui:actions@setFullscreen'],
+		value: (setFullscreen: (value: boolean) => void) => Promise.resolve(setFullscreen),
 	},
 	dispatchCreateSetMutedAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((value: boolean) => actions.setMuted(value)),
+		dependencies: ['ui:actions@setMuted'],
+		value: (setMuted: (value: boolean) => void) => Promise.resolve(setMuted),
+	},
+	dispatchCreateSetCompactModeAction: {
+		dependencies: ['ui:actions@setCompactMode'],
+		value: (setCompactMode: (value: boolean) => void) => Promise.resolve(setCompactMode),
 	},
 	store: {
 		dependencies: ['data-store'],
@@ -71,9 +73,6 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false,
-			fullscreen: false,
-			compact: false,
 			...defaultUIState,
 		};
 	}
@@ -95,7 +94,7 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 	public render(): any {
 		const {
 			// prettier-ignore
-			compact,
+			compactMode,
 		} = this.state;
 		const {
 			// prettier-ignore
@@ -166,7 +165,7 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 				<Fab
 					// prettier-ignore
 					className={classes.button}
-					color={compact ? 'secondary' : 'default'}
+					color={compactMode ? 'secondary' : 'default'}
 					onClick={this.toggleCompactMode}
 					variant="extended"
 				>
@@ -195,10 +194,9 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Wi
 	}
 
 	private toggleCompactMode = (): void => {
-		const { compact } = this.state;
-		this.setState({
-			compact: !compact,
-		});
+		const { dispatchCreateSetCompactModeAction, store } = this.props;
+		const { compactMode = false } = store ? store.getState() : {};
+		dispatchCreateSetCompactModeAction(!compactMode);
 	}
 
 	private renderLanguageSelector = (language: string, updateLanguage: any) => {

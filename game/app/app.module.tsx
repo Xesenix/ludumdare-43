@@ -15,7 +15,7 @@ import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
 import { ServiceWorkerModule } from 'lib/service-worker';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
-import { defaultUIState, IUIState, UIModule, uiReducer } from 'lib/ui';
+import { defaultUIState, IUIState, UIModule, uiReducer } from 'ui';
 
 import { initialGameState } from '../data/initial-state';
 import { PhaserGameModule } from '../src/phaser/game.module';

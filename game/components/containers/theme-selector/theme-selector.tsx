@@ -29,8 +29,8 @@ const diDecorator = connectToInjector<IThemeSelectorProps, IThemeSelectorInterna
 		dependencies: ['data-store'],
 	},
 	dispatchSetThemeAction: {
-		dependencies: ['ui:actions'],
-		value: (actions: IUIActions) => Promise.resolve((theme: string) => actions.setTheme(theme)),
+		dependencies: ['ui:actions@setTheme'],
+		value: (setTheme: (theme: string) => void) => Promise.resolve(setTheme),
 	},
 });
 

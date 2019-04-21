@@ -39,12 +39,18 @@ export function connectToInjector<T, I = any>(
 ) {
 	return (Consumer: React.ComponentType<T>) => {
 		class DIInjector extends React.Component<T & { di: Container | null }> {
+			private isMounted = false;
+
 			public componentDidMount() {
 				const { di } = this.props;
+
+				this.isMounted = true;
 
 				if (!!di) {
 					const keys = Object.keys(select);
 					const configs = Object.values<{ dependencies: string[]; value?: (...dependencies: any[]) => Promise<any> }>(select);
+
+					const nameRegexp = /\@([a-zA-Z0-9_-]+)/;
 
 					Promise.all(
 						configs.map(
@@ -52,16 +58,31 @@ export function connectToInjector<T, I = any>(
 							({
 								value = (dep: any) => Promise.resolve(dep),
 								dependencies,
-							}) => value.apply({}, dependencies.map((key) => di.get<any>(key))),
+							}) => value.apply({}, dependencies.map((key) => {
+								const nameMatch = nameRegexp.exec(key);
+								// handling keys with named dependencies like:
+								// some_key@name
+								if (!!nameMatch) {
+									key = key.replace(nameMatch[0], '');
+									return di.getNamed<any>(key, nameMatch[1]);
+								}
+								return di.get<any>(key);
+							})),
 						),
 					).then((values: any[]) => {
-						const state = values.reduce((result, value, index) => {
-							result[keys[index]] = value;
-							return result;
-						}, {});
-						this.setState(state);
+						if (this.isMounted) {
+							const state = values.reduce((result, value, index) => {
+								result[keys[index]] = value;
+								return result;
+							}, {});
+							this.setState(state);
+						}
 					});
 				}
+			}
+
+			public componentWillUnmount() {
+				this.isMounted = false;
 			}
 
 			public render() {
