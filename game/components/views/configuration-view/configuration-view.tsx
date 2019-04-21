@@ -32,8 +32,8 @@ import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 import { styles } from './configuration-view.styles';
 
 const Loader = () => <LinearProgress />;
-const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/language-selector/language-selector') });
-const ThemeSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/theme-selector/theme-selector') });
+const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
+const ThemeSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/theme-selector/theme-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewProps {}

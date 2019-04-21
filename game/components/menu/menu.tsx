@@ -12,8 +12,8 @@ import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
 import { Store } from 'redux';
 
 // elements
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab, { FabProps } from '@material-ui/core/Fab';
-import LinearProgress from '@material-ui/core/LinearProgress';
 // icons
 import ConfigIcon from '@material-ui/icons/Build';
 import FullScreenIcon from '@material-ui/icons/Fullscreen';
@@ -26,8 +26,8 @@ import MuteOffIcon from '@material-ui/icons/VolumeUp';
 
 import { styles } from './menu.styles';
 
-const Loader = () => <LinearProgress />;
-const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/language-selector/language-selector') });
+const Loader = () => <CircularProgress />;
+const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
 
 /** Component public properties required to be provided by parent component. */
 export interface IMenuProps extends RouteComponentProps {
