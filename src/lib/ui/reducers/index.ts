@@ -9,7 +9,6 @@ import {
 	SET_MUSIC_VOLUME,
 	SET_MUTED,
 	SET_PAUSED,
-	SET_THEME,
 	SET_VOLUME,
 } from '../actions';
 
@@ -21,7 +20,6 @@ export interface IUIState {
 	effectsVolume: number;
 	musicVolume: number;
 	volume: number;
-	theme: 'dark' | 'light';
 	fullscreen: boolean;
 }
 
@@ -33,7 +31,6 @@ export const defaultUIState: IUIState = {
 	effectsVolume: 1.0,
 	volume: 0.5,
 	musicVolume: 1.0,
-	theme: 'light',
 	fullscreen: false,
 };
 
@@ -86,13 +83,6 @@ export function uiReducer<S extends IUIState | undefined, A extends IValueAction
 			return {
 				...(state as any),
 				effectsVolume: value,
-			};
-		}
-		case SET_THEME: {
-			const { value } = action as IValueAction<string>;
-			return {
-				...(state as any),
-				theme: value,
 			};
 		}
 		case SET_FULLSCREEN: {

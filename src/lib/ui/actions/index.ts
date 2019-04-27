@@ -45,13 +45,6 @@ export const createSetMusicVolumeAction = (value: number): IValueAction<number> 
 	value,
 });
 
-export const SET_THEME = 'UI_SET_THEME';
-
-export const createSetThemeAction = (value: string): IValueAction<string> => ({
-	type: SET_THEME,
-	value,
-});
-
 export const SET_FULLSCREEN = 'UI_SET_FULLSCREEN';
 
 export const createSetFullscreenAction = (value: boolean): IValueAction<boolean> => ({

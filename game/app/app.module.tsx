@@ -16,9 +16,10 @@ import { ServiceWorkerModule } from 'lib/service-worker';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
 import { defaultUIState, IUIState, UIModule, uiReducer } from 'ui';
+import { PhaserGameModule } from 'phaser/game.module';
+import { ThemeModule } from 'theme';
 
 import { initialGameState } from '../data/initial-state';
-import { PhaserGameModule } from '../src/phaser/game.module';
 import App from './app';
 
 declare const process: any;
@@ -46,6 +47,9 @@ export class AppModule extends Container implements IApplication {
 		ServiceWorkerModule.register();
 
 		// load modules
+
+		// application themeing
+		ThemeModule.register(this);
 
 		// fullscreen bindings
 		FullScreenModule.register(this, document.querySelector('body') as HTMLElement);
@@ -113,8 +117,9 @@ export class AppModule extends Container implements IApplication {
 
 	public boot(): Promise<AppModule> {
 		// start all required modules
-		return this.get<I18nModule>('i18n:module')
-			.boot()
+
+		return Promise.all(this.getAll('boot').map((provider: any) => provider()))
+			.then(this.get<I18nModule>('i18n:module').boot)
 			.then(this.get<FullScreenModule>('fullscreen:module').boot)
 			.then(this.get<FullScreenModule>('ui:module').boot)
 			.then(

@@ -2,7 +2,7 @@ import { IApplication, ICreateSetAction } from 'lib/interfaces';
 import { UIModule as BaseUIModule } from 'lib/ui';
 
 import { createSetCompactModeAction } from './actions';
-import { UIActionsBootProvider } from './ui-actions.provider';
+import { UIBootProvider } from './ui-boot.provider';
 
 
 /**
@@ -14,7 +14,7 @@ export class UIModule extends BaseUIModule {
 		BaseUIModule.register(app);
 
 		// add additional bootstrap logic needed to bootstrap extended ui module
-		app.bind('ui:boot').toProvider(UIActionsBootProvider);
+		app.bind('boot').toProvider(UIBootProvider);
 
 		// redux action creators
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-compact-mode').toConstantValue(createSetCompactModeAction);

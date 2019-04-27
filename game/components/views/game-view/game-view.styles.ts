@@ -1,9 +1,12 @@
 import { createStyles, Theme } from '@material-ui/core';
 
-export const styles = (theme: Theme) =>
-	createStyles({
+import { IAppTheme } from 'theme';
+
+export const styles = (theme: Theme) => {
+	const appTheme: IAppTheme = theme as IAppTheme;
+	return createStyles({
 		root: {
-			maxWidth: theme.layout.container.width,
+			maxWidth: appTheme.layout.container.width,
 			margin: '24px auto 24px',
 			padding: '16px',
 		},
@@ -29,3 +32,4 @@ export const styles = (theme: Theme) =>
 			padding: '16px',
 		},
 	});
+};

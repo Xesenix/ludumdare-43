@@ -12,12 +12,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { connectToInjector } from 'lib/di/context';
 import { defaultUIState, IUIState } from 'lib/ui';
+import { IAppTheme } from 'theme';
 
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
 
 import { styles } from './app.styles';
-import { appThemes } from './app.themes';
 
 const Loader = () => <div>...</div>;
 
@@ -31,11 +31,15 @@ interface IAppProps {}
 interface IAppInternalProps {
 	di?: Container;
 	store?: Store<IUIState, any>;
+	getTheme: () => IAppTheme;
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	store: {
 		dependencies: ['data-store'],
+	},
+	getTheme: {
+		dependencies: ['theme:get-theme'],
 	},
 });
 
@@ -67,7 +71,8 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 	}
 
 	public render() {
-		const { fullscreen = false, theme = 'light' } = this.state;
+		const { fullscreen = false } = this.state;
+		const { getTheme } = this.props;
 
 		const routing = (
 			<>
@@ -78,7 +83,7 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 		);
 
 		return (
-			<MuiThemeProvider theme={appThemes[theme]}>
+			<MuiThemeProvider theme={getTheme()}>
 				<CssBaseline />
 				<MemoryRouter>
 					{/* <React.StrictMode> */}

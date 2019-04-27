@@ -13,10 +13,9 @@ import {
 	createSetMusicVolumeAction,
 	createSetMutedAction,
 	createSetPausedAction,
-	createSetThemeAction,
 	createSetVolumeAction,
 } from './actions';
-import { UIActionsBootProvider } from './ui-actions.provider';
+import { UIBootProvider } from './ui-boot.provider';
 
 /**
  * Connect application fullscreen state with datastore.
@@ -26,7 +25,7 @@ export class UIModule {
 		app.bind<UIModule>('ui:module').toConstantValue(new UIModule(app));
 
 		// define logic needed to bootstrap ui module
-		app.bind('ui:boot').toProvider(UIActionsBootProvider);
+		app.bind('boot').toProvider(UIBootProvider);
 
 		// redux action creators
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-muted').toConstantValue(createSetMutedAction);
@@ -36,7 +35,6 @@ export class UIModule {
 		app.bind<ICreateSetAction<number>>('data-store:action:create:set-volume').toConstantValue(createSetVolumeAction);
 		app.bind<ICreateSetAction<number>>('data-store:action:create:set-effects-volume').toConstantValue(createSetEffectsVolumeAction);
 		app.bind<ICreateSetAction<number>>('data-store:action:create:set-music-volume').toConstantValue(createSetMusicVolumeAction);
-		app.bind<ICreateSetAction<string>>('data-store:action:create:set-theme').toConstantValue(createSetThemeAction);
 		app.bind<ICreateSetAction<boolean>>('data-store:action:create:set-fullscreen').toConstantValue(createSetFullscreenAction);
 
 		// add data store keys that should be persisted between page refresh
@@ -45,18 +43,7 @@ export class UIModule {
 		app.bind<string>('data-store:persist:state').toConstantValue('musicMuted');
 		app.bind<string>('data-store:persist:state').toConstantValue('musicVolume');
 		app.bind<string>('data-store:persist:state').toConstantValue('mute');
-		app.bind<string>('data-store:persist:state').toConstantValue('theme');
 		app.bind<string>('data-store:persist:state').toConstantValue('volume');
-	}
 
-	constructor(
-		// prettier-ignore
-		private app: IApplication,
-	) {
-	}
-
-	public boot = () => {
-		// TODO: consider creating provider for whole module
-		return Promise.all(this.app.getAll('ui:boot').map((provider: any) => provider()));
 	}
 }

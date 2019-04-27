@@ -1,13 +1,16 @@
 import { createStyles, Theme } from '@material-ui/core';
 
-export const styles = (theme: Theme) =>
-	createStyles({
+import { IAppTheme } from 'theme';
+
+export const styles = (theme: Theme) => {
+	const appTheme: IAppTheme = theme as IAppTheme;
+	return createStyles({
 		root: {
 			display: 'block',
 			padding: '24px',
 		},
 		margin: {
-			margin: theme.spacing.unit,
+			margin: appTheme.spacing.unit,
 		},
 		icon: {
 			display: 'inline-flex',
@@ -15,7 +18,7 @@ export const styles = (theme: Theme) =>
 			height: '48px',
 			'justify-content': 'center',
 			'align-items': 'center',
-			color: theme.palette.text.primary,
+			color: appTheme.palette.text.primary,
 		},
 		scroll: {
 			padding: '0 24px',
@@ -23,17 +26,18 @@ export const styles = (theme: Theme) =>
 			display: 'inline-flex',
 			alignItems: 'center',
 			overflow: 'hidden',
-			[theme.breakpoints.down('sm')]: {
+			[appTheme.breakpoints.down('sm')]: {
 				height: '28px',
 			},
 		},
 		formControl: {
-			margin: theme.spacing.unit,
+			margin: appTheme.spacing.unit,
 			minWidth: 120,
 		},
 		section: {
 			padding: '24px 0',
-			maxWidth: theme.layout.container.width,
+			maxWidth: appTheme.layout.container.width,
 			margin: '0 auto',
 		},
 	});
+};
