@@ -1,8 +1,8 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
 import { EventEmitter } from 'eventemitter3';
 import { Container } from 'inversify';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Reducer } from 'redux';
 
 import { Game } from 'game/game';
 import { DataStore, IGameState } from 'game/store';
@@ -10,14 +10,14 @@ import { DataStoreModule } from 'lib/data-store';
 import { DebugModule } from 'lib/debug';
 import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
-import { defaultI18nState, I18nModule, i18nReducer, II18nState } from 'lib/i18n';
+import { defaultI18nState, I18nModule, II18nState } from 'lib/i18n';
 import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
 import { ServiceWorkerModule } from 'lib/service-worker';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
-import { defaultUIState, IUIState, UIModule, uiReducer } from 'ui';
 import { PhaserGameModule } from 'phaser/game.module';
 import { ThemeModule } from 'theme';
+import { defaultUIState, IUIState, UIModule } from 'ui';
 
 import { initialGameState } from '../data/initial-state';
 import App from './app';
@@ -65,23 +65,12 @@ export class AppModule extends Container implements IApplication {
 		this.load(PhaserGameModule(this));
 
 		// data store
-		this.load(
-			DataStoreModule<IAppState, AppAction>(
-				this,
-				{
-					...defaultUIState,
-					...defaultI18nState,
-				},
-				(state: IAppState, action: AppAction) => {
-					const console = this.get<Console>('debug:console:DEBUG_STORE');
-					console.log('reduce', state, action);
-
-					// TODO: configure store
-					state = uiReducer<IAppState, AppAction>(state, action);
-					state = i18nReducer<IAppState, AppAction>(state, action);
-					return state;
-				},
-			),
+		DataStoreModule.register<IAppState, AppAction>(
+			this,
+			{
+				...defaultUIState,
+				...defaultI18nState,
+			},
 		);
 
 		if ((window as any).__inversifyDevtools__) {

@@ -1,7 +1,10 @@
+import { Reducer } from 'redux';
+
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 import { UIModule as BaseUIModule } from 'lib/ui';
 
 import { createSetCompactModeAction } from './actions';
+import { reducer } from './reducers';
 import { UIBootProvider } from './ui-boot.provider';
 
 
@@ -21,5 +24,8 @@ export class UIModule extends BaseUIModule {
 
 		// add data store keys that should be persisted between page refresh
 		app.bind<string>('data-store:persist:state').toConstantValue('compactMode');
+
+		// add reducer from this module
+		app.bind<Reducer<any, any>>('data-store:reducers').toConstantValue(reducer);
 	}
 }

@@ -1,25 +1,19 @@
 import { IValueAction } from 'lib/interfaces';
-import {
-	defaultUIState as baseUIState,
-	IUIState as IBaseUIState,
-	uiReducer as baseReducer,
-} from 'lib/ui';
+import { defaultUIState as baseUIState } from 'lib/ui';
 
 import { SET_COMPACT_MODE } from '../actions';
-
-export interface IUIState extends IBaseUIState {
-	compactMode: boolean;
-}
+import { IUIState } from '../ui.interfaces';
 
 export const defaultUIState: IUIState = {
 	...baseUIState,
 	compactMode: false,
 };
 
-export function uiReducer<S extends IUIState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {
-	state = baseReducer(state, action);
-
+export function reducer<S extends IUIState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {
 	switch (action.type) {
+		case '@@INIT': {
+			return { ...defaultUIState, ...state };
+		}
 		case SET_COMPACT_MODE: {
 			const { value } = action as IValueAction<boolean>;
 			return {

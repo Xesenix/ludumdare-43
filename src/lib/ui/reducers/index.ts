@@ -1,27 +1,17 @@
 import { IValueAction } from 'lib/interfaces';
 
+import { IUIState } from '../ui.interfaces';
+
 import {
 	// prettier-ignore
 	SET_EFFECTS_MUTED,
 	SET_EFFECTS_VOLUME,
-	SET_FULLSCREEN,
 	SET_MUSIC_MUTED,
 	SET_MUSIC_VOLUME,
 	SET_MUTED,
 	SET_PAUSED,
 	SET_VOLUME,
 } from '../actions';
-
-export interface IUIState {
-	mute: boolean;
-	musicMuted: boolean;
-	effectsMuted: boolean;
-	paused: boolean;
-	effectsVolume: number;
-	musicVolume: number;
-	volume: number;
-	fullscreen: boolean;
-}
 
 export const defaultUIState: IUIState = {
 	mute: false,
@@ -31,11 +21,13 @@ export const defaultUIState: IUIState = {
 	effectsVolume: 1.0,
 	volume: 0.5,
 	musicVolume: 1.0,
-	fullscreen: false,
 };
 
-export function uiReducer<S extends IUIState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {
+export function reducer<S extends IUIState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {
 	switch (action.type) {
+		case '@@INIT': {
+			return { ...defaultUIState, ...state };
+		}
 		case SET_MUTED: {
 			const { value } = action as IValueAction<boolean>;
 			return {
@@ -83,13 +75,6 @@ export function uiReducer<S extends IUIState | undefined, A extends IValueAction
 			return {
 				...(state as any),
 				effectsVolume: value,
-			};
-		}
-		case SET_FULLSCREEN: {
-			const { value } = action as IValueAction<boolean>;
-			return {
-				...(state as any),
-				fullscreen: value,
 			};
 		}
 	}

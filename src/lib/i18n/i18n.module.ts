@@ -1,3 +1,5 @@
+import { Reducer } from 'redux';
+
 import {
 	// prettier-ignore
 	IApplication,
@@ -18,6 +20,7 @@ import {
 	II18nPluralTranslation,
 	II18nTranslation,
 } from './i18n.interfaces';
+import { reducer } from './reducers/index';
 
 export class I18nModule {
 	public static register(app: IApplication) {
@@ -34,5 +37,7 @@ export class I18nModule {
 		// add data store keys that should be persisted between page refresh
 		app.bind<string>('data-store:persist:state').toConstantValue('language');
 
+		// add reducer from this module
+		app.bind<Reducer<any, any>>('data-store:reducers').toConstantValue(reducer);
 	}
 }

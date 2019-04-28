@@ -27,7 +27,7 @@ import MuteOnIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
 import { II18nState, II18nTranslation } from 'lib/i18n';
-import { defaultUIState, IUIActions, IUIState } from 'lib/ui';
+import { defaultUIState, IUIState } from 'lib/ui';
 
 import { styles } from './configuration-view.styles';
 
