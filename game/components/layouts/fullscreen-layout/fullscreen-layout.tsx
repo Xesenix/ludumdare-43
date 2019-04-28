@@ -6,9 +6,8 @@ import { connectToInjector } from 'lib/di/context';
 
 // elements
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
-import Grid from '@material-ui/core/Grid';
+import Fab from '@material-ui/core/Fab';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
@@ -16,12 +15,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { IMenuItemProps, IMenuProps } from 'menu/menu';
+
 import { styles } from './fullscreen-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IFullscreenLayoutProps {
 	content: any;
-	menu: any;
+	Menu: React.ComponentType<IMenuProps>;
 	loading: boolean;
 }
 
@@ -49,7 +50,7 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps &
 		const {
 			classes,
 			content = null,
-			menu = null,
+			Menu,
 			loading = false,
 		} = this.props;
 
@@ -57,16 +58,21 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps &
 			<Paper className={classes.root} elevation={0}>
 				<AppBar position="fixed">
 					<Toolbar>
-						<Hidden xsDown>{menu}</Hidden>
+						<Hidden xsDown>
+							<Menu
+								key="fullscreen-menu"
+								MenuItem={this.renderTopMenuItem}
+							/>
+						</Hidden>
 						<Hidden smUp>
-							<Button
+							<Fab
 								className={classes.button}
 								color="primary"
 								onClick={this.toggleDrawer}
-								variant="extendedFab"
+								variant="extended"
 							>
 								<MenuIcon/>
-							</Button>
+							</Fab>
 						</Hidden>
 					</Toolbar>
 					{loading ? <LinearProgress/> : null}
@@ -76,10 +82,28 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps &
 					onClose={this.toggleDrawer}
 					open={this.state.drawer}
 				>
-					{menu}
+					<Menu
+						key="fullscreen-drawer-menu"
+						MenuItem={this.renderTopMenuItem}
+					/>
 				</Drawer>
 				{content}
 			</Paper>
+		);
+	}
+
+	private renderTopMenuItem = (props: IMenuItemProps) => {
+		const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
+		return (
+			<Fab
+				color={props.active && props.activeColor ? props.activeColor : props.color}
+				onClick={props.onClick}
+				component={props.component as any}
+				variant="extended"
+			>
+				{Icon ? <Icon/> : null}
+				{props.label}
+			</Fab>
 		);
 	}
 

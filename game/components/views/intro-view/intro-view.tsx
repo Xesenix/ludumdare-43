@@ -58,6 +58,7 @@ class IntroViewComponent extends React.Component<IIntroViewProps & IIntroViewInt
 					{__( `Go to ludumdare 43 game page` )}
 				</Button>
 				<Fab
+					color="primary"
 					component={this.renderGameLink}
 					className={classes.cta}
 					variant="extended"

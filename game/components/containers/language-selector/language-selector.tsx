@@ -4,7 +4,8 @@ import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
-import { II18nActions, II18nState } from 'lib/i18n';
+import { II18nState } from 'lib/i18n';
+import { LanguageType } from 'lib/interfaces';
 import { defaultUIState } from 'lib/ui';
 
 /** Component public properties required to be provided by parent component. */
@@ -27,8 +28,8 @@ const diDecorator = connectToInjector<ILanguageSelectorProps, ILanguageSelectorI
 		dependencies: ['data-store'],
 	},
 	dispatchSetCurrentLanguageAction: {
-		dependencies: ['i18n:actions'],
-		value: (actions: II18nActions) => Promise.resolve((locale) => actions.setCurrentLanguage(locale)),
+		dependencies: ['i18n:actions@setCurrentLanguage'],
+		value: (setCurrentLanguage: (locale: LanguageType) => void) => Promise.resolve(setCurrentLanguage),
 	},
 });
 

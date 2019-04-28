@@ -31,7 +31,6 @@ export const styles = (theme: Theme) => {
 			fontSize: 'calc(.75em + 1vw)',
 		},
 		cta: {
-			...theme.typography.body1,
 			padding: '0 24px',
 		},
 	});

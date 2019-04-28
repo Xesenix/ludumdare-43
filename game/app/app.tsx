@@ -90,13 +90,13 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 					{fullscreen
 					? (
 						<FullscreenLayoutComponent
-							menu={<MenuComponent/>}
+							Menu={MenuComponent}
 							content={routing}
 						/>
 					)
 					: (
 						<PrimaryLayoutComponent
-							menu={<MenuComponent/>}
+							Menu={MenuComponent}
 							content={routing}
 						/>
 					)}
