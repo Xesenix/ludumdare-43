@@ -12,7 +12,7 @@ import { ThemesProvider } from './themes.provider';
 export class ThemeModule {
 	public static register(app: IApplication) {
 
-		// define logic needed to bootstrap ui module
+		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(ThemeBootProvider);
 
 		// available application themes

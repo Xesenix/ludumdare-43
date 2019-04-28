@@ -119,9 +119,6 @@ export class AppModule extends Container implements IApplication {
 		// start all required modules
 
 		return Promise.all(this.getAll('boot').map((provider: any) => provider()))
-			.then(this.get<I18nModule>('i18n:module').boot)
-			.then(this.get<FullScreenModule>('fullscreen:module').boot)
-			.then(this.get<FullScreenModule>('ui:module').boot)
 			.then(
 				() => {
 					this.banner();

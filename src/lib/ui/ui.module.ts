@@ -22,9 +22,7 @@ import { UIBootProvider } from './ui-boot.provider';
  */
 export class UIModule {
 	public static register(app: IApplication) {
-		app.bind<UIModule>('ui:module').toConstantValue(new UIModule(app));
-
-		// define logic needed to bootstrap ui module
+		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(UIBootProvider);
 
 		// redux action creators
