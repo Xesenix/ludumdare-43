@@ -14,14 +14,19 @@ export const DIContext = React.createContext<Container | null>(null);
  * @returns component with injected DI container property under `di` property
  */
 export function connectToDI<T>(Consumer: React.ComponentType<T & { di: Container | null }>) {
-	class DIConsumer extends React.Component<T, {}> {
+	class DIContainerConsumer extends React.Component<T, {}> {
 		public render() {
 			return <DIContext.Consumer>{(container: Container | null) => <Consumer {...this.props} di={container} />}</DIContext.Consumer>;
 		}
 	}
 
-	return DIConsumer;
+	// changes name for debuging
+	(DIContainerConsumer as any).displayName = 'DIContainer.Consumer';
+
+	return DIContainerConsumer;
 }
+
+const componentNameRegexp = /function ([a-zA-Z0-9_]+)\(/;
 
 /**
  * Map dependencies from DI container into component properties.
@@ -38,6 +43,10 @@ export function connectToInjector<T, I = any>(
 	Preloader: React.FunctionComponent = () => <>loading...</>,
 ) {
 	return (Consumer: React.ComponentType<T>) => {
+		const keys = Object.keys(select);
+		const [ , decoratedComponentNameMatch = '' ] = componentNameRegexp.exec(Consumer.toString()) || [];
+		const className = `DI.Injector(${decoratedComponentNameMatch})`;
+
 		class DIInjector extends React.Component<T & { di: Container | null }> {
 			private isMounted = false;
 
@@ -47,10 +56,10 @@ export function connectToInjector<T, I = any>(
 				this.isMounted = true;
 
 				if (!!di) {
-					const keys = Object.keys(select);
 					const configs = Object.values<{ dependencies: string[]; value?: (...dependencies: any[]) => Promise<any> }>(select);
 
 					const nameRegexp = /\@([a-zA-Z0-9_-]+)/;
+					const callRegexp = /(\(\))$/;
 
 					Promise.all(
 						configs.map(
@@ -60,16 +69,30 @@ export function connectToInjector<T, I = any>(
 								dependencies,
 							}) => value.apply({}, dependencies.map((key) => {
 								const nameMatch = nameRegexp.exec(key);
+								const callMatch = callRegexp.exec(key);
+								const callable = !!callMatch;
+								let injection: any;
+
+								// handling keys with call signature:
+								// some_key()
+								if (!!callMatch) {
+									key = key.replace(callMatch[0], '');
+								}
+
 								// handling keys with named dependencies like:
 								// some_key@name
 								if (!!nameMatch) {
 									key = key.replace(nameMatch[0], '');
-									return di.getNamed<any>(key, nameMatch[1]);
+									injection = di.getNamed<any>(key, nameMatch[1]);
+								} else {
+									injection = di.get<any>(key);
 								}
-								return di.get<any>(key);
+
+								return callable ? injection() : injection;
 							})),
 						),
-					).then((values: any[]) => {
+					)
+					.then((values: any[]) => {
 						if (this.isMounted) {
 							const state = values.reduce((result, value, index) => {
 								result[keys[index]] = value;
@@ -87,12 +110,17 @@ export function connectToInjector<T, I = any>(
 
 			public render() {
 				if (!!this.state) {
+					console.log('DI:render', this.state, className);
+
 					return <Consumer {...this.props} {...this.state} />;
 				}
 
 				return <Preloader />;
 			}
 		}
+
+		// changes name for debuging
+		(DIInjector as any).displayName = className;
 
 		return connectToDI<T>(DIInjector) as React.ComponentType<T>;
 	};
