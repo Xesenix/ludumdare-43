@@ -1,3 +1,4 @@
+import { INITIALIZE } from 'lib/data-store';
 import { IValueAction, LanguageType } from 'lib/interfaces';
 
 import { I18nAction, II18nState } from '../i18n.interfaces';
@@ -16,7 +17,7 @@ export const defaultI18nState: II18nState = {
 
 export function reducer<S extends II18nState | undefined, A extends I18nAction>(state: S = defaultI18nState as S, action: A): S {
 	switch (action.type) {
-		case '@@INIT': {
+		case INITIALIZE: {
 			return { ...defaultI18nState, ...state };
 		}
 		case SET_CURRENT_LANGUAGE: {

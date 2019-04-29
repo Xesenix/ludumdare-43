@@ -1,3 +1,4 @@
+import { INITIALIZE } from 'lib/data-store';
 import { IValueAction } from 'lib/interfaces';
 
 import { IFullscreenState } from '../fullscreen.interfaces';
@@ -13,7 +14,7 @@ export const defaultFullscreenState: IFullscreenState = {
 
 export function reducer<S extends IFullscreenState | undefined, A extends IValueAction<any>>(state: S = defaultFullscreenState as S, action: A): S {
 	switch (action.type) {
-		case '@@INIT': {
+		case INITIALIZE: {
 			return { ...defaultFullscreenState, ...state };
 		}
 		case SET_FULLSCREEN: {

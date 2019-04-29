@@ -1,3 +1,4 @@
+import { INITIALIZE } from 'lib/data-store';
 import { IValueAction } from 'lib/interfaces';
 
 import { IUIState } from '../ui.interfaces';
@@ -25,7 +26,7 @@ export const defaultUIState: IUIState = {
 
 export function reducer<S extends IUIState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {
 	switch (action.type) {
-		case '@@INIT': {
+		case INITIALIZE: {
 			return { ...defaultUIState, ...state };
 		}
 		case SET_MUTED: {

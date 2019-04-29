@@ -22,7 +22,6 @@ export function FullscreenBootProvider({ container }: interfaces.Context) {
 			onFullScreenChange(() => {
 				const { fullscreen } = store.getState();
 				const currentFullScreenState: boolean = isFullScreen();
-				console.trace('onFullScreenChange', fullscreen, currentFullScreenState);
 
 				if (fullscreen !== currentFullScreenState) {
 					setFullScreenAction(currentFullScreenState);
@@ -36,9 +35,7 @@ export function FullscreenBootProvider({ container }: interfaces.Context) {
 			store.subscribe(() => {
 				const { fullscreen } = store.getState();
 				const currentFullScreenState: boolean = isFullScreen();
-				console.log('DATA STORE SUBSCRIBE', fullscreen, currentFullScreenState);
 
-				// TODO: FIX undefined
 				if (fullscreen !== currentFullScreenState) {
 					setFullscreen(fullscreen, container.get<HTMLElement>('ui:fullscreen-root'));
 				}
