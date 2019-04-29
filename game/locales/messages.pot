@@ -24,7 +24,7 @@ msgstr ""
 msgid "audio time"
 msgstr ""
 
-#: game/components/menu/menu.tsx:136
+#: game/components/menu/menu.tsx:145
 msgid "Back"
 msgstr ""
 
@@ -60,11 +60,11 @@ msgstr ""
 msgid "Children"
 msgstr ""
 
-#: game/components/menu/menu.tsx:172
+#: game/components/menu/menu.tsx:175
 msgid "Compact"
 msgstr ""
 
-#: game/components/menu/menu.tsx:123
+#: game/components/menu/menu.tsx:135
 msgid "Configuration"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgstr ""
 msgid "english"
 msgstr ""
 
-#: game/components/menu/menu.tsx:149
+#: game/components/menu/menu.tsx:157
 msgid "Fullscreen"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "fx mute"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:56
+#: game/components/views/intro-view/intro-view.tsx:58
 msgid "Go to ludumdare 43 game page"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 msgid "light"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:46
+#: game/components/views/intro-view/intro-view.tsx:48
 msgid "Ludumdare 43 edition"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:52
+#: game/components/views/intro-view/intro-view.tsx:54
 msgid "Manage your villagers assign them to work so they can gather resources for sacrifices or village development."
 msgstr ""
 
@@ -181,11 +181,11 @@ msgstr ""
 msgid "music volume"
 msgstr ""
 
-#: game/components/menu/menu.tsx:163
+#: game/components/menu/menu.tsx:167
 msgid "Mute"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:53
+#: game/components/views/intro-view/intro-view.tsx:55
 msgid "or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world."
 msgstr ""
 
@@ -193,7 +193,7 @@ msgstr ""
 msgid "Original power %{baseAttackPower}"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:63
+#: game/components/views/intro-view/intro-view.tsx:66
 msgid "Play"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr ""
 msgid "sound volume"
 msgstr ""
 
-#: game/components/views/intro-view/intro-view.tsx:43
+#: game/components/views/intro-view/intro-view.tsx:45
 msgid "The greatest sacrifice"
 msgstr ""
 
@@ -313,7 +313,7 @@ msgid_plural "Year %{turn}"
 msgstr[0] ""
 msgstr[1] ""
 
-#: game/components/views/intro-view/intro-view.tsx:49
+#: game/components/views/intro-view/intro-view.tsx:51
 msgid "You are the leader of a small village in this very hostile world."
 msgstr ""
 
@@ -327,7 +327,7 @@ msgid_plural "You have sacrificed %{sacrificedResources}&nbsp;resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: game/components/views/intro-view/intro-view.tsx:50
+#: game/components/views/intro-view/intro-view.tsx:52
 msgid "You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own."
 msgstr ""
 

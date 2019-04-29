@@ -110,8 +110,6 @@ export function connectToInjector<T, I = any>(
 
 			public render() {
 				if (!!this.state) {
-					console.log('DI:render', this.state, className);
-
 					return <Consumer {...this.props} {...this.state} />;
 				}
 

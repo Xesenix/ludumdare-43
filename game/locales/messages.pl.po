@@ -298,7 +298,7 @@ msgstr "głośność efektów"
 
 #: game/components/views/intro-view/intro-view.tsx:43
 msgid "The greatest sacrifice"
-msgstr "Największa poświęcenie"
+msgstr "Największe poświęcenie"
 
 #: game/components/views/configuration-view/configuration-view.tsx:193
 msgid "theme"
