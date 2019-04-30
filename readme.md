@@ -15,7 +15,7 @@ npm i
 ## Running 
 
 ```
-npm run game:build:dev
+npm run game:build:prod
 npm run game:start
 ```
 

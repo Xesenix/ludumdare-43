@@ -1,12 +1,14 @@
 const chalk = require('chalk');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
+const CompressionPlugin = require('compression-webpack-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
+const NgrockWebpackPlugin = require('ngrock-webpack-plugin');
 const webpackBase = require('webpack');
 const WebpackPwaManifestPlugin = require('webpack-pwa-manifest')
-const CompressionPlugin = require('compression-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+
 const { application, webpack } = require('xes-webpack-core');
 
 const app = application.getEnvApp();
@@ -83,6 +85,10 @@ const configureWebpack = (config) => {
 		config.plugins.push(new CompressionPlugin());
 		// if you are using moment you can reduce amount of locales here
 		config.plugins.push(new webpackBase.ContextReplacementPlugin(/moment[\/\\]locale$/, /(en|pl)$/));
+	}
+
+	if (process.env.EXPOSE === 'ngrok') {
+		config.plugins.push(new NgrockWebpackPlugin());
 	}
 
 	return config;

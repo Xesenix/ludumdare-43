@@ -26,7 +26,9 @@
     "game:build:dev": "cross-env APP=game npm run build:dev",
     "game:build:prod": "cross-env APP=game npm run build:prod",
     "game:xi18n": "cross-env APP=game ts-node ./scripts/extract.ts",
-    "game:check": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test"
+    "game:check": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test",
+    "game:serve:expose": "cross-env EXPOSE=ngrok npm run game:serve",
+    "game:start:expose": "ngrok http --host-header=rewrite 8080"
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.8.4",
@@ -60,6 +62,7 @@
     "istanbul": "github:Xesenix/istanbul",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "ngrock-webpack-plugin": "0.0.2",
     "node-gettext": "^2.0.0",
     "phaser": "^3.16.2",
     "pipeline-operator": "^1.1.0",
