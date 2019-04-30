@@ -14,7 +14,7 @@ import { II18nTranslation } from 'lib/i18n';
 import { styles } from './units-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IUnitsWidgetProps {
+export interface IUnitsWidgetExternalProps {
 	amount: number;
 	change: number;
 	compact: boolean;
@@ -30,16 +30,18 @@ interface IUnitsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<IUnitsWidgetProps, IUnitsWidgetInternalProps>({
+/** Internal component state. */
+interface IUnitsWidgetState {}
+
+const diDecorator = connectToInjector<IUnitsWidgetExternalProps, IUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-/** Internal component state. */
-interface IUnitsWidgetState {}
+type IUnitsWidgetProps = IUnitsWidgetExternalProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>;
 
-class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>, IUnitsWidgetState> {
+class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps, IUnitsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};

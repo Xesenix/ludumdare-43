@@ -32,7 +32,7 @@ import { II18nTranslation } from 'lib/i18n';
 import { styles } from './buildings-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IBuildingsWidgetProps {
+export interface IBuildingsWidgetExternalProps {
 	disabled: boolean;
 	compact: boolean;
 }
@@ -45,7 +45,10 @@ interface IBuildingsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<IBuildingsWidgetProps, IBuildingsWidgetInternalProps>({
+/** Internal component state. */
+interface IBuildingsWidgetState {}
+
+const diDecorator = connectToInjector<IBuildingsWidgetExternalProps, IBuildingsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -54,10 +57,9 @@ const diDecorator = connectToInjector<IBuildingsWidgetProps, IBuildingsWidgetInt
 	},
 });
 
-/** Internal component state. */
-interface IBuildingsWidgetState {}
+type IBuildingsWidgetProps = IBuildingsWidgetExternalProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>;
 
-class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>, IBuildingsWidgetState> {
+class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps, IBuildingsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -65,13 +67,20 @@ class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps & I
 
 	public render(): any {
 		const {} = this.state;
-		const { disabled, classes, game, compact, __ } = this.props;
+		const {
+			// prettier-ignore
+			__,
+			classes,
+			compact,
+			disabled,
+			game,
+		} = this.props;
 		const currentState = game.getState();
-		const wallsBuildCost = getWallsBuildCost(currentState)(1);
 		const cottagesBuildCost = getCottagesBuildCost(currentState)(1);
-		const wallsReduction = getWallsReduction(currentState);
-		const wallLevel = getWallsLevel(currentState);
 		const cottagesLevel = getCottagesLevel(currentState);
+		const wallLevel = getWallsLevel(currentState);
+		const wallsBuildCost = getWallsBuildCost(currentState)(1);
+		const wallsReduction = getWallsReduction(currentState);
 
 		return (
 			<Grid className={classes.root} container spacing={8}>

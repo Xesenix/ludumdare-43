@@ -15,7 +15,7 @@ import { II18nTranslation } from 'lib/i18n';
 import { styles } from './turn-details.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface ITurnDetailsProps {
+export interface ITurnDetailsExternalProps {
 	consequences: any;
 	disabled: boolean;
 }
@@ -27,16 +27,18 @@ interface ITurnDetailsInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<ITurnDetailsProps, ITurnDetailsInternalProps>({
+/** Internal component state. */
+interface ITurnDetailsState {}
+
+const diDecorator = connectToInjector<ITurnDetailsExternalProps, ITurnDetailsInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-/** Internal component state. */
-interface ITurnDetailsState {}
+type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
 
-class TurnDetailsComponent extends React.Component<ITurnDetailsProps & ITurnDetailsInternalProps & WithStyles<typeof styles>, ITurnDetailsState> {
+class TurnDetailsComponent extends React.Component<ITurnDetailsProps, ITurnDetailsState> {
 	constructor(props) {
 		super(props);
 		this.state = {};

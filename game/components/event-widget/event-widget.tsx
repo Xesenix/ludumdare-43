@@ -29,7 +29,7 @@ import { getWallsLevel, getWallsReduction } from 'game/features/buildings/walls'
 import { styles } from './event-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IEventWidgetProps {
+export interface IEventWidgetExternalProps {
 	consequences: IGameState;
 	currentState: IGameState;
 	event: string;
@@ -42,16 +42,18 @@ interface IEventWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<IEventWidgetProps, IEventWidgetInternalProps>({
+/** Internal component state. */
+interface IEventWidgetState {}
+
+const diDecorator = connectToInjector<IEventWidgetExternalProps, IEventWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-/** Internal component state. */
-interface IEventWidgetState {}
+type IEventWidgetProps = IEventWidgetExternalProps & IEventWidgetInternalProps & WithStyles<typeof styles>;
 
-class EventWidgetComponent extends React.PureComponent<IEventWidgetProps & IEventWidgetInternalProps & WithStyles<typeof styles>, IEventWidgetState> {
+class EventWidgetComponent extends React.PureComponent<IEventWidgetProps, IEventWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};

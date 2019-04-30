@@ -1,6 +1,5 @@
-import { MuiThemeProvider, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import { Container } from 'inversify';
+import { isEqual, pickBy } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -9,10 +8,11 @@ import { Store } from 'redux';
 
 // elements
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { connectToInjector } from 'lib/di/context';
-import { defaultUIState, IUIState } from 'lib/ui';
-import { IAppTheme } from 'theme';
+import { LanguageType } from 'lib/interfaces';
+import { IAppTheme, ThemesNames } from 'theme';
 
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
@@ -30,8 +30,19 @@ interface IAppProps {}
 
 interface IAppInternalProps {
 	di?: Container;
-	store?: Store<IUIState, any>;
 	getTheme: () => IAppTheme;
+	store: Store<IAppState, any>;
+}
+
+interface IAppState {
+	/** required for interface updates after changing fullscreen state */
+	fullscreen: boolean;
+	/** required for interface updates after changing application language */
+	language: LanguageType;
+	/** required for interface updates after loading language */
+	languages: any;
+	/** required for interface updates after changing application theme */
+	theme: ThemesNames;
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
@@ -43,16 +54,24 @@ const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	},
 });
 
-interface IAppState {
-}
+type AppProps = IAppProps & IAppInternalProps & WithStyles<typeof styles>;
 
-class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typeof styles>, IAppState & IUIState> {
+class App extends React.Component<AppProps, IAppState> {
 	private unsubscribe?: any;
 
 	constructor(props) {
 		super(props);
+		const {
+			fullscreen,
+			theme,
+			language,
+			languages,
+		} = props.store.getState();
 		this.state = {
-			...defaultUIState,
+			fullscreen,
+			theme,
+			language,
+			languages,
 		};
 	}
 
@@ -70,9 +89,15 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 		}
 	}
 
+	public shouldComponentUpdate(nextProps: AppProps, nextState: IAppState): boolean {
+		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
+	}
+
 	public render() {
 		const { fullscreen = false } = this.state;
 		const { getTheme } = this.props;
+
+		console.log('App:render');
 
 		const routing = (
 			<>
@@ -106,16 +131,23 @@ class App extends React.Component<IAppProps & IAppInternalProps & WithStyles<typ
 		);
 	}
 
+	/**
+	 * Responsible for notifying component about state changes related to this component.
+	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
+	 */
 	private bindToStore(): void {
 		const { store } = this.props;
 
-		if (!this.unsubscribe && store) {
+		if (!this.unsubscribe && !!store) {
+			const keys = Object.keys(this.state);
+			const filter = (state: IAppState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IAppState;
 			this.unsubscribe = store.subscribe(() => {
-				if (store) {
-					this.setState(store.getState());
+				console.log('App:bindToStore', keys);
+				if (!!store) {
+					this.setState(filter(store.getState()));
 				}
 			});
-			this.setState(store.getState());
+			this.setState(filter(store.getState()));
 		}
 	}
 }

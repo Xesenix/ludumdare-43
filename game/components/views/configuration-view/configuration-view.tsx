@@ -1,5 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
+import { isEqual, pickBy } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -26,8 +27,8 @@ import MuteOffIcon from '@material-ui/icons/VolumeOff';
 import MuteOnIcon from '@material-ui/icons/VolumeUp';
 
 import { connectToInjector } from 'lib/di';
-import { II18nState, II18nTranslation } from 'lib/i18n';
-import { defaultUIState, IUIState } from 'lib/ui';
+import { II18nTranslation } from 'lib/i18n';
+import { LanguageType } from 'lib/interfaces';
 
 import { styles } from './configuration-view.styles';
 
@@ -36,7 +37,7 @@ const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => impo
 const ThemeSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/theme-selector/theme-selector') });
 
 /** Component public properties required to be provided by parent component. */
-export interface IConfigurationViewProps {}
+export interface IConfigurationViewExternalProps {}
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IConfigurationViewInternalProps {
@@ -49,13 +50,24 @@ interface IConfigurationViewInternalProps {
 	dispatchSetMutedAction: (event: any, checked: boolean) => void;
 	dispatchSetThemeAction: (event: any) => void;
 	dispatchSetVolumeAction: (event: any, value: number) => void;
-	store?: Store<IUIState & II18nState>;
+	store: Store<IConfigurationViewState>;
 }
 
 /** Internal component state. */
-interface IConfigurationViewState {}
+interface IConfigurationViewState {
+	effectsMuted: boolean;
+	effectsVolume: number;
+	/** required for interface updates after changing application language */
+	language: LanguageType;
+	/** required for interface updates after loading language */
+	languages: any;
+	musicMuted: boolean;
+	musicVolume: number;
+	mute: boolean;
+	volume: number;
+}
 
-const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
+const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -92,34 +104,77 @@ const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationVie
 	},
 });
 
-export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps & IConfigurationViewInternalProps & WithStyles<typeof styles>, IConfigurationViewState> {
+type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
+
+export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps, IConfigurationViewState> {
+	private unsubscribeDataStore?: any;
+
 	constructor(props) {
 		super(props);
-		this.state = {};
+		const {
+			// prettier-ignore
+			effectsMuted,
+			effectsVolume,
+			language,
+			languages,
+			musicMuted,
+			musicVolume,
+			mute,
+			volume,
+		} = props.store.getState();
+		this.state = {
+			// prettier-ignore
+			effectsMuted,
+			effectsVolume,
+			language,
+			languages,
+			musicMuted,
+			musicVolume,
+			mute,
+			volume,
+		};
+	}
+
+	public componentDidMount(): void {
+		this.bindToStore();
+	}
+
+	public componentDidUpdate(): void {
+		this.bindToStore();
+	}
+
+	public componentWillUnmount(): void {
+		if (this.unsubscribeDataStore) {
+			this.unsubscribeDataStore();
+			this.unsubscribeDataStore = null;
+		}
+	}
+
+	public shouldComponentUpdate(nextProps: IConfigurationViewProps, nextState: IConfigurationViewState): boolean {
+		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
 	}
 
 	public render(): any {
 		const {
 			// prettier-ignore
+			__,
 			classes,
-			store = { getState: () => ({ ...defaultUIState, language: 'en' }) },
 			dispatchSetEffectsMutedAction,
 			dispatchSetEffectsVolumeAction,
 			dispatchSetMusicMutedAction,
 			dispatchSetMusicVolumeAction,
 			dispatchSetMutedAction,
 			dispatchSetVolumeAction,
-			__,
 		} = this.props;
 		const {
 			// prettier-ignore
-			mute,
-			musicMuted,
 			effectsMuted,
-			volume,
-			musicVolume,
 			effectsVolume,
-		} = store.getState();
+			musicMuted,
+			musicVolume,
+			mute,
+			volume,
+		} = this.state;
 
 		return (
 			<form className={classes.root}>
@@ -218,6 +273,26 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 				<MenuItem value={'dark'}>{__('dark')}</MenuItem>
 			</Select>
 		);
+	}
+
+
+	/**
+	 * Responsible for notifying component about state changes related to this component.
+	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
+	 */
+	private bindToStore(): void {
+		const { store } = this.props;
+
+		if (!this.unsubscribeDataStore && !!store) {
+			const keys = Object.keys(this.state);
+			const filter = (state: IConfigurationViewState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IConfigurationViewState;
+			this.unsubscribeDataStore = store.subscribe(() => {
+				if (!!store) {
+					this.setState(filter(store.getState()));
+				}
+			});
+			this.setState(filter(store.getState()));
+		}
 	}
 }
 

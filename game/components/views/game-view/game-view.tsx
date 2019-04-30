@@ -3,7 +3,6 @@ import { EventEmitter } from 'events';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import Loadable from 'react-loadable';
 import { Store } from 'redux';
 
 // elements
@@ -56,7 +55,7 @@ import {
 	II18nPluralTranslation,
 	II18nTranslation,
 } from 'lib/i18n';
-import { IUIState } from 'ui';
+import { LanguageType } from 'lib/interfaces';
 
 import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
 import EventWidgetComponent from 'components/event-widget/event-widget';
@@ -67,16 +66,11 @@ import TrainWidgetComponent from 'components/train-widget/train-widget';
 // import TurnDetailsComponent from 'components/turn-details/turn-details';
 import UnitsWidgetComponent from 'components/units-widget/units-widget';
 
+import { pickBy } from 'lodash';
 import { styles } from './game-view.styles';
 
-const Loader = () => (
-	<Grid container style={{ justifyContent: 'center' }}>
-		<CircularProgress color="primary" size={64} />
-	</Grid>
-);
-
 /** Component public properties required to be provided by parent component. */
-export interface IGameViewProps {
+export interface IGameViewExternalProps {
 	compact: boolean;
 }
 
@@ -91,29 +85,33 @@ interface IGameViewInternalProps {
 }
 
 /** Internal component state. */
-interface IGameViewState extends IUIState {
+interface IGameViewState {
 	currentState: IGameState | null;
+	language: LanguageType;
+	compactMode: boolean;
 }
 
-const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
-	store: {
-		dependencies: ['data-store'],
-	},
-	em: {
-		dependencies: ['event-manager'],
-	},
+const diDecorator = connectToInjector<IGameViewExternalProps, IGameViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 	_$: {
 		dependencies: ['i18n:translate_plural'],
 	},
+	em: {
+		dependencies: ['event-manager'],
+	},
 	game: {
 		dependencies: ['game'],
 	},
+	store: {
+		dependencies: ['data-store'],
+	},
 });
 
-class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewInternalProps & WithStyles<typeof styles>, IGameViewState> {
+type IGameViewProps = IGameViewExternalProps & IGameViewInternalProps & WithStyles<typeof styles>;
+
+class GameViewComponent extends React.PureComponent<IGameViewProps, IGameViewState> {
 	private unsubscribeDataStore?: any;
 	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
@@ -121,8 +119,17 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	constructor(props) {
 		super(props);
 
+		const {
+			// prettier-ignore
+			compactMode,
+			language,
+		} = props.store.getState();
+
 		this.state = {
+			// prettier-ignore
+			compactMode,
 			currentState: null,
+			language,
 		};
 	}
 
@@ -147,16 +154,17 @@ class GameViewComponent extends React.PureComponent<IGameViewProps & IGameViewIn
 	public render(): any {
 		const {
 			// prettier-ignore
-			game,
-			classes,
 			__,
 			_$,
+			classes,
+			game,
 		} = this.props;
 		const {
+			// prettier-ignore
 			compactMode,
 		} = this.state;
-		const blockNextTurn = false;
 
+		const blockNextTurn = false;
 		const currentState = game.getState();
 		const consequences: IGameState = game.calculateConsequences();
 
@@ -447,16 +455,23 @@ Each one requires 1 resource per year to be operational if there are no enough r
 		}
 	}
 
+	/**
+	 * Responsible for notifying component about state changes related to this component.
+	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
+	 */
 	private bindToStore(): void {
 		const { store } = this.props;
 
-		if (!this.unsubscribeDataStore && store) {
+		if (!this.unsubscribeDataStore && !!store) {
+			const keys = Object.keys(this.state);
+			const filter = (state: IGameViewState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IGameViewState;
 			this.unsubscribeDataStore = store.subscribe(() => {
-				if (store) {
-					this.setState(store.getState());
+				console.log('GameViewComponent:bindToStore', keys);
+				if (!!store) {
+					this.setState(filter(store.getState()));
 				}
 			});
-			this.setState(store.getState());
+			this.setState(filter(store.getState()));
 		}
 	}
 
@@ -467,6 +482,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 			const handle = (state: IGameState) => {
 				this.setState({ currentState: state });
 			};
+			// handle game state change
 			em.addListener('state:update', handle);
 			this.unsubscribeEventManager = () => {
 				em.removeListener('state:update', handle);

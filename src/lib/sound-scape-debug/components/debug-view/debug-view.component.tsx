@@ -1,8 +1,6 @@
+import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-
-import { EventEmitter } from 'events';
-import { Container } from 'inversify';
 import { interval, Observable, Subscription } from 'rxjs';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -13,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di';
+import { IEventEmitter } from 'lib/interfaces';
 import { IScheduledSoundtrack, ISoundtrackPlayer } from 'lib/sound-scape/interfaces';
 
 const styles = (theme: Theme) =>
@@ -65,10 +64,10 @@ const styles = (theme: Theme) =>
 		},
 	});
 
-export interface ISoundScapeDebugViewProps {
+export interface ISoundScapeDebugViewExternalProps {
 	audioContext?: AudioContext;
 	soundtrackPlayer?: ISoundtrackPlayer;
-	eventsManager?: EventEmitter;
+	eventsManager?: IEventEmitter;
 	di?: Container;
 	console: Console;
 }
@@ -79,15 +78,17 @@ export interface ISoundScapeDebugViewState {
 	currentAudioTime: number;
 }
 
+type ISoundScapeDebugViewProps = ISoundScapeDebugViewExternalProps & WithStyles<typeof styles>;
+
 /**
  * TODO: create own repository for debug component with peer dependency on vis
  */
-class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugViewProps & WithStyles<typeof styles>, ISoundScapeDebugViewState> {
+class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugViewProps, ISoundScapeDebugViewState> {
 	private subscription: Subscription = new Subscription();
 
 	constructor(
 		// prettier-ignore
-		props: ISoundScapeDebugViewProps & WithStyles<typeof styles>,
+		props: ISoundScapeDebugViewProps,
 	) {
 		super(props);
 
@@ -308,14 +309,14 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 }
 
 export default hot(module)(
-	connectToInjector<ISoundScapeDebugViewProps>({
+	connectToInjector<ISoundScapeDebugViewExternalProps>({
 		'sound-scape:soundtrack-player': {
 			dependencies: ['soundtrackPlayer'],
 			value: (soundtrackPlayer: ISoundtrackPlayer) => Promise.resolve(soundtrackPlayer),
 		},
 		'event-manager': {
 			dependencies: ['eventsManager'],
-			value: (eventsManager: EventEmitter) => Promise.resolve(eventsManager),
+			value: (eventsManager: IEventEmitter) => Promise.resolve(eventsManager),
 		},
 		'audio-context': {
 			dependencies: ['audioContext'],

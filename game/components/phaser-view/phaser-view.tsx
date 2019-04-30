@@ -15,7 +15,7 @@ let game: Phaser.Game | null;
 let gameContainer: HTMLDivElement | null;
 
 /** Component public properties required to be provided by parent component. */
-export interface IPhaserViewProps {
+export interface IPhaserViewExternalProps {
 	keepInstanceOnRemove: boolean;
 }
 
@@ -25,16 +25,18 @@ interface IPhaserViewInternalProps {
 	store?: Store<IUIState>;
 }
 
-const diDecorator = connectToInjector<IPhaserViewProps, IPhaserViewInternalProps>({
+/** Internal component state. */
+interface IPhaserViewState {}
+
+const diDecorator = connectToInjector<IPhaserViewExternalProps, IPhaserViewInternalProps>({
 	store: {
 		dependencies: ['data-store'],
 	},
 });
 
-/** Internal component state. */
-interface IPhaserViewState {}
+type IPhaserViewProps = IPhaserViewExternalProps & IPhaserViewInternalProps & WithStyles<typeof styles>;
 
-class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaserViewInternalProps & WithStyles<typeof styles>, IPhaserViewState> {
+class PhaserViewComponent extends React.PureComponent<IPhaserViewProps, IPhaserViewState> {
 	private unsubscribe?: any;
 
 	constructor(props) {
@@ -67,7 +69,9 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaser
 		}
 
 		if (!!gameContainer) {
-			gameContainer.removeChild(game.canvas);
+			if (!!game) {
+				gameContainer.removeChild(game.canvas);
+			}
 			gameContainer = null;
 		}
 
@@ -86,6 +90,10 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps & IPhaser
 		);
 	}
 
+	/**
+	 * Responsible for notifying component about state changes related to this component.
+	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
+	 */
 	private bindToStore(): void {
 		const { store } = this.props;
 

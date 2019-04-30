@@ -14,23 +14,28 @@ import { II18nTranslation } from 'lib/i18n';
 
 import { styles } from './intro-view.styles';
 
-export interface IIntroViewProps {
+/** Component public properties required to be provided by parent component. */
+export interface IIntroViewExternalProps {
 }
 
+/** Internal component properties include properties injected via dependency injection. */
 interface IIntroViewInternalProps {
 	__: II18nTranslation;
 }
 
+/** Internal component state. */
 interface IIntroViewState {
 }
 
-const diDecorator = connectToInjector<IIntroViewProps, IIntroViewInternalProps>({
+const diDecorator = connectToInjector<IIntroViewExternalProps, IIntroViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-class IntroViewComponent extends React.Component<IIntroViewProps & IIntroViewInternalProps & WithStyles<typeof styles>, IIntroViewState> {
+type IIntroViewProps = IIntroViewExternalProps & IIntroViewInternalProps & WithStyles<typeof styles>;
+
+class IntroViewComponent extends React.Component<IIntroViewProps, IIntroViewState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -40,7 +45,7 @@ class IntroViewComponent extends React.Component<IIntroViewProps & IIntroViewInt
 		const { classes, __ } = this.props;
 
 		return (
-			<Paper className={classes.root} elevation={1}>
+			<Paper className={classes.root} elevation={0}>
 				<Typography className={classes.title} variant="h1" component="h1" align="center">
 					{__( `The greatest sacrifice` )}
 				</Typography>

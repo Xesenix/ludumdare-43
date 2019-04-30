@@ -16,14 +16,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { IMenuItemProps, IMenuProps } from 'menu/menu';
+import { IMenuExternalProps, IMenuItemExternalProps } from 'menu/menu';
 
 import { styles } from './primary-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IPrimaryLayoutProps {
+export interface IPrimaryLayoutExternalProps {
 	content: any;
-	Menu: React.ComponentType<IMenuProps>;
+	Menu: React.ComponentType<IMenuExternalProps>;
 	loading: boolean;
 }
 
@@ -36,10 +36,12 @@ interface IPrimaryLayoutState {
 	drawer: boolean;
 }
 
-const diDecorator = connectToInjector<IPrimaryLayoutProps, IPrimaryLayoutInternalProps>({
+const diDecorator = connectToInjector<IPrimaryLayoutExternalProps, IPrimaryLayoutInternalProps>({
 });
 
-class PrimaryLayoutComponent extends React.Component<IPrimaryLayoutProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>, IPrimaryLayoutState> {
+type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>;
+
+class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IPrimaryLayoutState> {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -49,17 +51,18 @@ class PrimaryLayoutComponent extends React.Component<IPrimaryLayoutProps & IPrim
 
 	public render(): any {
 		const {
+			// prettier-ignore
 			classes,
 			content = null,
-			Menu,
 			loading = false,
+			Menu,
 		} = this.props;
 
 		return (
 			<Grid container spacing={0} alignItems="center">
 				<Grid item xs={12}>
 					<AppBar position="fixed">
-						<Toolbar className={classes.toolbar}>
+						<Toolbar>
 							<Hidden xsDown>
 								<Menu
 									key="menu"
@@ -99,7 +102,7 @@ class PrimaryLayoutComponent extends React.Component<IPrimaryLayoutProps & IPrim
 		);
 	}
 
-	private renderTopMenuItem = (props: IMenuItemProps) => {
+	private renderTopMenuItem = (props: IMenuItemExternalProps) => {
 		const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 		return (
 			<Fab

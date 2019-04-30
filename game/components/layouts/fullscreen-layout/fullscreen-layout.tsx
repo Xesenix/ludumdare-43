@@ -15,14 +15,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { IMenuItemProps, IMenuProps } from 'menu/menu';
+import { IMenuExternalProps, IMenuItemExternalProps } from 'menu/menu';
 
 import { styles } from './fullscreen-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IFullscreenLayoutProps {
+export interface IFullscreenLayoutExternalProps {
 	content: any;
-	Menu: React.ComponentType<IMenuProps>;
+	Menu: React.ComponentType<IMenuExternalProps>;
 	loading: boolean;
 }
 
@@ -35,10 +35,12 @@ interface IFullscreenLayoutState {
 	drawer: boolean;
 }
 
-const diDecorator = connectToInjector<IFullscreenLayoutProps, IFullscreenLayoutInternalProps>({
+const diDecorator = connectToInjector<IFullscreenLayoutExternalProps, IFullscreenLayoutInternalProps>({
 });
 
-class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps & IFullscreenLayoutInternalProps & WithStyles<typeof styles>, IFullscreenLayoutState> {
+type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & WithStyles<typeof styles>;
+
+class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps, IFullscreenLayoutState> {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -48,10 +50,11 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps &
 
 	public render(): any {
 		const {
+			// prettier-ignore
 			classes,
 			content = null,
-			Menu,
 			loading = false,
+			Menu,
 		} = this.props;
 
 		return (
@@ -92,7 +95,7 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps &
 		);
 	}
 
-	private renderTopMenuItem = (props: IMenuItemProps) => {
+	private renderTopMenuItem = (props: IMenuItemExternalProps) => {
 		const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 		return (
 			<Fab

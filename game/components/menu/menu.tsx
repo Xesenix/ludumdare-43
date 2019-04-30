@@ -1,4 +1,5 @@
 import { PropTypes } from '@material-ui/core';
+import { isEqual, pickBy } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -9,8 +10,8 @@ import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
-import { IAppTheme } from 'theme';
-import { defaultUIState, IUIState } from 'ui';
+import { LanguageType } from 'lib/interfaces';
+import { IAppTheme, ThemesNames } from 'theme';
 
 // elements
 // import { ButtonBaseProps } from '@material-ui/core/ButtonBase';
@@ -19,7 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const Loader = () => <CircularProgress />;
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
 
-export interface IMenuItemProps {
+export interface IMenuItemExternalProps {
 	active?: boolean;
 	activeColor?: PropTypes.Color;
 	color?: PropTypes.Color;
@@ -31,18 +32,18 @@ export interface IMenuItemProps {
 }
 
 /** Component public properties required to be provided by parent component. */
-export interface IMenuProps {
-	MenuItem: React.ComponentType<IMenuItemProps>;
+export interface IMenuExternalProps {
+	MenuItem: React.ComponentType<IMenuItemExternalProps>;
 }
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IMenuInternalProps {
 	__: II18nTranslation;
+	dispatchCreateSetCompactModeAction: (value: boolean) => void;
 	dispatchCreateSetMutedAction: (value: boolean) => void;
 	dispatchSetFullscreenAction: (value: boolean) => void;
-	dispatchCreateSetCompactModeAction: (value: boolean) => void;
-	store?: Store<IMenuState>;
 	getTheme: () => IAppTheme;
+	store?: Store<IMenuState>;
 }
 
 /** Internal component state. */
@@ -50,9 +51,15 @@ interface IMenuState {
 	fullscreen: boolean;
 	mute: boolean;
 	compactMode: boolean;
+	/** required for interface updates after changing application language */
+	language: LanguageType;
+	/** required for interface updates after loading language */
+	languages: any;
+	/** required for interface updates after changing application theme */
+	theme: ThemesNames;
 }
 
-const diDecorator = connectToInjector<IMenuProps & RouteComponentProps, IMenuInternalProps>({
+const diDecorator = connectToInjector<IMenuExternalProps & RouteComponentProps, IMenuInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -68,24 +75,38 @@ const diDecorator = connectToInjector<IMenuProps & RouteComponentProps, IMenuInt
 		dependencies: ['ui:actions@setCompactMode'],
 		value: (setCompactMode: (value: boolean) => void) => Promise.resolve(setCompactMode),
 	},
-	store: {
-		dependencies: ['data-store'],
-	},
 	getTheme: {
 		dependencies: ['theme:get-theme'],
 	},
+	store: {
+		dependencies: ['data-store'],
+	},
 });
 
-class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & RouteComponentProps, IMenuState> {
-	private unsubscribe?: any;
+type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
+
+class MenuComponent extends React.Component<IMenuProps, IMenuState> {
+	private unsubscribeDataStore?: any;
 
 	constructor(props) {
 		super(props);
-		const { fullscreen, mute, compactMode } = props.store.getState();
-		this.state = {
-			fullscreen,
-			mute,
+		const {
+			// prettier-ignore
 			compactMode,
+			fullscreen,
+			language,
+			languages,
+			mute,
+			theme,
+		} = props.store.getState();
+		this.state = {
+			// prettier-ignore
+			compactMode,
+			fullscreen,
+			language,
+			languages,
+			mute,
+			theme,
 		};
 	}
 
@@ -98,31 +119,32 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Ro
 	}
 
 	public componentWillUnmount(): void {
-		if (this.unsubscribe) {
-			this.unsubscribe();
-			this.unsubscribe = null;
+		if (this.unsubscribeDataStore) {
+			this.unsubscribeDataStore();
+			this.unsubscribeDataStore = null;
 		}
+	}
+
+	public shouldComponentUpdate(nextProps: IMenuProps, nextState: IMenuState): boolean {
+		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
 	}
 
 	public render(): any {
 		const {
 			// prettier-ignore
-			compactMode,
-		} = this.state;
-		const {
-			// prettier-ignore
 			__,
+			getTheme,
 			location,
 			MenuItem,
-			store,
-			getTheme,
 		} = this.props;
 		const {
 			// prettier-ignore
-			fullscreen = false,
-			mute = false,
-		} = store ? store.getState() : {};
+			compactMode,
+			fullscreen,
+			mute,
+		} = this.state;
 		const theme = getTheme();
+
 		// TODO: need menu component that renders diffrent buttons depending on context (toolbar, drawer) and is influenced by css theme
 		return (
 			<>
@@ -180,9 +202,9 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Ro
 		);
 	}
 
-	private renderConfigLink = (props: IMenuItemProps) => <RouterLink to="/config" {...props}/>;
+	private renderConfigLink = (props: IMenuItemExternalProps) => <RouterLink to="/config" {...props}/>;
 
-	private renderGameLink = (props: IMenuItemProps) => <RouterLink to="/game" {...props}/>;
+	private renderGameLink = (props: IMenuItemExternalProps) => <RouterLink to="/game" {...props}/>;
 
 	private toggleFullScreen = (): void => {
 		const { dispatchSetFullscreenAction, store } = this.props;
@@ -229,18 +251,24 @@ class MenuComponent extends React.Component<IMenuProps & IMenuInternalProps & Ro
 		);
 	}
 
+	/**
+	 * Responsible for notifying component about state changes related to this component.
+	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
+	 */
 	private bindToStore(): void {
 		const { store } = this.props;
 
-		if (!this.unsubscribe && !!store) {
-			this.unsubscribe = store.subscribe(() => {
+		if (!this.unsubscribeDataStore && !!store) {
+			const keys = Object.keys(this.state);
+			const filter = (state: IMenuState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IMenuState;
+			this.unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
-					this.setState(store.getState());
+					this.setState(filter(store.getState()));
 				}
 			});
-			this.setState(store.getState());
+			this.setState(filter(store.getState()));
 		}
 	}
 }
 
-export default hot(module)(withRouter<IMenuProps & RouteComponentProps>(diDecorator(MenuComponent)));
+export default hot(module)(withRouter<IMenuExternalProps & RouteComponentProps>(diDecorator(MenuComponent)));

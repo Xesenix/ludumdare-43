@@ -15,7 +15,7 @@ import { II18nPluralTranslation, II18nTranslation } from 'lib/i18n';
 import { styles } from './status-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IStatusWidgetProps {
+export interface IStatusWidgetExternalProps {
 	compact: boolean;
 	population: { current: number; change: number; max: number };
 	resources: { current: number; income: number };
@@ -30,7 +30,10 @@ interface IStatusWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalProps>({
+/** Internal component state. */
+interface IStatusWidgetState {}
+
+const diDecorator = connectToInjector<IStatusWidgetExternalProps, IStatusWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -39,10 +42,9 @@ const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalP
 	},
 });
 
-/** Internal component state. */
-interface IStatusWidgetState {}
+type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps & WithStyles<typeof styles>;
 
-class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & IStatusWidgetInternalProps & WithStyles<typeof styles>, IStatusWidgetState> {
+class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps, IStatusWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -50,7 +52,16 @@ class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps & ISt
 
 	public render(): any {
 		const {} = this.state;
-		const { classes, population, resources, turn, compact, __, _$ } = this.props;
+		const {
+			// prettier-ignore
+			__,
+			_$,
+			classes,
+			compact,
+			population,
+			resources,
+			turn,
+		} = this.props;
 
 		return (
 			<Paper className={classes.root} elevation={0}>

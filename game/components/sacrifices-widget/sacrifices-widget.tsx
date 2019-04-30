@@ -34,7 +34,7 @@ import { II18nTranslation } from 'lib/i18n';
 import { styles } from './sacrifices-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface ISacrificesWidgetProps {
+export interface ISacrificesWidgetExternalProps {
 	compact: boolean;
 	disabled: boolean;
 }
@@ -47,7 +47,10 @@ interface ISacrificesWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<ISacrificesWidgetProps, ISacrificesWidgetInternalProps>({
+/** Internal component state. */
+interface ISacrificesWidgetState {}
+
+const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrificesWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -56,10 +59,9 @@ const diDecorator = connectToInjector<ISacrificesWidgetProps, ISacrificesWidgetI
 	},
 });
 
-/** Internal component state. */
-interface ISacrificesWidgetState {}
+type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>;
 
-class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>, ISacrificesWidgetState> {
+class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps, ISacrificesWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -77,14 +79,14 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps &
 		const currentState = game.getState();
 
 		const turn = currentState.turn;
-		const sacrificeCount = getSacrificeCount(currentState);
-		const populationCost = getSacrificePopulationCost(currentState);
-		const resourceCost = getSacrificeResourcesCost(currentState);
 		const futureResourceCost = getSacrificeResourcesCost({ ...currentState, turn: turn + 1 });
-		const weaknessLevel = getWeaknessLevel(currentState);
 		const nextLevelWeaknessReduction = (getWeaknessDamageReduction(changeAmountOfWeaknessLevel(1)(currentState)) * 100).toFixed(2);
-		const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
 		const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
+		const populationCost = getSacrificePopulationCost(currentState);
+		const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
+		const resourceCost = getSacrificeResourcesCost(currentState);
+		const sacrificeCount = getSacrificeCount(currentState);
+		const weaknessLevel = getWeaknessLevel(currentState);
 
 		return (
 			<Grid className={classes.root} container spacing={8}>

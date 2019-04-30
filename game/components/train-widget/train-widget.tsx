@@ -14,7 +14,7 @@ import { II18nTranslation } from 'lib/i18n';
 import { styles } from './train-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface ITrainUnitsWidgetProps {
+export interface ITrainUnitsWidgetExternalProps {
 	amount: number;
 	canTrain?: (amount: number) => boolean;
 	disabled: boolean;
@@ -31,18 +31,20 @@ interface ITrainUnitsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-const diDecorator = connectToInjector<ITrainUnitsWidgetProps, ITrainUnitsWidgetInternalProps>({
-	__: {
-		dependencies: ['i18n:translate'],
-	},
-});
-
 /** Internal component state. */
 interface ITrainUnitsWidgetState {
 	step: number;
 }
 
-class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps & ITrainUnitsWidgetInternalProps & WithStyles<typeof styles>, ITrainUnitsWidgetState> {
+const diDecorator = connectToInjector<ITrainUnitsWidgetExternalProps, ITrainUnitsWidgetInternalProps>({
+	__: {
+		dependencies: ['i18n:translate'],
+	},
+});
+
+type ITrainUnitsWidgetProps = ITrainUnitsWidgetExternalProps & ITrainUnitsWidgetInternalProps & WithStyles<typeof styles>;
+
+class TrainUnitsWidgetComponent extends React.Component<ITrainUnitsWidgetProps, ITrainUnitsWidgetState> {
 	constructor(props) {
 		super(props);
 		this.state = {
