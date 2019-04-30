@@ -20,13 +20,20 @@ export class ThemeModule {
 
 		// current application theme
 		app.bind<Promise<() => IAppTheme>>('theme:get-theme').toDynamicValue(async ({ container }: interfaces.Context) => {
-			const themes = await container.get<ThemesProviderType>('theme:themes')();
-			const store = container.get<Store<IThemeState, any>>('data-store');
+			const key = 'theme:get-theme:_cached';
+			if (!container.isBound(key)) {
+				const themes = await container.get<ThemesProviderType>('theme:themes')();
+				const store = container.get<Store<IThemeState, any>>('data-store');
 
-			return () => {
-				const { theme } = store.getState();
-				return themes[theme];
-			};
+				const getTheme = () => {
+					const { theme } = store.getState();
+					return themes[theme];
+				};
+
+				container.bind<() => IAppTheme>(key).toConstantValue(getTheme);
+			}
+
+			return container.get<() => IAppTheme>(key);
 		});
 
 		// redux action creators
