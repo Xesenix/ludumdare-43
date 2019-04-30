@@ -9,7 +9,8 @@ export function UIBootProvider({ container }: interfaces.Context) {
 
 	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
 		.then((store: Store<any, any>) => {
-			console.debug('UIBootProvider:base');
+			console.debug('UIBootProvider:boot');
+
 			const createSetMutedAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-muted');
 			container.bind('ui:actions')
 				.toConstantValue((value: boolean) => store.dispatch(createSetMutedAction(value)))

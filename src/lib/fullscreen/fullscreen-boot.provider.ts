@@ -12,6 +12,8 @@ export function FullscreenBootProvider({ container }: interfaces.Context) {
 
 	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
 		.then((store: Store<any, any>) => {
+			console.debug('FullscreenBootProvider:boot');
+
 			const createSetFullscreenAction = container.get<ICreateSetAction<boolean>>('data-store:action:create:set-fullscreen');
 			const setFullScreenAction = (value: boolean) => store.dispatch(createSetFullscreenAction(value));
 			container.bind('ui:actions')

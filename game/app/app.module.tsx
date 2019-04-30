@@ -39,12 +39,16 @@ export class AppModule extends Container implements IApplication {
 	constructor() {
 		super();
 
+		if ((window as any).__inversifyDevtools__) {
+			(window as any).__inversifyDevtools__(this);
+		}
+
+		ServiceWorkerModule.register();
+
 		DebugModule.register(this);
 
 		// event manager
 		this.bind<IEventEmitter>('event-manager').toConstantValue(this.eventManager);
-
-		ServiceWorkerModule.register();
 
 		// load modules
 
@@ -65,17 +69,7 @@ export class AppModule extends Container implements IApplication {
 		this.load(PhaserGameModule(this));
 
 		// data store
-		DataStoreModule.register<IAppState, AppAction>(
-			this,
-			{
-				...defaultUIState,
-				...defaultI18nState,
-			},
-		);
-
-		if ((window as any).__inversifyDevtools__) {
-			(window as any).__inversifyDevtools__(this);
-		}
+		DataStoreModule.register<IAppState, AppAction>(this);
 
 		// rendering DOM - from outside of react
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
@@ -92,6 +86,7 @@ export class AppModule extends Container implements IApplication {
 
 	public banner() {
 		const console = this.get<Console>('debug:console');
+		console.debug('AppModule:booted');
 		// tslint:disable:max-line-length
 		console.log(
 			'%c  ★★★ Black Dragon Framework ★★★  ',
@@ -106,15 +101,15 @@ export class AppModule extends Container implements IApplication {
 
 	public boot(): Promise<AppModule> {
 		// start all required modules
+		const console = this.get<Console>('debug:console');
+		const providers = this.getAll('boot');
+		let progress = 0;
 
-		return Promise.all(this.getAll('boot').map((provider: any) => provider()))
+		return Promise.all(providers.map((provider: any) => provider().then(() => console.debug(`AppModule:boot:progress ${++progress}/${providers.length}`))))
 			.then(
 				() => {
 					this.banner();
 					this.get<IEventEmitter>('event-manager').emit('app:boot');
-
-					// const game = this.get<AncientMaze<IGameObjectState, IAncientMazeState<IGameObjectState>>>('game');
-					// game.boot();
 
 					const container = this.get<HTMLElement>('ui:root');
 
@@ -125,7 +120,6 @@ export class AppModule extends Container implements IApplication {
 						),
 						container,
 					);
-					// ReactDOM.render(<App/>, container);
 
 					return this;
 				},

@@ -11,6 +11,8 @@ export function ThemeBootProvider({ container }: interfaces.Context) {
 
 	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
 		.then((store: Store<any, any>) => {
+			console.debug('ThemeBootProvider:boot');
+
 			const createSetThemeAction = container.get<ICreateSetAction<ThemesNames>>('data-store:action:create:set-theme');
 			container.bind('ui:actions')
 				.toConstantValue((value: ThemesNames) => store.dispatch(createSetThemeAction(value)))

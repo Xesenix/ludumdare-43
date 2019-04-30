@@ -38,9 +38,14 @@ const syncLocaleWithStore = (store: Store<any, any>, setLanguageReady: SetLangua
 };
 
 export function I18nBootProvider({ container }: interfaces.Context) {
+	const console: Console = container.get<Console>('debug:console');
+	console.debug('I18nBootProvider');
+
 	return () => container
 		.get<IDataStoreProvider<any, any>>('data-store:provider')()
 		.then((store: Store<any, any>) => {
+			console.debug('I18nBootProvider:boot');
+
 			const createSetCurrentLanguageAction = container.get<ICreateSetAction<LanguageType>>('data-store:action:create:set-current-language');
 			container.bind('i18n:actions')
 				.toConstantValue((value: LanguageType) => store.dispatch(createSetCurrentLanguageAction(value)))
