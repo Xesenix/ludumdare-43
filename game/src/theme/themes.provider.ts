@@ -6,6 +6,12 @@ export function ThemesProvider({ container }: interfaces.Context) {
 	const console: Console = container.get<Console>('debug:console');
 	console.debug('ThemesProvider');
 
+	const MuiDrawer = {
+		paper: {
+			minWidth: '320px',
+		},
+	};
+
 	return () => Promise.resolve({
 		light: createAppTheme({
 			typography: {
@@ -36,9 +42,7 @@ export function ThemesProvider({ container }: interfaces.Context) {
 				},
 			},
 			overrides: {
-				MuiToolbar: {
-
-				},
+				MuiDrawer,
 			},
 		}),
 		dark: createAppTheme({
@@ -66,20 +70,21 @@ export function ThemesProvider({ container }: interfaces.Context) {
 					width: '1200px',
 				},
 			},
-			shape: {
-				toolbarButtonBorderRadius: '0px',
-			},
 			overrides: {
 				MuiToolbar: {
 					root: {
 						padding: '0',
-
 					},
 				},
-				MuiFab: {
-					extended: {
-						// 'border-radius': '0px',
+				MuiDrawer,
+				TopMenuButton: {
+					root: {
+						borderRadius: '0',
 					},
+				},
+				topToolbar: {
+					minHeight: '0',
+					padding: '0',
 				},
 			},
 		}),

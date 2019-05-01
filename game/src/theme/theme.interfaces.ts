@@ -1,18 +1,20 @@
 import * as React from 'react';
 
 import { Theme } from '@material-ui/core';
+import { FabClassKey } from '@material-ui/core/Fab';
+import { StyleRules } from '@material-ui/core/styles';
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
-import { Shape, ShapeOptions } from '@material-ui/core/styles/shape';
+import { Overrides } from '@material-ui/core/styles/overrides';
+
+export interface ICSSProperties {
+	[propertyName: string]: any;
+}
 
 export interface IAppThemeOptions extends ThemeOptions {
-	layout: {
-		container: {
-			width: string;
+	layout?: {
+		container?: {
+			width?: string;
 		};
-	};
-
-	shape?: ShapeOptions & {
-		toolbarButtonBorderRadius?: string;
 	};
 
 	icons?: {
@@ -23,6 +25,12 @@ export interface IAppThemeOptions extends ThemeOptions {
 		muteOn?: React.ComponentType;
 		muteOff?: React.ComponentType;
 	};
+
+	overrides?: Overrides & {
+		DrawerMenuButton?: Partial<StyleRules<FabClassKey>>;
+		TopMenuButton?: Partial<StyleRules<FabClassKey>>;
+		topToolbar?: ICSSProperties;
+	};
 }
 
 export interface IAppTheme extends Theme {
@@ -30,10 +38,7 @@ export interface IAppTheme extends Theme {
 		container: {
 			width: string;
 		};
-	};
 
-	shape: Shape & {
-		toolbarButtonBorderRadius: string;
 	};
 
 	icons: {
@@ -43,6 +48,12 @@ export interface IAppTheme extends Theme {
 		fullscreenOff: React.ComponentType;
 		muteOn: React.ComponentType;
 		muteOff: React.ComponentType;
+	};
+
+	overrides: Overrides & {
+		DrawerMenuButton: Partial<StyleRules<FabClassKey>>;
+		TopMenuButton: Partial<StyleRules<FabClassKey>>;
+		topToolbar: ICSSProperties;
 	};
 }
 

@@ -15,9 +15,6 @@ import { IAppTheme, IAppThemeOptions } from './theme.interfaces';
 export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 	let baseTheme = createMuiTheme(theme as ThemeOptions);
 	baseTheme = merge(baseTheme, {
-		shape: {
-			toolbarButtonBorderRadius: baseTheme.shape.borderRadius,
-		},
 		icons: {
 			config: ConfigIcon,
 			undo: BackIcon,
@@ -25,6 +22,27 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 			fullscreenOff: FullScreenExitIcon,
 			muteOn: MuteOnIcon,
 			muteOff: MuteOffIcon,
+		},
+		overrides: {
+			DrawerMenuButton: {
+				root: {
+					borderRadius: '0',
+
+					minHeight: '0',
+					padding: '0 24px 0 64px',
+					'& span': {
+						display: 'flex',
+						justifyContent: 'stretch',
+					},
+					'& svg': {
+						position: 'absolute',
+						left: '16px',
+						fontSize: 'xx-large',
+					},
+				},
+			},
+			TopMenuButton: {},
+			topToolbar: {},
 		},
 	});
 

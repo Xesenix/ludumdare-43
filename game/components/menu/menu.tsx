@@ -151,6 +151,7 @@ class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 				{location.pathname !== '/config' ? (
 					<MenuItem
 						// prettier-ignore
+						color="primary"
 						component={this.renderConfigLink}
 						key="config"
 						Icon={theme.icons.config}
@@ -161,6 +162,7 @@ class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 				{location.pathname === '/config' ? (
 					<MenuItem
 						// prettier-ignore
+						color="primary"
 						component={this.renderGameLink}
 						key="game"
 						Icon={theme.icons.undo}
@@ -171,7 +173,7 @@ class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 				<MenuItem
 					// prettier-ignore
 					active={fullscreen}
-					color="secondary"
+					color="default"
 					key="fullscreen"
 					onClick={this.toggleFullScreen}
 					ActiveIcon={theme.icons.fullscreenOn}
@@ -182,7 +184,7 @@ class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 				<MenuItem
 					// prettier-ignore
 					active={mute}
-					color="primary"
+					color="default"
 					onClick={this.toggleMute}
 					ActiveIcon={theme.icons.muteOn}
 					Icon={theme.icons.muteOff}

@@ -182,21 +182,21 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 					{__('Sound configuration')}
 				</Typography>
 				<Grid container spacing={0} alignItems="stretch" component="section" className={classes.section}>
-					<Grid item xs={6} sm={4}>
+					<Grid item xs={12} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
 							label={__('master mute')}
 							control={<Checkbox checkedIcon={<MuteOffIcon />} icon={<MuteOnIcon />} checked={mute} onChange={dispatchSetMutedAction} />}
 						/>
 					</Grid>
-					<Grid item xs={6} sm={4}>
+					<Grid item xs={12} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
 							label={__('music mute')}
 							control={<Checkbox checkedIcon={<MuteOffIcon />} icon={<MuteOnIcon />} checked={musicMuted} onChange={dispatchSetMusicMutedAction} />}
 						/>
 					</Grid>
-					<Grid item xs={6} sm={4}>
+					<Grid item xs={12} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
 							label={__('fx mute')}

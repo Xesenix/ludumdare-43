@@ -7,7 +7,6 @@ import { connectToInjector } from 'lib/di/context';
 // elements
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
-import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -16,7 +15,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { IMenuExternalProps, IMenuItemExternalProps } from 'menu/menu';
+import DrawerMenuButton from 'components/core/drawer-menu-button';
+import TopMenuButton from 'components/core/top-menu-button';
+
+import { IMenuExternalProps } from 'menu/menu';
 
 import { styles } from './primary-layout.styles';
 
@@ -62,58 +64,43 @@ class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IP
 			<Grid container spacing={0} alignItems="center">
 				<Grid item xs={12}>
 					<AppBar position="fixed">
-						<Toolbar>
-							<Hidden xsDown>
+						<Toolbar className={classes.topToolbar}>
+							<Hidden smDown>
 								<Menu
 									key="menu"
-									MenuItem={this.renderTopMenuItem}
+									MenuItem={TopMenuButton}
 								/>
 
 							</Hidden>
-							<Hidden smUp>
-								<Fab
-									className={classes.button}
+							<Hidden mdUp>
+								<TopMenuButton
 									color="primary"
 									onClick={this.toggleDrawer}
 									variant="extended"
-								>
-									<MenuIcon/>
-								</Fab>
+									Icon={MenuIcon}
+								/>
 							</Hidden>
 						</Toolbar>
 						{loading ? <LinearProgress/> : null}
 					</AppBar>
-					<Drawer
-						anchor="left"
-						onClose={this.toggleDrawer}
-						open={this.state.drawer}
-					>
-						<Menu
-							key="drawer-menu"
-							MenuItem={this.renderTopMenuItem}
-						/>
-					</Drawer>
-					<Paper className={classes.root} elevation={0}>
 
+					<Hidden mdUp>
+						<Drawer
+							anchor="left"
+							onClose={this.toggleDrawer}
+							open={this.state.drawer}
+						>
+							<Menu
+								key="drawer-menu"
+								MenuItem={DrawerMenuButton}
+							/>
+						</Drawer>
+					</Hidden>
+					<Paper className={classes.root} elevation={0}>
 						{content}
 					</Paper>
 				</Grid>
 			</Grid>
-		);
-	}
-
-	private renderTopMenuItem = (props: IMenuItemExternalProps) => {
-		const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
-		return (
-			<Fab
-				color={props.active && props.activeColor ? props.activeColor : props.color}
-				onClick={props.onClick}
-				component={props.component as any}
-				variant="extended"
-			>
-				{Icon ? <Icon/> : null}
-				{props.label}
-			</Fab>
 		);
 	}
 

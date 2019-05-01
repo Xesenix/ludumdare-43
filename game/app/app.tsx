@@ -7,7 +7,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { Store } from 'redux';
 
 // elements
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider, withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { connectToInjector } from 'lib/di/context';
@@ -19,7 +21,16 @@ import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-la
 
 import { styles } from './app.styles';
 
-const Loader = () => <div>...</div>;
+const Loader = () => (
+	<Grid
+		container
+		spacing={0}
+		alignItems="center"
+		style={{ padding: '64px 0', position: 'relative', marginLeft: '50%', left: '-64px',}}
+	>
+		<CircularProgress size={128}/>
+	</Grid>
+);
 
 const MenuComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "menu" */ 'components/menu/menu') });
 const IntroView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view') });
