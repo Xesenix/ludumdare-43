@@ -1,3 +1,4 @@
+import hoistNonReactStatic from 'hoist-non-react-statics';
 import { Container } from 'inversify';
 import * as React from 'react';
 
@@ -22,6 +23,8 @@ export function connectToDI<T>(Consumer: React.ComponentType<T & { di: Container
 
 	// changes name for debuging
 	(DIContainerConsumer as any).displayName = 'DIContainer.Consumer';
+
+	hoistNonReactStatic(DIContainerConsumer, Consumer);
 
 	return DIContainerConsumer;
 }
@@ -119,6 +122,8 @@ export function connectToInjector<T, I = any>(
 
 		// changes name for debuging
 		(DIInjector as any).displayName = className;
+
+		hoistNonReactStatic(DIInjector, Consumer);
 
 		return connectToDI<T>(DIInjector) as React.ComponentType<T>;
 	};
