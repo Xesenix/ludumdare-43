@@ -67,6 +67,10 @@ Links:
 
 * [MDN web docs - game development](https://developer.mozilla.org/en-US/docs/Games)
 
+### Caveats
+
+* Why I don't use `Function.bind` and instead use instance functions when it supposed to be more optimized? [`this` in Typescript](https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript)
+
 ### TODO:
 
 * [Large-Allocation header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation)
