@@ -6,7 +6,6 @@ import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
 // elements
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -56,6 +55,7 @@ import {
 	II18nTranslation,
 } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
 
 import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
 import EventWidgetComponent from 'components/event-widget/event-widget';
@@ -66,7 +66,6 @@ import TrainWidgetComponent from 'components/train-widget/train-widget';
 // import TurnDetailsComponent from 'components/turn-details/turn-details';
 import UnitsWidgetComponent from 'components/units-widget/units-widget';
 
-import { pickBy } from 'lodash';
 import { styles } from './game-view.styles';
 
 /** Component public properties required to be provided by parent component. */
@@ -116,20 +115,18 @@ class GameViewComponent extends React.PureComponent<IGameViewProps, IGameViewSta
 	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
 
+	private filter = filterByKeys<IGameViewState>([
+		// prettier-ignore
+		'compactMode',
+		'language',
+	]);
+
 	constructor(props) {
 		super(props);
 
-		const {
-			// prettier-ignore
-			compactMode,
-			language,
-		} = props.store.getState();
-
 		this.state = {
-			// prettier-ignore
-			compactMode,
+			...this.filter(props.store.getState()),
 			currentState: null,
-			language,
 		};
 	}
 
@@ -463,15 +460,12 @@ Each one requires 1 resource per year to be operational if there are no enough r
 		const { store } = this.props;
 
 		if (!this.unsubscribeDataStore && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: IGameViewState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IGameViewState;
 			this.unsubscribeDataStore = store.subscribe(() => {
-				console.log('GameViewComponent:bindToStore', keys);
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 

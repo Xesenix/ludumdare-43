@@ -1,6 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
-import { isEqual, pickBy } from 'lodash';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -29,6 +29,7 @@ import MuteOnIcon from '@material-ui/icons/VolumeUp';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
 
 import { styles } from './configuration-view.styles';
 
@@ -109,30 +110,22 @@ type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationV
 export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps, IConfigurationViewState> {
 	private unsubscribeDataStore?: any;
 
+	private filter = filterByKeys<IConfigurationViewState>([
+		// prettier-ignore
+		'effectsMuted',
+		'effectsVolume',
+		'language',
+		'languages',
+		'musicMuted',
+		'musicVolume',
+		'mute',
+		'volume',
+	]);
+
 	constructor(props) {
 		super(props);
-		const {
-			// prettier-ignore
-			effectsMuted,
-			effectsVolume,
-			language,
-			languages,
-			musicMuted,
-			musicVolume,
-			mute,
-			volume,
-		} = props.store.getState();
-		this.state = {
-			// prettier-ignore
-			effectsMuted,
-			effectsVolume,
-			language,
-			languages,
-			musicMuted,
-			musicVolume,
-			mute,
-			volume,
-		};
+
+		this.state = this.filter(props.store.getState());
 	}
 
 	public componentDidMount(): void {
@@ -284,14 +277,12 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 		const { store } = this.props;
 
 		if (!this.unsubscribeDataStore && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: IConfigurationViewState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IConfigurationViewState;
 			this.unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 }

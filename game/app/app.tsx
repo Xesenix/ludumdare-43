@@ -1,5 +1,5 @@
 import { Container } from 'inversify';
-import { isEqual, pickBy } from 'lodash';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -10,7 +10,7 @@ import { Store } from 'redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import { MuiThemeProvider, withStyles, WithStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import { connectToInjector } from 'lib/di/context';
 import { LanguageType } from 'lib/interfaces';
@@ -18,8 +18,7 @@ import { IAppTheme, ThemesNames } from 'theme';
 
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
-
-import { styles } from './app.styles';
+import { filterByKeys } from 'lib/utils/filter-keys';
 
 const Loader = () => (
 	<Grid
@@ -65,25 +64,23 @@ const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	},
 });
 
-type AppProps = IAppProps & IAppInternalProps & WithStyles<typeof styles>;
+type AppProps = IAppProps & IAppInternalProps;
 
 class App extends React.Component<AppProps, IAppState> {
 	private unsubscribe?: any;
 
+	private filter = filterByKeys<IAppState>([
+		// prettier-ignore
+		'fullscreen',
+		'theme',
+		'language',
+		'languages',
+	]);
+
 	constructor(props) {
 		super(props);
-		const {
-			fullscreen,
-			theme,
-			language,
-			languages,
-		} = props.store.getState();
-		this.state = {
-			fullscreen,
-			theme,
-			language,
-			languages,
-		};
+
+		this.state = this.filter(props.store.getState());
 	}
 
 	public componentDidMount(): void {
@@ -134,6 +131,7 @@ class App extends React.Component<AppProps, IAppState> {
 						<PrimaryLayoutComponent
 							Menu={MenuComponent}
 							content={routing}
+							// loading={GameView.}
 						/>
 					)}
 					{/* </React.StrictMode> */}
@@ -150,17 +148,14 @@ class App extends React.Component<AppProps, IAppState> {
 		const { store } = this.props;
 
 		if (!this.unsubscribe && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: IAppState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IAppState;
 			this.unsubscribe = store.subscribe(() => {
-				console.log('App:bindToStore', keys);
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(App)));
+export default hot(module)(diDecorator(App));

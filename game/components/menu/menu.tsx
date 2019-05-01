@@ -1,5 +1,5 @@
 import { PropTypes } from '@material-ui/core';
-import { isEqual, pickBy } from 'lodash';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
@@ -11,11 +11,12 @@ import { Store } from 'redux';
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
-import { IAppTheme, ThemesNames } from 'theme';
+import { IAppTheme } from 'theme';
 
 // elements
 // import { ButtonBaseProps } from '@material-ui/core/ButtonBase';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { filterByKeys } from 'lib/utils/filter-keys';
 
 const Loader = () => <CircularProgress />;
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
@@ -55,8 +56,6 @@ interface IMenuState {
 	language: LanguageType;
 	/** required for interface updates after loading language */
 	languages: any;
-	/** required for interface updates after changing application theme */
-	theme: ThemesNames;
 }
 
 const diDecorator = connectToInjector<IMenuExternalProps & RouteComponentProps, IMenuInternalProps>({
@@ -88,26 +87,19 @@ type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
 class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 	private unsubscribeDataStore?: any;
 
+	private filter = filterByKeys<IMenuState>([
+		// prettier-ignore
+		'compactMode',
+		'fullscreen',
+		'language',
+		'languages',
+		'mute',
+	]);
+
 	constructor(props) {
 		super(props);
-		const {
-			// prettier-ignore
-			compactMode,
-			fullscreen,
-			language,
-			languages,
-			mute,
-			theme,
-		} = props.store.getState();
-		this.state = {
-			// prettier-ignore
-			compactMode,
-			fullscreen,
-			language,
-			languages,
-			mute,
-			theme,
-		};
+
+		this.state = this.filter(props.store.getState());
 	}
 
 	public componentDidMount(): void {
@@ -261,14 +253,12 @@ class MenuComponent extends React.Component<IMenuProps, IMenuState> {
 		const { store } = this.props;
 
 		if (!this.unsubscribeDataStore && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: IMenuState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IMenuState;
 			this.unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 }

@@ -1,10 +1,11 @@
 import { Container } from 'inversify';
-import { isEqual, pickBy } from 'lodash';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di/context';
+import { filterByKeys } from 'lib/utils/filter-keys';
 import { ThemesNames } from 'theme';
 
 /** Component public properties required to be provided by parent component. */
@@ -39,10 +40,15 @@ type IThemeSelectorProps = IThemeSelectorExternalProps & IThemeSelectorInternalP
 class ThemeSelectorComponent extends React.Component<IThemeSelectorProps, IThemeSelectorState> {
 	private unsubscribeDataStore?: any;
 
+	private filter = filterByKeys<IThemeSelectorState>([
+		// prettier-ignore
+		'theme',
+	]);
+
 	constructor(props) {
 		super(props);
-		const { theme } = props.store.getState();
-		this.state = { theme };
+
+		this.state = this.filter(props.store.getState());
 	}
 
 	public componentDidMount(): void {
@@ -83,14 +89,12 @@ class ThemeSelectorComponent extends React.Component<IThemeSelectorProps, ITheme
 		const { store } = this.props;
 
 		if (!this.unsubscribeDataStore && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: IThemeSelectorState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as IThemeSelectorState;
 			this.unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 }

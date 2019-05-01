@@ -1,11 +1,12 @@
 import { Container } from 'inversify';
-import { isEqual, pickBy } from 'lodash';
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
 import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
 
 /** Component public properties required to be provided by parent component. */
 export interface ILanguageSelectorExternalProps {
@@ -39,10 +40,15 @@ type ILanguageSelectorProps = ILanguageSelectorExternalProps & ILanguageSelector
 class LanguageSelectorComponent extends React.Component<ILanguageSelectorProps, ILanguageSelectorState> {
 	private unsubscribeDataStore?: any;
 
+	private filter = filterByKeys<ILanguageSelectorState>([
+		// prettier-ignore
+		'language',
+	]);
+
 	constructor(props) {
 		super(props);
-		const { language } = props.store.getState();
-		this.state = { language };
+
+		this.state = this.filter(props.store.getState());
 	}
 
 	public componentDidMount(): void {
@@ -83,14 +89,12 @@ class LanguageSelectorComponent extends React.Component<ILanguageSelectorProps, 
 		const { store } = this.props;
 
 		if (!this.unsubscribeDataStore && !!store) {
-			const keys = Object.keys(this.state);
-			const filter = (state: ILanguageSelectorState) => pickBy(state, (_, key) => keys.indexOf(key) >= 0) as ILanguageSelectorState;
 			this.unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
-					this.setState(filter(store.getState()));
+					this.setState(this.filter(store.getState()));
 				}
 			});
-			this.setState(filter(store.getState()));
+			this.setState(this.filter(store.getState()));
 		}
 	}
 }
