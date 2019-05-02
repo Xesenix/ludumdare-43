@@ -44,7 +44,7 @@ interface IMenuInternalProps {
 	dispatchCreateSetMutedAction: (value: boolean) => void;
 	dispatchSetFullscreenAction: (value: boolean) => void;
 	getTheme: () => IAppTheme;
-	store?: Store<IMenuState>;
+	store: Store<IMenuState>;
 }
 
 /** Internal component state. */
