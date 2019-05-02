@@ -72,9 +72,6 @@ export function ThemesProvider({ container }: interfaces.Context) {
 			},
 			overrides: {
 				MuiToolbar: {
-					root: {
-						padding: '0',
-					},
 				},
 				MuiDrawer,
 				TopMenuButton: {
@@ -82,9 +79,13 @@ export function ThemesProvider({ container }: interfaces.Context) {
 						borderRadius: '0',
 					},
 				},
-				topToolbar: {
-					minHeight: '0',
-					padding: '0',
+			},
+			props: {
+				MuiToolbar: {
+					variant: 'dense',
+				},
+				MuiDrawer: {
+					anchor: 'right',
 				},
 			},
 		}),

@@ -95,7 +95,7 @@ class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IP
 			<Grid container spacing={0} alignItems="center">
 				<Grid item xs={12}>
 					<AppBar position="fixed">
-						<Toolbar className={classes.topToolbar}>
+						<Toolbar>
 							<Hidden smDown>
 								<Menu
 									key="menu"
@@ -117,7 +117,6 @@ class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IP
 
 					<Hidden mdUp>
 						<Drawer
-							anchor="left"
 							onClose={this.toggleDrawer}
 							open={this.state.drawerOpen}
 						>

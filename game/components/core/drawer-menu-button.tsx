@@ -6,7 +6,6 @@ import { hot } from 'react-hot-loader';
 import Fab from '@material-ui/core/Fab';
 
 import { IMenuItemExternalProps } from 'menu/menu';
-import { IAppTheme } from 'theme';
 
 export const styles = (theme: Theme) => {
 	return createStyles({
