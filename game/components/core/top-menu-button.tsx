@@ -6,11 +6,8 @@ import { hot } from 'react-hot-loader';
 import Fab from '@material-ui/core/Fab';
 
 import { IMenuItemExternalProps } from 'menu/menu';
-import { IAppTheme } from 'theme';
 
 export const styles = (theme: Theme) => {
-	const appTheme: IAppTheme = theme as IAppTheme;
-	console.log('TopMenuButton:styles');
 	return createStyles({
 		root: {
 			'& svg': {
@@ -25,7 +22,7 @@ export const styles = (theme: Theme) => {
 	});
 };
 
-const TopMenuButton = React.forwardRef((props: IMenuItemExternalProps & WithStyles < typeof styles > , ref) => {
+const TopMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styles>) => {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	return (
@@ -34,13 +31,12 @@ const TopMenuButton = React.forwardRef((props: IMenuItemExternalProps & WithStyl
 			color={props.active && props.activeColor ? props.activeColor : props.color}
 			component={props.component as any}
 			onClick={props.onClick}
-			ref={ref}
 			variant="extended"
 		>
 			{Icon ? <Icon/> : null}
 			{props.label}
 		</Fab>
 	);
-});
+};
 
 export default hot(module)(withStyles(styles, { name: 'TopMenuButton' })(TopMenuButton));

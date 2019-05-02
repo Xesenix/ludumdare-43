@@ -2,7 +2,6 @@ import { EventEmitter } from 'eventemitter3';
 import { Container } from 'inversify';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Reducer } from 'redux';
 
 import { Game } from 'game/game';
 import { DataStore, IGameState } from 'game/store';
@@ -10,14 +9,14 @@ import { DataStoreModule } from 'lib/data-store';
 import { DebugModule } from 'lib/debug';
 import { DIContext } from 'lib/di';
 import { FullScreenModule } from 'lib/fullscreen';
-import { defaultI18nState, I18nModule, II18nState } from 'lib/i18n';
+import { I18nModule, II18nState } from 'lib/i18n';
 import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
 import { ServiceWorkerModule } from 'lib/service-worker';
 import { SoundModule } from 'lib/sound';
 import { SoundScapeModule } from 'lib/sound-scape';
 import { PhaserGameModule } from 'phaser/game.module';
 import { ThemeModule } from 'theme';
-import { defaultUIState, IUIState, UIModule } from 'ui';
+import { IUIState, UIModule } from 'ui';
 
 import { initialGameState } from '../data/initial-state';
 import App from './app';

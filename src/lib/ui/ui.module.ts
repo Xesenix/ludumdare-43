@@ -10,7 +10,6 @@ import {
 	// prettier-ignore
 	createSetEffectsMutedAction,
 	createSetEffectsVolumeAction,
-	createSetFullscreenAction,
 	createSetMusicMutedAction,
 	createSetMusicVolumeAction,
 	createSetMutedAction,

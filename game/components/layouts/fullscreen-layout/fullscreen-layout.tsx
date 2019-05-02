@@ -94,7 +94,7 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps, 
 		return (
 			<Paper className={classes.root} elevation={0}>
 				<AppBar position="fixed">
-					<Toolbar className={classes.topToolbar}>
+					<Toolbar>
 						<Hidden smDown>
 							<Menu
 								key="fullscreen-menu"
@@ -103,7 +103,6 @@ class FullscreenLayoutComponent extends React.Component<IFullscreenLayoutProps, 
 						</Hidden>
 						<Hidden mdUp>
 							<TopMenuButton
-								className={classes.topMenuButton}
 								color="primary"
 								onClick={this.toggleDrawer}
 								variant="extended"

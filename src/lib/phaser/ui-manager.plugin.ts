@@ -1,5 +1,4 @@
 import { Store } from 'redux';
-import { onFullScreenChange } from './../fullscreen/fullscreen';
 
 import { createClassProvider } from 'lib/di';
 
