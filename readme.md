@@ -74,3 +74,4 @@ Links:
 ### TODO:
 
 * [Large-Allocation header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation)
+* connect react router history to redux store
