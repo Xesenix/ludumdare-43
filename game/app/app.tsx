@@ -6,19 +6,19 @@ import Loadable from 'react-loadable';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Store } from 'redux';
 
+import { connectToInjector } from 'lib/di/context';
+import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
+import { IAppTheme, ThemesNames } from 'theme';
+
 // elements
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
-import { connectToInjector } from 'lib/di/context';
-import { LanguageType } from 'lib/interfaces';
-import { IAppTheme, ThemesNames } from 'theme';
-
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
-import { filterByKeys } from 'lib/utils/filter-keys';
 
 const Loader = () => (
 	<Grid
@@ -56,11 +56,11 @@ interface IAppState {
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
+	getTheme: {
+		dependencies: ['theme:get-theme()'],
+	},
 	store: {
 		dependencies: ['data-store'],
-	},
-	getTheme: {
-		dependencies: ['theme:get-theme'],
 	},
 });
 

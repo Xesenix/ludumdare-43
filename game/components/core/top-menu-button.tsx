@@ -19,6 +19,15 @@ export const styles = (theme: Theme) => {
 			display: 'flex',
 			justifyContent: 'stretch',
 		},
+		primary: {
+
+		},
+		secondary: {
+
+		},
+		focusVisible: {
+
+		},
 	});
 };
 

@@ -1,21 +1,69 @@
 import { interfaces } from 'inversify';
 import { Store } from 'redux';
 
+import { resolveDependencies } from 'lib/di';
 import { ICreateSetAction } from 'lib/interfaces';
+import { IThemeBuilder } from 'theme';
 
-import { ThemesNames } from './theme.interfaces';
+import {
+	// prettier-ignore
+	IAppTheme,
+	IAppThemeDescriptors,
+	ThemesNames,
+} from './theme.interfaces';
 
 export function ThemeBootProvider({ container }: interfaces.Context) {
 	const console: Console = container.get<Console>('debug:console');
 	console.debug('ThemeBootProvider');
 
-	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
-		.then((store: Store<any, any>) => {
-			console.debug('ThemeBootProvider:boot');
+	return () => resolveDependencies(container, [
+		// prettier-ignore
+		'data-store:provider()',
+		'theme:create-theme',
+	], async (
+		// prettier-ignore
+		store: Store<any, any>,
+		createTheme: IThemeBuilder,
+	) => {
+		const { theme } = store.getState();
+		console.debug('ThemeBootProvider:boot', theme);
 
-			const createSetThemeAction = container.get<ICreateSetAction<ThemesNames>>('data-store:action:create:set-theme');
-			container.bind('ui:actions')
-				.toConstantValue((value: ThemesNames) => store.dispatch(createSetThemeAction(value)))
-				.whenTargetNamed('setTheme');
-		});
+		const loadTheme = await resolveDependencies(container, [
+				// prettier-ignore
+				'theme:theme-descriptors',
+			], (
+				themesDescriptors: IAppThemeDescriptors,
+			) => (value: ThemesNames) => {
+				const key = `theme:loaded:${value}`;
+
+				if (!themesDescriptors[value]) {
+					container.bind(key).toConstantValue(createTheme({}));
+					console.warn(`ThemeBootProvider:error requested theme doesn't exist.`);
+				}
+
+				if (container.isBound(key)) {
+					return Promise.resolve(container.get<IAppTheme>(key));
+				}
+
+				return themesDescriptors[value].themeProvider().then((result: IAppTheme) => {
+					if (!container.isBound(key)) {
+						container.bind(key).toConstantValue(result);
+					}
+
+					return result;
+				});
+			});
+
+		const createSetThemeAction = container.get<ICreateSetAction<ThemesNames>>('data-store:action:create:set-theme');
+		const setTheme = (value: ThemesNames) => {
+			loadTheme(value).then(() => {
+				store.dispatch(createSetThemeAction(value));
+			});
+		};
+		container.bind('ui:actions')
+			.toConstantValue(setTheme)
+			.whenTargetNamed('setTheme');
+
+		return loadTheme(theme);
+	});
 }

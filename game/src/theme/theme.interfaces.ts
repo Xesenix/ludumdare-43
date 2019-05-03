@@ -5,6 +5,7 @@ import { FabClassKey } from '@material-ui/core/Fab';
 import { StyleRules } from '@material-ui/core/styles';
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { Overrides } from '@material-ui/core/styles/overrides';
+import { II18nTranslation } from 'lib/i18n';
 
 export interface ICSSProperties {
 	[propertyName: string]: any;
@@ -57,15 +58,29 @@ export interface IAppTheme extends Theme {
 	};
 }
 
-export interface IAppThemes {
-	light: IAppTheme;
-	dark: IAppTheme;
+export type ThemesNames = 'default' | 'light' | 'dark' | string;
+
+export type IThemeProvider = () => Promise<IAppTheme>;
+
+
+export interface IAppThemesProviders {
+	[key: string]: IThemeProvider;
 }
 
-export type ThemesNames = keyof IAppThemes;
+export type IAppThemesProvider = () => Promise<IAppThemesProviders>;
 
 export interface IThemeState {
 	theme: ThemesNames;
 }
 
-export type ThemesProviderType = () => Promise<IAppThemes>;
+export type IThemeBuilder = (style: IAppThemeOptions) => IAppTheme;
+
+export interface IAppThemeDescriptor {
+	name: ThemesNames;
+	localizedLabel: (__: II18nTranslation) => string;
+	themeProvider: IThemeProvider;
+}
+
+export interface IAppThemeDescriptors {
+	[key: string]: IAppThemeDescriptor;
+}

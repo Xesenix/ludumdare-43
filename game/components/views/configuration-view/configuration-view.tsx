@@ -6,6 +6,12 @@ import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
 import { Store } from 'redux';
 
+import { connectToInjector } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
+import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
+import { IAppThemeDescriptor } from 'theme';
+
 // elements
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
@@ -25,11 +31,6 @@ import MusicOnIcon from '@material-ui/icons/MusicNote';
 import MusicOffIcon from '@material-ui/icons/MusicOff';
 import MuteOffIcon from '@material-ui/icons/VolumeOff';
 import MuteOnIcon from '@material-ui/icons/VolumeUp';
-
-import { connectToInjector } from 'lib/di';
-import { II18nTranslation } from 'lib/i18n';
-import { LanguageType } from 'lib/interfaces';
-import { filterByKeys } from 'lib/utils/filter-keys';
 
 import { styles } from './configuration-view.styles';
 
@@ -52,6 +53,7 @@ interface IConfigurationViewInternalProps {
 	dispatchSetThemeAction: (event: any) => void;
 	dispatchSetVolumeAction: (event: any, value: number) => void;
 	store: Store<IConfigurationViewState>;
+	themes: IAppThemesDescriptors;
 }
 
 /** Internal component state. */
@@ -102,6 +104,9 @@ const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigur
 	dispatchSetVolumeAction: {
 		dependencies: ['ui:actions@setVolume'],
 		value: (setVolume: (value: number) => void) => Promise.resolve((event: any, value: number) => setVolume(value)),
+	},
+	themes: {
+		dependencies: ['theme:theme-descriptors'],
 	},
 });
 
@@ -258,12 +263,16 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 	}
 
 	private renderThemeSelector = (value: string, update: any) => {
-		const { __ } = this.props;
+		const { __, themes } = this.props;
 		// tslint:disable:jsx-no-lambda
 		return (
 			<Select value={value} onChange={(event) => update(event.target.value)}>
-				<MenuItem value={'light'}>{__('light')}</MenuItem>
-				<MenuItem value={'dark'}>{__('dark')}</MenuItem>
+				{
+					Object.entries<IAppThemeDescriptor>(themes)
+						.map(([key, { localizedLabel }]) => (
+							<MenuItem key={key} value={key}>{localizedLabel(__)}</MenuItem>
+						))
+				}
 			</Select>
 		);
 	}

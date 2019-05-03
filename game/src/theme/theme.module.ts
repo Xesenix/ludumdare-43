@@ -1,40 +1,67 @@
 import { interfaces } from 'inversify';
 import { Reducer, Store } from 'redux';
 
+import { resolveDependencies } from 'lib/di';
+import { II18nTranslation } from 'lib/i18n';
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
 import { createSetThemeAction } from './actions';
+import { createAppTheme } from './create-theme';
 import { reducer } from './reducers';
 import { ThemeBootProvider } from './theme-boot.provider';
-import { IAppTheme, IThemeState, ThemesNames, ThemesProviderType } from './theme.interfaces';
-import { ThemesProvider } from './themes.provider';
+import {
+	// prettier-ignore
+	IAppTheme,
+	IAppThemeDescriptor,
+	IAppThemeDescriptors,
+	IThemeBuilder,
+	IThemeProvider,
+	IThemeState,
+	ThemesNames,
+} from './theme.interfaces';
 
 export class ThemeModule {
 	public static register(app: IApplication) {
 
 		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(ThemeBootProvider);
+		app.bind<IThemeBuilder>('theme:create-theme').toConstantValue(createAppTheme);
 
-		// available application themes
-		app.bind<ThemesProviderType>('theme:themes').toProvider(ThemesProvider);
+		app.bind<IAppThemeDescriptors>('theme:theme-descriptors').toDynamicValue(
+			({ container }: interfaces.Context) => {
+				const themeDescriptors = container.getAll<() => IAppThemeDescriptor>('theme:theme');
+				return themeDescriptors
+					.map((descriptor) => descriptor())
+					.reduce(
+						(
+							result: Partial<IAppThemeDescriptors>,
+							{ name, ...data },
+						) => ({
+							...result,
+							[name]: data,
+						}),
+						{},
+					);
+			},
+		);
 
 		// current application theme
-		app.bind<Promise<() => IAppTheme>>('theme:get-theme').toDynamicValue(async ({ container }: interfaces.Context) => {
-			const key = 'theme:get-theme:_cached';
-			if (!container.isBound(key)) {
-				const themes = await container.get<ThemesProviderType>('theme:themes')();
-				const store = container.get<Store<IThemeState, any>>('data-store');
-
-				const getTheme = () => {
-					const { theme } = store.getState();
-					return themes[theme];
-				};
-
-				container.bind<() => IAppTheme>(key).toConstantValue(getTheme);
-			}
-
-			return container.get<() => IAppTheme>(key);
-		});
+		app.bind<Promise<() => IAppTheme>>('theme:get-theme')
+			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<() => IAppTheme>(container, [
+				'data-store',
+				'theme:create-theme',
+			], (
+				store: Store<IThemeState, any>,
+				createTheme: IThemeBuilder,
+			) => () => {
+				const { theme } = store.getState();
+				const key = `theme:loaded:${theme}`;
+				if (!container.isBound(key)) {
+					console.warn(`ThemeModule:error theme ${theme} is not loaded.\nEnsure that theme is loaded before setting it in data store.`);
+					return createTheme({});
+				}
+				return container.get<IAppTheme>(key);
+			}));
 
 		// redux action creators
 		app.bind<ICreateSetAction<ThemesNames>>('data-store:action:create:set-theme').toConstantValue(createSetThemeAction);
@@ -44,5 +71,23 @@ export class ThemeModule {
 
 		// add reducer from this module
 		app.bind<Reducer<any, any>>('data-store:reducers').toConstantValue(reducer);
+	}
+
+	public static registerTheme(
+		// prettier-ignore
+		app: IApplication,
+		name: string,
+		localizedLabel: (__: II18nTranslation) => string,
+		themeProviderFactory: (builder: IThemeBuilder) => IThemeProvider,
+	) {
+		app.bind<() => IAppThemeDescriptor>('theme:theme')
+			.toDynamicValue(({ container }: interfaces.Context) => () => {
+				const createTheme = container.get<IThemeBuilder>('theme:create-theme');
+				return {
+					name,
+					localizedLabel,
+					themeProvider: themeProviderFactory(createTheme),
+				};
+			});
 	}
 }

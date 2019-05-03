@@ -23,6 +23,10 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 			muteOn: MuteOnIcon,
 			muteOff: MuteOffIcon,
 		},
+		layout: {
+			container: {
+			},
+		},
 		overrides: {
 			DrawerMenuButton: {
 				root: {
@@ -41,8 +45,13 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 					},
 				},
 			},
-			TopMenuButton: {},
-			topToolbar: {},
+			TopMenuButton: {
+				root: {
+					'& svg': {
+						fontSize: 'x-large',
+					},
+				},
+			},
 		},
 	});
 

@@ -14,10 +14,9 @@ import ActionIcon from '@material-ui/icons/FlashOnRounded';
 // icons
 import WinIcon from '@material-ui/icons/Star';
 
-import { connectToInjector } from 'lib/di';
-
 import { Game } from 'game/game';
 import { IGameState } from 'game/store';
+import { connectToInjector } from 'lib/di';
 
 import { canMakeUltimateSacrifice } from 'game/actions/sacrifice';
 import {

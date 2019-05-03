@@ -11,12 +11,11 @@ import { Store } from 'redux';
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
+import { filterByKeys } from 'lib/utils/filter-keys';
 import { IAppTheme } from 'theme';
 
 // elements
-// import { ButtonBaseProps } from '@material-ui/core/ButtonBase';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { filterByKeys } from 'lib/utils/filter-keys';
 
 const Loader = () => <CircularProgress />;
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
@@ -75,7 +74,7 @@ const diDecorator = connectToInjector<IMenuExternalProps & RouteComponentProps, 
 		value: (setCompactMode: (value: boolean) => void) => Promise.resolve(setCompactMode),
 	},
 	getTheme: {
-		dependencies: ['theme:get-theme'],
+		dependencies: ['theme:get-theme()'],
 	},
 	store: {
 		dependencies: ['data-store'],
