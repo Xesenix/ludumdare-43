@@ -36,13 +36,69 @@ export function injectable(): any {
 /**
  * Uses context container to inject named dependencies into function.
  *
+ * @param container dependency injection container
+ * @param key unique identifier that will be used internally to store result of factory in container
+ * @param dependencies list identifiers of required dependencies in addition if identifier ends with '()' it will resolve provider result before injecting it
+ * @param factory factory function into which we want to inject dependencies
+ */
+export async function resolveDependencies<T = any>(
+	container: ii.Container,
+	dependencies: string[],
+	factory: (...args: any[]) => T,
+) {
+	const klass = factory(
+		...(await Promise.all(
+			dependencies.map((dep: string) => {
+				const multiple = dep.indexOf('[]') > -1;
+				const callable = dep.indexOf('()') > -1;
+				if (multiple) {
+					const key = dep.replace('[]', '').replace('()', '');
+					const results = container.getAll<any>(key);
+					if (callable) {
+						try {
+							return results.length > 1 ? results.map((result) => result()) : results[0]();
+						} catch (err) {
+							console.error('error:', dep, results, err);
+							return Promise.reject(err);
+						}
+					}
+					return Promise.all(results).then((resolved) => resolved.length > 1 ? resolved : resolved[0]);
+				} else {
+					const key = dep.replace('()', '');
+					const result = container.get<any>(key);
+					if (callable) {
+						try {
+							return result();
+						} catch (err) {
+							console.error('error:', dep, result, err);
+							return Promise.reject(err);
+						}
+					}
+					return Promise.resolve(result);
+				}
+			}),
+		)),
+	);
+
+	return klass;
+}
+
+/**
+ * Uses context container to inject named dependencies into function.
+ *
  * @param key unique identifier that will be used internally to store result of factory in container
  * @param dependencies list identifiers of required dependencies in addition if identifier ends with '()' it will resolve provider result before injecting it
  * @param factory factory function into which we want to inject dependencies
  * @param shouldResolve if true will try resolve factory result from DIC else will return result of factory without further modifications
  * @returns provider function
  */
-export function createProvider(key, dependencies, factory, shouldResolve = true, cache = true) {
+export function createProvider(
+	key: string,
+	dependencies: string[],
+	factory,
+	shouldResolve: boolean = true,
+	cache: boolean = true,
+) {
 	const cacheResult = cache ? memoize : (cb) => cb;
 	return cacheResult(({ container }: ii.Context) => async () => {
 		const console = container.get<Console>('debug:console:DEBUG_DI');
@@ -51,24 +107,10 @@ export function createProvider(key, dependencies, factory, shouldResolve = true,
 			dependencies,
 			factory,
 		});
-		const klass = factory(
-			...(await Promise.all(
-				dependencies.map((dep: string) => {
-					const result = container.get<any>(dep.replace('()', ''));
-					if (dep.indexOf('()') > -1) {
-						try {
-							return result() as Promise<any>;
-						} catch (err) {
-							console.error('error:', dep, result, err);
-							return Promise.reject(err);
-						}
-					}
-					return Promise.resolve(result);
-				}),
-			)),
-		);
 
-		if (shouldResolve) {
+		const klass = await resolveDependencies(container, dependencies, factory);
+
+		if (shouldResolve && key) {
 			if (!container.isBound(key)) {
 				container
 					.bind(key)

@@ -62,7 +62,8 @@ export function connectToInjector<T, I = any>(
 					const configs = Object.values<{ dependencies: string[]; value?: (...dependencies: any[]) => Promise<any> }>(select);
 
 					const nameRegexp = /\@([a-zA-Z0-9_-]+)/;
-					const callRegexp = /(\(\))$/;
+					const callRegexp = /(\(\))/;
+					const multipleRegexp = /(\[\])$/;
 
 					Promise.all(
 						configs.map(
@@ -73,6 +74,7 @@ export function connectToInjector<T, I = any>(
 							}) => value.apply({}, dependencies.map((key) => {
 								const nameMatch = nameRegexp.exec(key);
 								const callMatch = callRegexp.exec(key);
+								const multipleMatch = multipleRegexp.exec(key);
 								const callable = !!callMatch;
 								let injection: any;
 
@@ -82,13 +84,27 @@ export function connectToInjector<T, I = any>(
 									key = key.replace(callMatch[0], '');
 								}
 
+								if (!!multipleMatch) {
+									key = key.replace(multipleMatch[0], '');
+								}
+
+
 								// handling keys with named dependencies like:
 								// some_key@name
-								if (!!nameMatch) {
-									key = key.replace(nameMatch[0], '');
-									injection = di.getNamed<any>(key, nameMatch[1]);
+								if (!!multipleMatch) {
+									if (!!nameMatch) {
+										key = key.replace(nameMatch[0], '');
+										injection = di.getAllNamed<any>(key, nameMatch[1]);
+									} else {
+										injection = di.getAll<any>(key);
+									}
 								} else {
-									injection = di.get<any>(key);
+									if (!!nameMatch) {
+										key = key.replace(nameMatch[0], '');
+										injection = di.getNamed<any>(key, nameMatch[1]);
+									} else {
+										injection = di.get<any>(key);
+									}
 								}
 
 								return callable ? injection() : injection;
