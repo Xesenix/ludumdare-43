@@ -10,7 +10,9 @@ export class SharpThemeModule {
 			(__: II18nTranslation) => __('sharp-theme-light'),
 			(createTheme: IThemeBuilder) => () =>
 				import(/* webpackChunkName: "sharp-theme" */ './sharp-theme.styles')
-					.then((module) => module.default(createTheme, 'light') as IAppTheme),
+					.then((module) => module.default(createTheme, {
+						type: 'light',
+					}) as IAppTheme),
 		);
 
 		ThemeModule.registerTheme(
@@ -19,7 +21,9 @@ export class SharpThemeModule {
 			(__: II18nTranslation) => __('sharp-theme-dark'),
 			(createTheme: IThemeBuilder) => () =>
 				import(/* webpackChunkName: "sharp-theme" */ './sharp-theme.styles')
-					.then((module) => module.default(createTheme, 'dark') as IAppTheme),
+					.then((module) => module.default(createTheme, {
+						type: 'dark',
+					}) as IAppTheme),
 		);
 	}
 }

@@ -1,9 +1,12 @@
-import { darken, lighten, linearGradient, rgba } from 'polished';
+import { PaletteOptions } from '@material-ui/core/styles/createPalette';
+import UndoIcon from '@material-ui/icons/Close';
+import { darken, invert, lighten, linearGradient } from 'polished';
 import { IAppTheme, IAppThemeOptions } from 'theme';
 
-import UndoIcon from '@material-ui/icons/Close';
-
-export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'light' | 'dark') => {
+export default (
+	createTheme: (options: IAppThemeOptions) => IAppTheme,
+	paletteConfig: PaletteOptions = {},
+) => {
 	const MuiDrawer = {
 		paper: {
 			minWidth: '320px',
@@ -16,9 +19,8 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 		contrastText: '#ffffff',
 	};
 
-	const baseTheme = createTheme({
+	const { palette } = createTheme({
 		palette: {
-			type,
 			secondary: {
 				main: '#a00000',
 				contrastText: '#ffffff',
@@ -27,7 +29,7 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 				main: '#3045ee',
 				contrastText: '#ffffff',
 			},
-
+			...paletteConfig,
 		},
 	});
 
@@ -44,13 +46,12 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 	const menuButton = (color) => ({
 		...toolbarGradient(color.main),
 		boxShadow: '0',
-		color: '#ffffff',
+		color: color.contrastText,
 		'&:hover': {
 		// 	...toolbarGradient(color.dark),
 			boxShadow: 'inset 2px 0px 5px rgba(0, 0, 0, 0.6), inset -2px 0px 2px rgba(0, 0, 0, 0.1)',
-			'& span': {
-				color: '#ffff00',
-				textShadow: '0 0 2px #ffffff, 0 0 5px #000000',
+			'& span, & svg': {
+				textShadow: `0 0 2px #ffffff, 0 0 5px ${invert(color.contrastText)}`,
 			},
 		},
 	});
@@ -63,7 +64,7 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 		icons: {
 			undo: UndoIcon,
 		},
-		palette: baseTheme.palette,
+		palette,
 		layout: {
 			container: {
 				width: '1200px',
@@ -82,10 +83,10 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 					...menuButton(colorDefault),
 				},
 				primary: {
-					...menuButton(baseTheme.palette.primary),
+					...menuButton(palette.primary),
 				},
 				secondary: {
-					...menuButton(baseTheme.palette.secondary),
+					...menuButton(palette.secondary),
 				},
 				label: {
 					// color: '#ffffff',

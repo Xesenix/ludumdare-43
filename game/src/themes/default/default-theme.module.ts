@@ -10,7 +10,9 @@ export class DefaultThemeModule {
 			(__: II18nTranslation) => __('default-theme-light'),
 			(createTheme: IThemeBuilder) => () =>
 				import(/* webpackChunkName: "default-theme" */ './default-theme.styles')
-					.then((module) => module.default(createTheme, 'light') as IAppTheme),
+					.then((module) => module.default(createTheme, {
+						type: 'light',
+					}) as IAppTheme),
 		);
 
 		ThemeModule.registerTheme(
@@ -19,7 +21,9 @@ export class DefaultThemeModule {
 			(__: II18nTranslation) => __('default-theme-dark'),
 			(createTheme: IThemeBuilder) => () =>
 				import(/* webpackChunkName: "default-theme" */ './default-theme.styles')
-					.then((module) => module.default(createTheme, 'dark') as IAppTheme),
+					.then((module) => module.default(createTheme, {
+						type: 'dark',
+					}) as IAppTheme),
 		);
 	}
 }

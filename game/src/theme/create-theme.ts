@@ -13,7 +13,12 @@ import MuteOffIcon from '@material-ui/icons/VolumeUp';
 import { IAppTheme, IAppThemeOptions } from './theme.interfaces';
 
 export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
-	let baseTheme = createMuiTheme(theme as ThemeOptions);
+	let baseTheme = createMuiTheme({
+		typography: {
+			useNextVariants: true,
+		},
+		...theme,
+	});
 
 	// setup defaults for all custom theme fields
 	// and common style overrides

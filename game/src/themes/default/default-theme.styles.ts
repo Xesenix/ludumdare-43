@@ -1,7 +1,10 @@
+import { PaletteOptions } from '@material-ui/core/styles/createPalette';
 import { IAppTheme, IAppThemeOptions } from 'theme';
 
-export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'light' | 'dark') => {
-
+export default (
+	createTheme: (options: IAppThemeOptions) => IAppTheme,
+	paletteConfig: PaletteOptions = {},
+) => {
 	const MuiDrawer = {
 		paper: {
 			minWidth: '320px',
@@ -17,7 +20,6 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 			useNextVariants: true,
 		},
 		palette: {
-			type,
 			secondary: {
 				light: '#ffc000',
 				main: '#e8a000',
@@ -30,6 +32,7 @@ export default (createTheme: (options: IAppThemeOptions) => IAppTheme, type: 'li
 				dark: '#a00000',
 				contrastText: '#ffffff',
 			},
+			...paletteConfig,
 		},
 		layout: {
 			container: {
