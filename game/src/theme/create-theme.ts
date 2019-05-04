@@ -14,6 +14,9 @@ import { IAppTheme, IAppThemeOptions } from './theme.interfaces';
 
 export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 	let baseTheme = createMuiTheme(theme as ThemeOptions);
+
+	// setup defaults for all custom theme fields
+	// and common style overrides
 	baseTheme = merge(baseTheme, {
 		icons: {
 			config: ConfigIcon,

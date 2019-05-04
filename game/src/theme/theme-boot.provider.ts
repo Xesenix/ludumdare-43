@@ -9,6 +9,7 @@ import {
 	// prettier-ignore
 	IAppTheme,
 	IAppThemeDescriptors,
+	IThemeState,
 	ThemesNames,
 } from './theme.interfaces';
 
@@ -22,7 +23,7 @@ export function ThemeBootProvider({ container }: interfaces.Context) {
 		'theme:create-theme',
 	], async (
 		// prettier-ignore
-		store: Store<any, any>,
+		store: Store<IThemeState, any>,
 		createTheme: IThemeBuilder,
 	) => {
 		const { theme } = store.getState();

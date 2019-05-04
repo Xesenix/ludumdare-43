@@ -5,15 +5,6 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Store } from 'redux';
 
-// elements
-import Fab from '@material-ui/core/Fab';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import ActionIcon from '@material-ui/icons/FlashOnRounded';
-// icons
-import WinIcon from '@material-ui/icons/Star';
-
 import { Game } from 'game/game';
 import { IGameState } from 'game/store';
 import { connectToInjector } from 'lib/di';
@@ -55,6 +46,15 @@ import {
 } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
 import { filterByKeys } from 'lib/utils/filter-keys';
+
+// elements
+import Fab from '@material-ui/core/Fab';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import ActionIcon from '@material-ui/icons/FlashOnRounded';
+// icons
+import WinIcon from '@material-ui/icons/Star';
 
 import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
 import EventWidgetComponent from 'components/event-widget/event-widget';
