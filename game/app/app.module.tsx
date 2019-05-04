@@ -17,6 +17,7 @@ import { SoundScapeModule } from 'lib/sound-scape';
 import { PhaserGameModule } from 'phaser/game.module';
 import { ThemeModule } from 'theme';
 import { DefaultThemeModule } from 'themes/default/default-theme.module';
+import { ModernThemeModule } from 'themes/modern/modern-theme.module';
 import { SharpThemeModule } from 'themes/sharp/sharp-theme.module';
 import { IUIState, UIModule } from 'ui';
 
@@ -57,6 +58,7 @@ export class AppModule extends Container implements IApplication {
 		ThemeModule.register(this);
 		DefaultThemeModule.register(this);
 		SharpThemeModule.register(this);
+		ModernThemeModule.register(this);
 
 		// fullscreen bindings
 		FullScreenModule.register(this, document.querySelector('body') as HTMLElement);
