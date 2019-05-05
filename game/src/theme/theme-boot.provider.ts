@@ -39,7 +39,7 @@ export function ThemeBootProvider({ container }: interfaces.Context) {
 
 				if (!themesDescriptors[value]) {
 					container.bind(key).toConstantValue(createTheme({}));
-					console.warn(`ThemeBootProvider:error requested theme doesn't exist.`);
+					console.warn(`ThemeBootProvider:error requested theme '${value}' doesn't exist.`);
 				}
 
 				if (container.isBound(key)) {

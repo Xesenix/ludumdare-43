@@ -5,7 +5,7 @@ import { SET_THEME } from '../actions';
 import { IThemeState } from '../theme.interfaces';
 
 export const defaultThemeState: IThemeState = {
-	theme: 'light',
+	theme: 'default-theme-light',
 };
 
 export function reducer<S extends IThemeState | undefined, A extends IValueAction<any>>(state: S = defaultThemeState as S, action: A): S {
