@@ -10,7 +10,7 @@ import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
 import { filterByKeys } from 'lib/utils/filter-keys';
-import { IAppThemeDescriptor } from 'theme';
+import { IAppTheme, IAppThemeDescriptor, IAppThemesDescriptors } from 'theme';
 
 // elements
 import Checkbox from '@material-ui/core/Checkbox';
@@ -52,6 +52,7 @@ interface IConfigurationViewInternalProps {
 	dispatchSetMutedAction: (event: any, checked: boolean) => void;
 	dispatchSetThemeAction: (event: any) => void;
 	dispatchSetVolumeAction: (event: any, value: number) => void;
+	getTheme: () => IAppTheme;
 	store: Store<IConfigurationViewState>;
 	themes: IAppThemesDescriptors;
 }
@@ -105,8 +106,11 @@ const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigur
 		dependencies: ['ui:actions@setVolume'],
 		value: (setVolume: (value: number) => void) => Promise.resolve((event: any, value: number) => setVolume(value)),
 	},
+	getTheme: {
+		dependencies: ['theme:get-theme()'],
+	},
 	themes: {
-		dependencies: ['theme:theme-descriptors'],
+		dependencies: ['theme:theme-descriptors:provider()'],
 	},
 });
 
@@ -163,6 +167,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 			dispatchSetMusicVolumeAction,
 			dispatchSetMutedAction,
 			dispatchSetVolumeAction,
+			getTheme,
 		} = this.props;
 		const {
 			// prettier-ignore

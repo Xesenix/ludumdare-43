@@ -56,13 +56,13 @@ export async function resolveDependencies<T = any>(
 					const results = container.getAll<any>(key);
 					if (callable) {
 						try {
-							return results.length > 1 ? results.map((result) => result()) : results[0]();
+							return Promise.all(results.map((result) => result()));
 						} catch (err) {
 							console.error('error:', dep, key, results, err);
 							return Promise.reject(err);
 						}
 					}
-					return Promise.all(results).then((resolved) => resolved.length > 1 ? resolved : resolved[0]);
+					return Promise.all(results);
 				} else {
 					const key = dep.replace('()', '');
 					const result = container.get<any>(key);

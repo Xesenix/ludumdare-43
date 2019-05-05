@@ -6,7 +6,6 @@ import { II18nTranslation } from 'lib/i18n';
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
 import { createSetThemeAction } from './actions';
-import { createAppTheme } from './create-theme';
 import { reducer } from './reducers';
 import { ThemeBootProvider } from './theme-boot.provider';
 import {
@@ -25,31 +24,31 @@ export class ThemeModule {
 
 		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(ThemeBootProvider);
-		app.bind<IThemeBuilder>('theme:create-theme').toConstantValue(createAppTheme);
+		app.bind<IThemeBuilder>('theme:create-theme').toProvider(() => () => import(/* webpackChunkName: "theme" */ './create-theme').then(({ createAppTheme }) => createAppTheme));
 
-		app.bind<IAppThemeDescriptors>('theme:theme-descriptors').toDynamicValue(
-			({ container }: interfaces.Context) => {
-				const themeDescriptors = container.getAll<() => IAppThemeDescriptor>('theme:theme');
-				return themeDescriptors
-					.map((descriptor) => descriptor())
-					.reduce(
-						(
-							result: Partial<IAppThemeDescriptors>,
-							{ name, ...data },
-						) => ({
-							...result,
-							[name]: data,
-						}),
-						{},
-					);
-			},
-		);
+		app.bind<Promise<IAppThemeDescriptors>>('theme:theme-descriptors:provider')
+			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemeDescriptors>(container, [
+				'theme:theme:provider()[]',
+			], (
+				themeDescriptors,
+			) => themeDescriptors
+				.reduce(
+					(
+						result: Partial<IAppThemeDescriptors>,
+						{ name, ...data },
+					) => ({
+						...result,
+						[name]: data,
+					}),
+					{},
+				),
+		));
 
 		// current application theme
 		app.bind<Promise<() => IAppTheme>>('theme:get-theme')
 			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<() => IAppTheme>(container, [
 				'data-store',
-				'theme:create-theme',
+				'theme:create-theme()',
 			], (
 				store: Store<IThemeState, any>,
 				createTheme: IThemeBuilder,
@@ -58,7 +57,7 @@ export class ThemeModule {
 				const key = `theme:loaded:${theme}`;
 				if (!container.isBound(key)) {
 					console.warn(`ThemeModule:error theme ${theme} is not loaded.\nEnsure that theme is loaded before setting it in data store.`);
-					return createTheme({});
+					container.bind<IAppTheme>(key).toConstantValue(createTheme({}));
 				}
 				return container.get<IAppTheme>(key);
 			}));
@@ -80,14 +79,15 @@ export class ThemeModule {
 		localizedLabel: (__: II18nTranslation) => string,
 		themeProviderFactory: (builder: IThemeBuilder) => IThemeProvider,
 	) {
-		app.bind<() => IAppThemeDescriptor>('theme:theme')
-			.toDynamicValue(({ container }: interfaces.Context) => () => {
-				const createTheme = container.get<IThemeBuilder>('theme:create-theme');
-				return {
-					name,
-					localizedLabel,
-					themeProvider: themeProviderFactory(createTheme),
-				};
-			});
+		app.bind<Promise<IAppThemeDescriptor>>('theme:theme:provider')
+			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemeDescriptor>(container, [
+				'theme:create-theme()',
+			], (
+				createTheme: IThemeBuilder,
+			) => ({
+				name,
+				localizedLabel,
+				themeProvider: themeProviderFactory(createTheme),
+			})));
 	}
 }
