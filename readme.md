@@ -75,3 +75,6 @@ Links:
 
 * [Large-Allocation header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation)
 * connect react router history to redux store
+* separate audio from phaser or init phaser in compact mode
+* add about view
+* work on phaser states
