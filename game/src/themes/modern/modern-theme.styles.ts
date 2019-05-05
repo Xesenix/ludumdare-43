@@ -41,7 +41,7 @@ export default (
 					`transparent 75%`,
 					`${color} 75%`,
 				],
-				toDirection: '90deg',
+				toDirection: '45deg',
 			}).backgroundImage,
 			linearGradient({
 				colorStops: [
@@ -50,16 +50,16 @@ export default (
 					`transparent 75%`,
 					`${color} 75%`,
 				],
-				toDirection: '0',
+				toDirection: '135deg',
 			}).backgroundImage,
 			radialGradient({
 				colorStops: [
-					`${rgba(bgColor, 0.8)} 0%`,
-					`${rgba(bgColor, 0.6)} 40%`,
-					`${rgba(bgColor, 0.1)} 80%`,
-					'transparent 100%',
+					'transparent 0%',
+					`${rgba(bgColor, 0.1)} 40%`,
+					`${rgba(bgColor, 0.6)} 80%`,
+					`${rgba(bgColor, 0.8)} 100%`,
 				],
-				extent: 'ellipse at 50% 5%',
+				extent: 'ellipse at 0% 5%',
 			}).backgroundImage,
 		].join(', '),
 		backgroundSize: [
@@ -67,7 +67,16 @@ export default (
 			size,
 			'200% 100%',
 		],
+		backgroundPosition: [
+			'2px 0',
+			'0',
+			'0',
+		],
 	});
+
+	const inverseTheme = palette.type === 'dark';
+
+	const backGroundColor = !inverseTheme ? lighten(0.6, palette.background.paper) : lighten(0.3, palette.background.paper);
 
 	const darkBgPattern = gridBackgroundImagePattern(
 		rgba(lighten(0.3, colorDefault.main), 0.15),
@@ -75,7 +84,7 @@ export default (
 	);
 	const paperPattern = gridBackgroundImagePattern(
 		rgba(lighten(0.3, colorDefault.light), 0.15),
-		palette.type === 'light' ? lighten(0.3, palette.background.paper) : darken(0.3, palette.background.paper),
+		backGroundColor,
 	);
 
 	const toolbarGradient = (color, embose = true) => {
@@ -95,7 +104,7 @@ export default (
 				`${darken(0.3, color)} 100%`,
 			],
 		});
-		const pattern = gridBackgroundImagePattern(rgba(lighten(0.3, color), 0.25), color);
+		const pattern = gridBackgroundImagePattern(rgba(lighten(0.3, color), 0.25), darken(0.2, color));
 
 		return {
 			...bgGradient,
@@ -106,6 +115,10 @@ export default (
 			backgroundSize: [
 				...pattern.backgroundSize,
 				'100% 100%',
+			],
+			backgroundPosition: [
+				...pattern.backgroundPosition,
+				'0',
 			],
 		};
 	};
@@ -138,6 +151,19 @@ export default (
 			primary: {
 				root: {
 					...paperPattern,
+					minHeight: `calc(100vh - 32px)`,
+				},
+			},
+			fullscreen: {
+				root: {
+					...radialGradient({
+						colorStops: [
+							`${rgba(backGroundColor, inverseTheme ? 0.2 : 0.8)} 10%`,
+							`${rgba(backGroundColor, inverseTheme ? 0.8 : 0.2)} 100%`,
+						],
+						extent: 'ellipse at 0% 5%',
+					}),
+					minHeight: `calc(100vh - 32px)`,
 				},
 			},
 			container: {
