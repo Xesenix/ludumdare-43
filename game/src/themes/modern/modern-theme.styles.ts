@@ -6,6 +6,7 @@ import { IAppTheme, IAppThemeOptions } from 'theme';
 import UndoIcon from '@material-ui/icons/Close';
 import SoundOnIcon from '@material-ui/icons/Grade';
 import ConfigIcon from '@material-ui/icons/Settings';
+import { Color } from 'csstype';
 
 export default (
 	createTheme: (options: IAppThemeOptions) => IAppTheme,
@@ -32,12 +33,17 @@ export default (
 		},
 	});
 
-	const gridBackgroundImagePattern = (color, bgColor, size = '4px 4px') => ({
+	const gridBackgroundImagePattern = (color: Color, bgColor: Color, size = 8) => ({
 		backgroundImage: [
 			linearGradient({
 				colorStops: [
 					`${color} 25%`,
 					`transparent 25%`,
+				],
+				toDirection: '45deg',
+			}).backgroundImage,
+			linearGradient({
+				colorStops: [
 					`transparent 75%`,
 					`${color} 75%`,
 				],
@@ -47,10 +53,15 @@ export default (
 				colorStops: [
 					`${color} 25%`,
 					`transparent 25%`,
+				],
+				toDirection: '-45deg',
+			}).backgroundImage,
+			linearGradient({
+				colorStops: [
 					`transparent 75%`,
 					`${color} 75%`,
 				],
-				toDirection: '135deg',
+				toDirection: '-45deg',
 			}).backgroundImage,
 			radialGradient({
 				colorStops: [
@@ -63,13 +74,17 @@ export default (
 			}).backgroundImage,
 		].join(', '),
 		backgroundSize: [
-			size,
-			size,
+			`${size}px ${size}px`,
+			`${size}px ${size}px`,
+			`${size}px ${size}px`,
+			`${size}px ${size}px`,
 			'200% 100%',
 		],
 		backgroundPosition: [
-			'2px 0',
-			'0',
+			`0px 0px`,
+			`${size / 2}px ${size / 2}px`,
+			`0px ${size / 2}px`,
+			`${size / 2}px 0px`,
 			'0',
 		],
 	});
@@ -81,13 +96,15 @@ export default (
 	const darkBgPattern = gridBackgroundImagePattern(
 		rgba(lighten(0.3, colorDefault.main), 0.15),
 		colorDefault.main,
+		32,
 	);
 	const paperPattern = gridBackgroundImagePattern(
-		rgba(lighten(0.3, colorDefault.light), 0.15),
-		backGroundColor,
+		rgba(!inverseTheme ? lighten(0.3, colorDefault.light) : colorDefault.main, 0.55),
+		colorDefault.light,
+		8,
 	);
 
-	const toolbarGradient = (color, embose = true) => {
+	const toolbarGradient = (color: Color, embose = true) => {
 		const bgGradient = embose ? linearGradient({
 			colorStops: [
 				`${darken(0.3, color)} 0%`,
@@ -123,7 +140,7 @@ export default (
 		};
 	};
 
-	const menuButton = (color) => ({
+	const menuButton = (color: { main: Color, contrastText: Color }) => ({
 		...toolbarGradient(color.main),
 		boxShadow: '0',
 		color: color.contrastText,
@@ -163,12 +180,13 @@ export default (
 						],
 						extent: 'ellipse at 0% 5%',
 					}),
-					minHeight: `calc(100vh - 32px)`,
+					minHeight: `calc(100vh - 32px)`, // TODO: connect to top toolbar height
 				},
 			},
 			container: {
 				wrapper: {
 					maxWidth: '1200px',
+					padding: `0 64px 64px`,
 					background: palette.background.paper,
 					boxShadow: palette.type === 'dark' ? 'inset 2px 2px 4px #000' : 'none',
 				},
