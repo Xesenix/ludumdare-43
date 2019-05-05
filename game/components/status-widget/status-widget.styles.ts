@@ -3,6 +3,7 @@ import { createStyles, Theme } from '@material-ui/core';
 export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
+			background: 'transparent !important',
 			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-between',

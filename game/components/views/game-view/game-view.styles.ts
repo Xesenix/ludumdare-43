@@ -4,11 +4,12 @@ import { IAppTheme } from 'theme';
 
 export const styles = (theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
+
 	return createStyles({
 		root: {
-			maxWidth: appTheme.layout.container.width,
 			margin: '24px auto 24px',
 			padding: '16px',
+			...appTheme.layout.container.wrapper,
 		},
 		actionbar: {
 			margin: '24px 0',

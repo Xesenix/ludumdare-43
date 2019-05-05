@@ -22,7 +22,7 @@ export const styles = (theme: Theme) =>
 		attackContainer: {
 			padding: '12px',
 			borderRadius: '0',
-			backgroundColor: theme.palette.primary.main,
+			background: theme.palette.primary.main,
 		},
 		powerContainer: {
 			order: 0,

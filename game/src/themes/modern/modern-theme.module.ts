@@ -12,6 +12,9 @@ export class ModernThemeModule {
 				import(/* webpackChunkName: "modern-theme" */ './modern-theme.styles')
 					.then((module) => module.default(createTheme, {
 						type: 'light',
+						background: {
+							paper: '#eeeeee',
+						},
 					}) as IAppTheme),
 		);
 
@@ -35,12 +38,12 @@ export class ModernThemeModule {
 					.then((module) => module.default(createTheme, {
 						type: 'dark',
 						primary: {
-							main: '#ffffff',
-							contrastText: '#000000',
-						},
-						secondary: {
 							main: '#40a050',
 							contrastText: '#ffffff',
+						},
+						secondary: {
+							main: '#ffffff',
+							contrastText: '#000000',
 						},
 					}) as IAppTheme),
 		);
@@ -53,13 +56,57 @@ export class ModernThemeModule {
 				import(/* webpackChunkName: "modern-theme" */ './modern-theme.styles')
 					.then((module) => module.default(createTheme, {
 						type: 'light',
+						background: {
+							paper: '#eeeeee',
+						},
 						primary: {
 							main: '#40a050',
 							contrastText: '#ffffff',
 						},
 						secondary: {
+							main: '#000000',
+							contrastText: '#ffffff',
+						},
+					}) as IAppTheme),
+		);
+
+		ThemeModule.registerTheme(
+			app,
+			'modern-theme-dark-1',
+			(__: II18nTranslation) => __('modern-theme-dark-1'),
+			(createTheme: IThemeBuilder) => () =>
+				import(/* webpackChunkName: "modern-theme" */ './modern-theme.styles')
+					.then((module) => module.default(createTheme, {
+						type: 'dark',
+						primary: {
 							main: '#ffffff',
 							contrastText: '#000000',
+						},
+						secondary: {
+							main: '#40a050',
+							contrastText: '#ffffff',
+						},
+					}) as IAppTheme),
+		);
+
+		ThemeModule.registerTheme(
+			app,
+			'modern-theme-light-1',
+			(__: II18nTranslation) => __('modern-theme-light-1'),
+			(createTheme: IThemeBuilder) => () =>
+				import(/* webpackChunkName: "modern-theme" */ './modern-theme.styles')
+					.then((module) => module.default(createTheme, {
+						type: 'light',
+						background: {
+							paper: '#eeeeee',
+						},
+						primary: {
+							main: '#222222',
+							contrastText: '#ffffff',
+						},
+						secondary: {
+							main: '#40a050',
+							contrastText: '#ffffff',
 						},
 					}) as IAppTheme),
 		);

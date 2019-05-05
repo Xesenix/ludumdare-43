@@ -1,11 +1,14 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { merge } from 'lodash';
 
-// icon
+// icons
 import ConfigIcon from '@material-ui/icons/Build';
+import SoundOffIcon from '@material-ui/icons/FlashOff';
+import SoundOnIcon from '@material-ui/icons/FlashOn';
 import FullScreenIcon from '@material-ui/icons/Fullscreen';
 import FullScreenExitIcon from '@material-ui/icons/FullscreenExit';
+import MusicOnIcon from '@material-ui/icons/MusicNote';
+import MusicOffIcon from '@material-ui/icons/MusicOff';
 import BackIcon from '@material-ui/icons/Undo';
 import MuteOnIcon from '@material-ui/icons/VolumeOff';
 import MuteOffIcon from '@material-ui/icons/VolumeUp';
@@ -30,9 +33,23 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 			fullscreenOff: FullScreenExitIcon,
 			muteOn: MuteOnIcon,
 			muteOff: MuteOffIcon,
+			musicOff: MusicOffIcon,
+			musicOn: MusicOnIcon,
+			soundOff: SoundOffIcon,
+			soundOn: SoundOnIcon,
 		},
 		layout: {
+			primary: {
+				root: {
+				},
+			},
+			fullscreen: {
+				root: {
+				},
+			},
 			container: {
+				wrapper: {
+				},
 			},
 		},
 		overrides: {

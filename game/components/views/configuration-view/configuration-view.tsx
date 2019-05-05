@@ -24,14 +24,6 @@ import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 
-// icons
-import SoundOffIcon from '@material-ui/icons/FlashOff';
-import SoundOnIcon from '@material-ui/icons/FlashOn';
-import MusicOnIcon from '@material-ui/icons/MusicNote';
-import MusicOffIcon from '@material-ui/icons/MusicOff';
-import MuteOffIcon from '@material-ui/icons/VolumeOff';
-import MuteOnIcon from '@material-ui/icons/VolumeUp';
-
 import { styles } from './configuration-view.styles';
 
 const Loader = () => <LinearProgress />;
@@ -178,6 +170,19 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 			mute,
 			volume,
 		} = this.state;
+		const theme = getTheme();
+		const MuteOffIcon = theme.icons.muteOff;
+		const muteOffIcon = <MuteOffIcon />;
+		const MuteOnIcon = theme.icons.muteOn;
+		const muteOnIcon = <MuteOnIcon />;
+		const MusicOffIcon = theme.icons.musicOff;
+		const musicOffIcon = <MusicOffIcon />;
+		const MusicOnIcon = theme.icons.musicOn;
+		const musicOnIcon = <MusicOnIcon />;
+		const SoundOffIcon = theme.icons.soundOff;
+		const soundOffIcon = <SoundOffIcon />;
+		const SoundOnIcon = theme.icons.soundOn;
+		const soundOnIcon = <SoundOnIcon />;
 
 		return (
 			<form className={classes.root}>
@@ -189,26 +194,26 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 						<FormControlLabel
 							className={classes.margin}
 							label={__('master mute')}
-							control={<Checkbox checkedIcon={<MuteOffIcon />} icon={<MuteOnIcon />} checked={mute} onChange={dispatchSetMutedAction} />}
+							control={<Checkbox checkedIcon={muteOnIcon} icon={muteOffIcon} checked={mute} onChange={dispatchSetMutedAction} />}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
 							label={__('music mute')}
-							control={<Checkbox checkedIcon={<MuteOffIcon />} icon={<MuteOnIcon />} checked={musicMuted} onChange={dispatchSetMusicMutedAction} />}
+							control={<Checkbox checkedIcon={musicOffIcon} icon={musicOnIcon} checked={musicMuted} onChange={dispatchSetMusicMutedAction} />}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={4}>
 						<FormControlLabel
 							className={classes.margin}
 							label={__('fx mute')}
-							control={<Checkbox checkedIcon={<MuteOffIcon />} icon={<MuteOnIcon />} checked={effectsMuted} onChange={dispatchSetEffectsMutedAction} />}
+							control={<Checkbox checkedIcon={soundOffIcon} icon={soundOnIcon} checked={effectsMuted} onChange={dispatchSetEffectsMutedAction} />}
 						/>
 					</Grid>
 					<Grid item xs={12} container>
 						<Grid item xs={12} md={3}>
-							<FormControlLabel className={classes.margin} label={__('master volume')} control={<span className={classes.icon}>{mute ? <MuteOffIcon /> : <MuteOnIcon />}</span>} />
+							<FormControlLabel className={classes.margin} label={__('master volume')} control={<span className={classes.icon}>{mute ? muteOnIcon : muteOffIcon}</span>} />
 						</Grid>
 						<Grid item xs={12} md={9} className={classes.scroll}>
 							<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction} />
@@ -219,7 +224,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 							<FormControlLabel
 								className={classes.margin}
 								label={__('music volume')}
-								control={<span className={classes.icon}>{mute || musicMuted ? <MusicOffIcon /> : <MusicOnIcon />}</span>}
+								control={<span className={classes.icon}>{mute || musicMuted ? musicOffIcon : musicOnIcon}</span>}
 							/>
 						</Grid>
 						<Grid item xs={12} md={9} className={classes.scroll}>
@@ -231,7 +236,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 							<FormControlLabel
 								className={classes.margin}
 								label={__('sound volume')}
-								control={<span className={classes.icon}>{mute || effectsMuted ? <SoundOffIcon /> : <SoundOnIcon />}</span>}
+								control={<span className={classes.icon}>{mute || effectsMuted ? soundOffIcon : soundOnIcon}</span>}
 							/>
 						</Grid>
 						<Grid item xs={12} md={9} className={classes.scroll}>

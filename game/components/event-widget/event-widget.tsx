@@ -89,7 +89,7 @@ class EventWidgetComponent extends React.PureComponent<IEventWidgetProps, IEvent
 			);
 		} else {
 			description = (
-				<Paper elevation={0}>
+				<Paper elevation={5}>
 					<Typography
 						// prettier-ignore
 						className={classes.attackTitle}

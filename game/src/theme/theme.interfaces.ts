@@ -13,8 +13,14 @@ export interface ICSSProperties {
 
 export interface IAppThemeOptions extends ThemeOptions {
 	layout?: {
+		primary?: {
+			root?: ICSSProperties;
+		},
+		fullscreen?: {
+			root?: ICSSProperties;
+		},
 		container?: {
-			width?: string;
+			wrapper?: ICSSProperties;
 		};
 	};
 
@@ -25,6 +31,10 @@ export interface IAppThemeOptions extends ThemeOptions {
 		fullscreenOff?: React.ComponentType;
 		muteOn?: React.ComponentType;
 		muteOff?: React.ComponentType;
+		musicOff?: React.ComponentType;
+		musicOn?: React.ComponentType;
+		soundOff?: React.ComponentType;
+		soundOn?: React.ComponentType;
 	};
 
 	overrides?: Overrides & {
@@ -36,10 +46,15 @@ export interface IAppThemeOptions extends ThemeOptions {
 
 export interface IAppTheme extends Theme {
 	layout: {
+		primary: {
+			root: ICSSProperties;
+		},
+		fullscreen: {
+			root: ICSSProperties;
+		},
 		container: {
-			width: string;
+			wrapper: ICSSProperties;
 		};
-
 	};
 
 	icons: {
@@ -49,6 +64,10 @@ export interface IAppTheme extends Theme {
 		fullscreenOff: React.ComponentType;
 		muteOn: React.ComponentType;
 		muteOff: React.ComponentType;
+		musicOff: React.ComponentType;
+		musicOn: React.ComponentType;
+		soundOff: React.ComponentType;
+		soundOn: React.ComponentType;
 	};
 
 	overrides: Overrides & {

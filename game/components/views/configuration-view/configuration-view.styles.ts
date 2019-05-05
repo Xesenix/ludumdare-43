@@ -6,8 +6,9 @@ export const styles = (theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
 	return createStyles({
 		root: {
-			display: 'block',
-			padding: '24px',
+			margin: '24px auto 24px',
+			padding: '16px',
+			...appTheme.layout.container.wrapper,
 		},
 		margin: {
 			margin: appTheme.spacing.unit,

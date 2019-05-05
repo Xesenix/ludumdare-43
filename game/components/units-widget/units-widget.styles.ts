@@ -9,6 +9,7 @@ const changeLabel = {
 export const styles = (theme: Theme) =>
 	createStyles({
 		root: {
+			background: 'transparent !important',
 			position: 'relative',
 			display: 'flex',
 			flexDirection: 'column',

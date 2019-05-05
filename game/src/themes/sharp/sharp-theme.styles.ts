@@ -33,7 +33,9 @@ export default (
 		},
 		layout: {
 			container: {
-				width: '1200px',
+				wrapper: {
+					maxWidth: '1200px',
+				},
 			},
 		},
 		overrides: {
