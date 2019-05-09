@@ -5,9 +5,9 @@ export const styles = (theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
 	return createStyles({
 		root: {
-			position: 'relative',
 			minHeight: '600px',
 			padding: '64px 0 24px',
+			position: 'relative',
 			...appTheme.layout.primary.root,
 		},
 	});

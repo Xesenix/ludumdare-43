@@ -8,9 +8,9 @@ export const styles = (theme: Theme) => {
 
 	return createStyles({
 		root: {
+			alignItems: 'center',
 			display: 'flex',
 			flexDirection: 'column',
-			alignItems: 'center',
 			padding: '24px 4px 36px',
 		},
 		title: {
@@ -25,10 +25,10 @@ export const styles = (theme: Theme) => {
 		},
 		description: {
 			...theme.typography.body1,
-			padding: '0 24px',
-			marginBottom: '1.5em',
-			textAlign: 'justify',
 			fontSize: 'calc(.75em + 1vw)',
+			marginBottom: '1.5em',
+			padding: '0 24px',
+			textAlign: 'justify',
 		},
 		cta: {
 			padding: '0 24px',

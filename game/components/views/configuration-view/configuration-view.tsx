@@ -217,7 +217,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 						<Grid item xs={12} md={3}>
 							<FormControlLabel className={classes.margin} label={__('master volume')} control={<span className={classes.icon}>{mute ? muteOnIcon : muteOffIcon}</span>} />
 						</Grid>
-						<Grid item xs={12} md={9} className={classes.scroll}>
+						<Grid item xs={12} md={9} className={classes.slider}>
 							<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction} />
 						</Grid>
 					</Grid>
@@ -229,7 +229,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 								control={<span className={classes.icon}>{mute || musicMuted ? musicOffIcon : musicOnIcon}</span>}
 							/>
 						</Grid>
-						<Grid item xs={12} md={9} className={classes.scroll}>
+						<Grid item xs={12} md={9} className={classes.slider}>
 							<Slider min={0} max={1} step={1 / 32} value={musicVolume} onChange={dispatchSetMusicVolumeAction} />
 						</Grid>
 					</Grid>
@@ -241,7 +241,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 								control={<span className={classes.icon}>{mute || effectsMuted ? soundOffIcon : soundOnIcon}</span>}
 							/>
 						</Grid>
-						<Grid item xs={12} md={9} className={classes.scroll}>
+						<Grid item xs={12} md={9} className={classes.slider}>
 							<Slider min={0} max={1} step={1 / 32} value={effectsVolume} onChange={dispatchSetEffectsVolumeAction} />
 						</Grid>
 					</Grid>

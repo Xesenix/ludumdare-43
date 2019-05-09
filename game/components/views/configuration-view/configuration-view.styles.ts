@@ -14,19 +14,19 @@ export const styles = (theme: Theme) => {
 			margin: appTheme.spacing.unit,
 		},
 		icon: {
-			display: 'inline-flex',
-			width: '48px',
-			height: '48px',
-			'justify-content': 'center',
-			'align-items': 'center',
-			color: appTheme.palette.text.primary,
-		},
-		scroll: {
-			padding: '0 24px',
-			height: '56px',
-			display: 'inline-flex',
 			alignItems: 'center',
+			color: appTheme.palette.text.primary,
+			display: 'inline-flex',
+			height: '48px',
+			justifyContent: 'center',
+			width: '48px',
+		},
+		slider: {
+			alignItems: 'center',
+			display: 'inline-flex',
+			height: '56px',
 			overflow: 'hidden',
+			padding: '0 24px',
 			[appTheme.breakpoints.down('sm')]: {
 				height: '28px',
 			},
@@ -36,9 +36,8 @@ export const styles = (theme: Theme) => {
 			minWidth: 120,
 		},
 		section: {
-			padding: '24px 0',
-			maxWidth: appTheme.layout.container.width,
 			margin: '0 auto',
+			padding: '24px 0',
 		},
 	});
 };
