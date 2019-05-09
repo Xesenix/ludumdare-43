@@ -8,7 +8,7 @@ import { IThemeBuilder } from 'theme';
 import {
 	// prettier-ignore
 	IAppTheme,
-	IAppThemeDescriptors,
+	IAppThemesDescriptors,
 	IThemeState,
 	ThemesNames,
 } from './theme.interfaces';
@@ -33,7 +33,7 @@ export function ThemeBootProvider({ container }: interfaces.Context) {
 				// prettier-ignore
 				'theme:theme-descriptors:provider()',
 			], (
-				themesDescriptors: IAppThemeDescriptors,
+				themesDescriptors: IAppThemesDescriptors,
 			) => (value: ThemesNames) => {
 				const key = `theme:loaded:${value}`;
 

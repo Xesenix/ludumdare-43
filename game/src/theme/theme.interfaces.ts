@@ -100,6 +100,6 @@ export interface IAppThemeDescriptor {
 	themeProvider: IThemeProvider;
 }
 
-export interface IAppThemeDescriptors {
+export interface IAppThemesDescriptors {
 	[key: string]: IAppThemeDescriptor;
 }

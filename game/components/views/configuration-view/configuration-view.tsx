@@ -24,6 +24,8 @@ import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 
+import I18nLabel from 'lib/i18n/components/i18n-label';
+
 import { styles } from './configuration-view.styles';
 
 const Loader = () => <LinearProgress />;
@@ -280,7 +282,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 				{
 					Object.entries<IAppThemeDescriptor>(themes)
 						.map(([key, { localizedLabel }]) => (
-							<MenuItem key={key} value={key}>{localizedLabel(__)}</MenuItem>
+							<MenuItem key={key} value={key}><I18nLabel render={localizedLabel}/></MenuItem>
 						))
 				}
 			</Select>

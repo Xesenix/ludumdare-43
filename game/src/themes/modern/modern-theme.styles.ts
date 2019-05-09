@@ -104,8 +104,8 @@ export default (
 		8,
 	);
 
-	const toolbarGradient = (color: Color, embose = true) => {
-		const bgGradient = embose ? linearGradient({
+	const toolbarGradient = (color: Color, emboss: boolean = true) => {
+		const bgGradient = emboss ? linearGradient({
 			colorStops: [
 				`${darken(0.3, color)} 0%`,
 				`${lighten(0.2, color)} 10%`,

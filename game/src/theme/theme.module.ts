@@ -12,7 +12,7 @@ import {
 	// prettier-ignore
 	IAppTheme,
 	IAppThemeDescriptor,
-	IAppThemeDescriptors,
+	IAppThemesDescriptors,
 	IThemeBuilder,
 	IThemeProvider,
 	IThemeState,
@@ -26,15 +26,15 @@ export class ThemeModule {
 		app.bind('boot').toProvider(ThemeBootProvider);
 		app.bind<IThemeBuilder>('theme:create-theme').toProvider(() => () => import(/* webpackChunkName: "theme" */ './create-theme').then(({ createAppTheme }) => createAppTheme));
 
-		app.bind<Promise<IAppThemeDescriptors>>('theme:theme-descriptors:provider')
-			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemeDescriptors>(container, [
+		app.bind<Promise<IAppThemesDescriptors>>('theme:theme-descriptors:provider')
+			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemesDescriptors>(container, [
 				'theme:theme:provider()[]',
 			], (
 				themeDescriptors,
 			) => themeDescriptors
 				.reduce(
 					(
-						result: Partial<IAppThemeDescriptors>,
+						result: Partial<IAppThemesDescriptors>,
 						{ name, ...data },
 					) => ({
 						...result,
