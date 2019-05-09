@@ -22,23 +22,17 @@ export interface IPhaserViewExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface IPhaserViewInternalProps {
 	di?: Container;
-	store?: Store<IUIState>;
 }
 
 /** Internal component state. */
 interface IPhaserViewState {}
 
 const diDecorator = connectToInjector<IPhaserViewExternalProps, IPhaserViewInternalProps>({
-	store: {
-		dependencies: ['data-store'],
-	},
 });
 
 type IPhaserViewProps = IPhaserViewExternalProps & IPhaserViewInternalProps & WithStyles<typeof styles>;
 
 class PhaserViewComponent extends React.PureComponent<IPhaserViewProps, IPhaserViewState> {
-	private unsubscribe?: any;
-
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -53,20 +47,10 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps, IPhaserV
 				game = result;
 			});
 		}
-
-		this.bindToStore();
-	}
-
-	public componentDidUpdate(): void {
-		this.bindToStore();
 	}
 
 	public componentWillUnmount(): void {
 		const { di } = this.props;
-
-		if (this.unsubscribe) {
-			this.unsubscribe();
-		}
 
 		if (!!gameContainer) {
 			if (!!game) {
@@ -83,28 +67,7 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps, IPhaserV
 	public render(): any {
 		const { classes } = this.props;
 
-		return (
-			<>
-				<div className={classes.root} ref={this.bindContainer} />
-			</>
-		);
-	}
-
-	/**
-	 * Responsible for notifying component about state changes related to this component.
-	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
-	 */
-	private bindToStore(): void {
-		const { store } = this.props;
-
-		if (!this.unsubscribe && store) {
-			this.unsubscribe = store.subscribe(() => {
-				if (store) {
-					this.setState(store.getState());
-				}
-			});
-			this.setState(store.getState());
-		}
+		return (<div className={classes.root} ref={this.bindContainer} />);
 	}
 
 	private bindContainer = (el: HTMLDivElement): void => {
