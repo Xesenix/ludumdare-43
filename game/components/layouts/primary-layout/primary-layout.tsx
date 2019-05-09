@@ -1,10 +1,14 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di/context';
-import { filterByKeys } from 'lib/utils/filter-keys';
+import {
+	// prettier-ignore
+	diStoreComponentDependencies,
+	IStoreComponentInternalProps,
+	StoreComponent,
+} from 'lib/utils/store.component';
 import { IMenuExternalProps } from 'menu/menu';
 
 // elements
@@ -27,13 +31,12 @@ import { styles } from './primary-layout.styles';
 export interface IPrimaryLayoutExternalProps {
 	content: any;
 	Menu: React.ComponentType<IMenuExternalProps>;
-	loading: boolean;
+	loading?: boolean;
 }
 
 /** Internal component properties include properties injected via dependency injection. */
-interface IPrimaryLayoutInternalProps {
+interface IPrimaryLayoutInternalProps extends IStoreComponentInternalProps<IPrimaryLayoutState> {
 	dispatchSetDrawerOpenAction: (value: boolean) => void;
-	store: Store<IPrimaryLayoutState>;
 }
 
 /** Internal component state. */
@@ -42,44 +45,21 @@ interface IPrimaryLayoutState {
 }
 
 const diDecorator = connectToInjector<IPrimaryLayoutExternalProps, IPrimaryLayoutInternalProps>({
+	...diStoreComponentDependencies,
 	dispatchSetDrawerOpenAction: {
 		dependencies: ['ui:actions@setDrawerOpen'],
 		value: (setDrawerOpen: (value: boolean) => void) => Promise.resolve(setDrawerOpen),
-	},
-	store: {
-		dependencies: ['data-store'],
 	},
 });
 
 type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>;
 
-class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IPrimaryLayoutState> {
-	private unsubscribeDataStore?: any;
-
-	private filter = filterByKeys<IPrimaryLayoutState>([
-		// prettier-ignore
-		'drawerOpen',
-	]);
-
+class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimaryLayoutState> {
 	constructor(props) {
-		super(props);
-
-		this.state = this.filter(props.store.getState());
-	}
-
-	public componentDidMount(): void {
-		this.bindToStore();
-	}
-
-	public componentDidUpdate(): void {
-		this.bindToStore();
-	}
-
-	public componentWillUnmount(): void {
-		if (this.unsubscribeDataStore) {
-			this.unsubscribeDataStore();
-			this.unsubscribeDataStore = null;
-		}
+		super(props, [
+			// prettier-ignore
+			'drawerOpen',
+		]);
 	}
 
 	public render(): any {
@@ -138,23 +118,6 @@ class PrimaryLayoutComponent extends React.PureComponent<IPrimaryLayoutProps, IP
 		const { dispatchSetDrawerOpenAction } = this.props;
 		const { drawerOpen } = this.state;
 		dispatchSetDrawerOpenAction(!drawerOpen);
-	}
-
-	/**
-	 * Responsible for notifying component about state changes related to this component.
-	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
-	 */
-	private bindToStore(): void {
-		const { store } = this.props;
-
-		if (!this.unsubscribeDataStore && !!store) {
-			this.unsubscribeDataStore = store.subscribe(() => {
-				if (!!store && !!this.unsubscribeDataStore) {
-					this.setState(this.filter(store.getState()));
-				}
-			});
-			this.setState(this.filter(store.getState()));
-		}
 	}
 }
 

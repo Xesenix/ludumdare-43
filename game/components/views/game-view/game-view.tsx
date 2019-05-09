@@ -3,7 +3,6 @@ import { EventEmitter } from 'events';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 import { Game } from 'game/game';
 import { IGameState } from 'game/store';
@@ -41,19 +40,25 @@ import {
 } from 'game/features/units/workers';
 import {
 	// prettier-ignore
+	II18nLanguagesState,
 	II18nPluralTranslation,
 	II18nTranslation,
 } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
-import { filterByKeys } from 'lib/utils/filter-keys';
+import {
+	// prettier-ignore
+	diStoreComponentDependencies,
+	IStoreComponentInternalProps,
+	StoreComponent,
+} from 'lib/utils/store.component';
 
 // elements
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ActionIcon from '@material-ui/icons/FlashOnRounded';
 // icons
+import ActionIcon from '@material-ui/icons/FlashOnRounded';
 import WinIcon from '@material-ui/icons/Star';
 
 import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
@@ -73,23 +78,26 @@ export interface IGameViewExternalProps {
 }
 
 /** Internal component properties include properties injected via dependency injection. */
-interface IGameViewInternalProps {
+interface IGameViewInternalProps extends IStoreComponentInternalProps<IGameViewState> {
 	__: II18nTranslation;
 	_$: II18nPluralTranslation;
 	di?: Container;
 	em: EventEmitter;
 	game: Game;
-	store?: Store<any, any>;
 }
 
 /** Internal component state. */
 interface IGameViewState {
-	currentState: IGameState | null;
-	language: LanguageType;
 	compactMode: boolean;
+	currentState: IGameState | null;
+	/** required for interface updates after changing application language */
+	language: LanguageType;
+	/** required for interface updates after loading language */
+	languages: II18nLanguagesState;
 }
 
 const diDecorator = connectToInjector<IGameViewExternalProps, IGameViewInternalProps>({
+	...diStoreComponentDependencies,
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -102,46 +110,35 @@ const diDecorator = connectToInjector<IGameViewExternalProps, IGameViewInternalP
 	game: {
 		dependencies: ['game'],
 	},
-	store: {
-		dependencies: ['data-store'],
-	},
 });
 
 type IGameViewProps = IGameViewExternalProps & IGameViewInternalProps & WithStyles<typeof styles>;
 
-class GameViewComponent extends React.PureComponent<IGameViewProps, IGameViewState> {
-	private unsubscribeDataStore?: any;
+class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 	private unsubscribeEventManager?: any;
 	private backToIdleHandle?: number;
 
-	private filter = filterByKeys<IGameViewState>([
-		// prettier-ignore
-		'compactMode',
-		'language',
-	]);
-
 	constructor(props) {
-		super(props);
+		super(props, [
+			// prettier-ignore
+			'compactMode',
+			'language',
+			'languages',
+		]);
 
 		this.state = {
-			...this.filter(props.store.getState()),
+			...this.state,
 			currentState: null,
 		};
 	}
 
 	public componentDidMount(): void {
-		this.bindToStore();
+		super.componentDidMount();
 		this.bindToEventManager();
 	}
 
-	public componentDidUpdate(): void {
-		this.bindToStore();
-	}
-
 	public componentWillUnmount(): void {
-		if (this.unsubscribeDataStore) {
-			this.unsubscribeDataStore();
-		}
+		super.componentWillUnmount();
 		if (this.unsubscribeEventManager) {
 			this.unsubscribeEventManager();
 		}
@@ -448,23 +445,6 @@ Each one requires 1 resource per year to be operational if there are no enough r
 		// plays idle soundtrack
 		if (em) {
 			em.emit('mode:change', 'idle');
-		}
-	}
-
-	/**
-	 * Responsible for notifying component about state changes related to this component.
-	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
-	 */
-	private bindToStore(): void {
-		const { store } = this.props;
-
-		if (!this.unsubscribeDataStore && !!store) {
-			this.unsubscribeDataStore = store.subscribe(() => {
-				if (!!store) {
-					this.setState(this.filter(store.getState()));
-				}
-			});
-			this.setState(this.filter(store.getState()));
 		}
 	}
 

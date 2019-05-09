@@ -1,14 +1,17 @@
-import { Container } from 'inversify';
-import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di/context';
+import { II18nLanguagesState } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
-import { filterByKeys } from 'lib/utils/filter-keys';
+import {
+	// prettier-ignore
+	diStoreComponentDependencies,
+	IStoreComponentInternalProps,
+	StoreComponent,
+} from 'lib/utils/store.component';
 import { IAppTheme, ThemesNames } from 'theme';
 
 // elements
@@ -38,10 +41,8 @@ const ConfigurationView = Loadable({ loading: Loader, loader: () => import(/* we
 
 interface IAppProps {}
 
-interface IAppInternalProps {
-	di?: Container;
+interface IAppInternalProps extends IStoreComponentInternalProps<IAppState> {
 	getTheme: () => IAppTheme;
-	store: Store<IAppState, any>;
 }
 
 interface IAppState {
@@ -50,55 +51,29 @@ interface IAppState {
 	/** required for interface updates after changing application language */
 	language: LanguageType;
 	/** required for interface updates after loading language */
-	languages: any;
+	languages: II18nLanguagesState;
 	/** required for interface updates after changing application theme */
 	theme: ThemesNames;
 }
 
 const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
+	...diStoreComponentDependencies,
 	getTheme: {
 		dependencies: ['theme:get-theme()'],
-	},
-	store: {
-		dependencies: ['data-store'],
 	},
 });
 
 type AppProps = IAppProps & IAppInternalProps;
 
-class App extends React.Component<AppProps, IAppState> {
-	private unsubscribe?: any;
-
-	private filter = filterByKeys<IAppState>([
-		// prettier-ignore
-		'fullscreen',
-		'theme',
-		'language',
-		'languages',
-	]);
-
+class App extends StoreComponent<AppProps, IAppState> {
 	constructor(props) {
-		super(props);
-
-		this.state = this.filter(props.store.getState());
-	}
-
-	public componentDidMount(): void {
-		this.bindToStore();
-	}
-
-	public componentDidUpdate(): void {
-		this.bindToStore();
-	}
-
-	public componentWillUnmount(): void {
-		if (this.unsubscribe) {
-			this.unsubscribe();
-		}
-	}
-
-	public shouldComponentUpdate(nextProps: AppProps, nextState: IAppState): boolean {
-		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
+		super(props, [
+			// prettier-ignore
+			'fullscreen',
+			'theme',
+			'language',
+			'languages',
+		]);
 	}
 
 	public render() {
@@ -138,23 +113,6 @@ class App extends React.Component<AppProps, IAppState> {
 				</MemoryRouter>
 			</MuiThemeProvider>
 		);
-	}
-
-	/**
-	 * Responsible for notifying component about state changes related to this component.
-	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
-	 */
-	private bindToStore(): void {
-		const { store } = this.props;
-
-		if (!this.unsubscribe && !!store) {
-			this.unsubscribe = store.subscribe(() => {
-				if (!!store) {
-					this.setState(this.filter(store.getState()));
-				}
-			});
-			this.setState(this.filter(store.getState()));
-		}
 	}
 }
 

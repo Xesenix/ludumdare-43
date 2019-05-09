@@ -1,16 +1,24 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
-import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
-import { II18nTranslation } from 'lib/i18n';
+import { II18nLanguagesState, II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
-import { filterByKeys } from 'lib/utils/filter-keys';
-import { IAppTheme, IAppThemeDescriptor, IAppThemesDescriptors } from 'theme';
+import {
+	// prettier-ignore
+	diStoreComponentDependencies,
+	IStoreComponentInternalProps,
+	StoreComponent,
+} from 'lib/utils/store.component';
+import {
+	// prettier-ignore
+	IAppTheme,
+	IAppThemeDescriptor,
+	IAppThemesDescriptors,
+} from 'theme';
 
 // elements
 import Checkbox from '@material-ui/core/Checkbox';
@@ -36,7 +44,7 @@ const ThemeSelectorComponent = Loadable({ loading: Loader, loader: () => import(
 export interface IConfigurationViewExternalProps {}
 
 /** Internal component properties include properties injected via dependency injection. */
-interface IConfigurationViewInternalProps {
+interface IConfigurationViewInternalProps extends IStoreComponentInternalProps<IConfigurationViewState> {
 	__: II18nTranslation;
 	di?: Container;
 	dispatchSetEffectsMutedAction: (event: any, checked: boolean) => void;
@@ -47,7 +55,6 @@ interface IConfigurationViewInternalProps {
 	dispatchSetThemeAction: (event: any) => void;
 	dispatchSetVolumeAction: (event: any, value: number) => void;
 	getTheme: () => IAppTheme;
-	store: Store<IConfigurationViewState>;
 	themes: IAppThemesDescriptors;
 }
 
@@ -58,7 +65,7 @@ interface IConfigurationViewState {
 	/** required for interface updates after changing application language */
 	language: LanguageType;
 	/** required for interface updates after loading language */
-	languages: any;
+	languages: II18nLanguagesState;
 	musicMuted: boolean;
 	musicVolume: number;
 	mute: boolean;
@@ -66,11 +73,9 @@ interface IConfigurationViewState {
 }
 
 const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
+	...diStoreComponentDependencies,
 	__: {
 		dependencies: ['i18n:translate'],
-	},
-	store: {
-		dependencies: ['data-store'],
 	},
 	dispatchSetEffectsMutedAction: {
 		dependencies: ['ui:actions@setEffectsMuted'],
@@ -110,44 +115,19 @@ const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigur
 
 type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
 
-export class ConfigurationViewComponent extends React.Component<IConfigurationViewProps, IConfigurationViewState> {
-	private unsubscribeDataStore?: any;
-
-	private filter = filterByKeys<IConfigurationViewState>([
-		// prettier-ignore
-		'effectsMuted',
-		'effectsVolume',
-		'language',
-		'languages',
-		'musicMuted',
-		'musicVolume',
-		'mute',
-		'volume',
-	]);
-
+export class ConfigurationViewComponent extends StoreComponent<IConfigurationViewProps, IConfigurationViewState> {
 	constructor(props) {
-		super(props);
-
-		this.state = this.filter(props.store.getState());
-	}
-
-	public componentDidMount(): void {
-		this.bindToStore();
-	}
-
-	public componentDidUpdate(): void {
-		this.bindToStore();
-	}
-
-	public componentWillUnmount(): void {
-		if (this.unsubscribeDataStore) {
-			this.unsubscribeDataStore();
-			this.unsubscribeDataStore = null;
-		}
-	}
-
-	public shouldComponentUpdate(nextProps: IConfigurationViewProps, nextState: IConfigurationViewState): boolean {
-		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
+		super(props, [
+			// prettier-ignore
+			'effectsMuted',
+			'effectsVolume',
+			'language',
+			'languages',
+			'musicMuted',
+			'musicVolume',
+			'mute',
+			'volume',
+		]);
 	}
 
 	public render(): any {
@@ -275,7 +255,7 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 	}
 
 	private renderThemeSelector = (value: string, update: any) => {
-		const { __, themes } = this.props;
+		const { themes } = this.props;
 		// tslint:disable:jsx-no-lambda
 		return (
 			<Select value={value} onChange={(event) => update(event.target.value)}>
@@ -287,24 +267,6 @@ export class ConfigurationViewComponent extends React.Component<IConfigurationVi
 				}
 			</Select>
 		);
-	}
-
-
-	/**
-	 * Responsible for notifying component about state changes related to this component.
-	 * If global state changes for keys defined in this component state it will transfer global state to components internal state.
-	 */
-	private bindToStore(): void {
-		const { store } = this.props;
-
-		if (!this.unsubscribeDataStore && !!store) {
-			this.unsubscribeDataStore = store.subscribe(() => {
-				if (!!store) {
-					this.setState(this.filter(store.getState()));
-				}
-			});
-			this.setState(this.filter(store.getState()));
-		}
 	}
 }
 

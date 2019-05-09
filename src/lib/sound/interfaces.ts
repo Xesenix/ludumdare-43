@@ -1,4 +1,4 @@
-import { IStoreStateAware } from '../data-store/interface';
+import { IStoreStateAware } from '../data-store';
 
 export type IAudioContextFactory = AudioContext;
 export type IAudioFileLoaderProvider = () => Promise<IAudioFileLoader>;

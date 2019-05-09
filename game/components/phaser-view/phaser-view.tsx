@@ -2,11 +2,8 @@ import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
-import { IUIState } from 'lib/ui';
-
 import { IPhaserGameProvider } from 'phaser/game.provider';
 
 import { styles } from './phaser-view.styles';

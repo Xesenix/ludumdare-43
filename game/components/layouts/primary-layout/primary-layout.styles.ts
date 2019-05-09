@@ -1,4 +1,5 @@
 import { createStyles, Theme } from '@material-ui/core';
+
 import { IAppTheme } from 'theme';
 
 export const styles = (theme: Theme) => {
