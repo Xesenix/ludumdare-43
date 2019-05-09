@@ -18,8 +18,12 @@ export type II18nPluralTranslation = (
 	domain?: string,
 ) => string;
 
+export interface II18nLanguagesState {
+	[key: string]: { ready: boolean };
+}
+
 export interface II18nState extends Object {
-	languages: { [key: string]: { ready: boolean } };
+	languages: II18nLanguagesState;
 	language: LanguageType;
 }
 
