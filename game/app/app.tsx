@@ -15,24 +15,12 @@ import {
 import { IAppTheme, ThemesNames } from 'theme';
 
 // elements
-import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
-
-const Loader = () => (
-	<Grid
-		container
-		spacing={0}
-		alignItems="center"
-		style={{ padding: '64px 0', position: 'relative', marginLeft: '50%', left: '-64px',}}
-	>
-		<CircularProgress size={128}/>
-	</Grid>
-);
+import Loader from 'components/loader/loader';
 
 const MenuComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "menu" */ 'components/menu/menu') });
 const IntroView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view') });
