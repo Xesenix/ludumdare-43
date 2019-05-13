@@ -17,14 +17,14 @@ const i18nTileLabel = (__: II18nTranslation) => __('Loading error');
 const i18nDescriptionLabel = (__: II18nTranslation) => __('Something went wrong while loading module try again later.');
 const i18nCtaLabel = (__: II18nTranslation) => __('Retry');
 
-function Loader({ classes, isLoading, retry }) {
+function Loader({ classes, isLoading, retry, size = 128 }) {
 	return (
 		<div
 			className={classes.root}
 		>
 			{
 				isLoading
-				? <CircularProgress size={128}/>
+				? <CircularProgress size={size}/>
 				: (
 					<Paper className={classes.notification}>
 						<Typography

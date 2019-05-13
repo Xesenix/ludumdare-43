@@ -6,9 +6,21 @@ export const styles = (theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
 	return createStyles({
 		root: {
-			minHeight: '600px',
-			padding: '64px 0 24px',
+			alignItems: 'self-start',
+			bottom: '32px',
+			display: 'grid',
+			left: '0',
+			overflowX: 'hidden',
+			overflowY: 'auto',
+			position: 'fixed',
+			right: '0',
+			top: appTheme.layout.toolbarHeight,
 			...appTheme.layout.fullscreen.root,
+		},
+		container: {
+			display: 'grid',
+			gridTemplateColumns: 'minmax(320px, 1fr)',
+			height: '100%',
 		},
 	});
 };

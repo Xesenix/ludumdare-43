@@ -22,6 +22,7 @@ export interface IAppThemeOptions extends ThemeOptions {
 		container?: {
 			wrapper?: ICSSProperties;
 		};
+		toolbarHeight?: any;
 	};
 
 	icons?: {
@@ -55,6 +56,7 @@ export interface IAppTheme extends Theme {
 		container: {
 			wrapper: ICSSProperties;
 		};
+		toolbarHeight: any;
 	};
 
 	icons: {

@@ -12,6 +12,7 @@ export default (
 	createTheme: (options: IAppThemeOptions) => IAppTheme,
 	paletteConfig: PaletteOptions = {},
 ) => {
+	const toolbarHeight = '48px';
 	const colorDefault = {
 		light: '#aaaaaa',
 		main: '#333333',
@@ -19,7 +20,7 @@ export default (
 		contrastText: '#ffffff',
 	};
 
-	const { palette } = createTheme({
+	const { palette, breakpoints } = createTheme({
 		palette: {
 			secondary: {
 				main: '#a00000',
@@ -107,7 +108,7 @@ export default (
 	const toolbarGradient = (color: Color, emboss: boolean = true) => {
 		const bgGradient = emboss ? linearGradient({
 			colorStops: [
-				`${darken(0.3, color)} 0%`,
+				`${lighten(0.5, color)} 0%`,
 				`${lighten(0.2, color)} 10%`,
 				`${color} 15%`,
 				`${color} 90%`,
@@ -128,15 +129,15 @@ export default (
 			backgroundImage: [
 				pattern.backgroundImage,
 				bgGradient.backgroundImage,
-			],
+			].join(', '),
 			backgroundSize: [
 				...pattern.backgroundSize,
 				'100% 100%',
-			],
+			].join(', '),
 			backgroundPosition: [
 				...pattern.backgroundPosition,
 				'0',
-			],
+			].join(', '),
 		};
 	};
 
@@ -168,7 +169,6 @@ export default (
 			primary: {
 				root: {
 					...paperPattern,
-					minHeight: `calc(100vh - 32px)`,
 				},
 			},
 			fullscreen: {
@@ -180,33 +180,40 @@ export default (
 						],
 						extent: 'ellipse at 0% 5%',
 					}),
-					minHeight: `calc(100vh - 32px)`, // TODO: connect to top toolbar height
 				},
 			},
 			container: {
 				wrapper: {
 					maxWidth: '1200px',
-					padding: `0 64px 64px`,
+					padding: `64px 64px`,
 					background: palette.background.paper,
 					boxShadow: palette.type === 'dark' ? 'inset 2px 2px 4px #000' : 'none',
+					[breakpoints.down('sm')]: {
+						padding: `24px 24px`,
+						margin: `0`,
+					},
 				},
 			},
+			toolbarHeight,
 		},
 		overrides: {
 			MuiToolbar: {
 				root: {
 					...toolbarGradient(colorDefault.main),
+					[breakpoints.down('sm')]: {
+						justifyContent: 'flex-end',
+					},
 				},
 			},
 			MuiDrawer: {
 				paper: {
-					minWidth: '320px',
 					...darkBgPattern,
 				},
 			},
 			TopMenuButton: {
 				root: {
 					borderRadius: '0',
+					minHeight: toolbarHeight,
 					...menuButton(colorDefault),
 				},
 				primary: {

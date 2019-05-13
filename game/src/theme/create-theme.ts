@@ -16,6 +16,12 @@ import MuteOffIcon from '@material-ui/icons/VolumeUp';
 import { IAppTheme, IAppThemeOptions } from './theme.interfaces';
 
 export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
+	const MuiDrawer = {
+		paper: {
+			minWidth: '260px',
+		},
+	};
+
 	let baseTheme = createMuiTheme({
 		typography: {
 			useNextVariants: true,
@@ -51,6 +57,7 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 				wrapper: {
 				},
 			},
+			toolbarHeight: '64px',
 		},
 		overrides: {
 			DrawerMenuButton: {
@@ -77,6 +84,7 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 					},
 				},
 			},
+			MuiDrawer,
 		},
 	});
 

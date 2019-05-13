@@ -5,12 +5,7 @@ export default (
 	createTheme: (options: IAppThemeOptions) => IAppTheme,
 	paletteConfig: PaletteOptions = {},
 ) => {
-	const MuiDrawer = {
-		paper: {
-			minWidth: '320px',
-		},
-	};
-
+	const { breakpoints } = createTheme({});
 	const styles: IAppThemeOptions = {
 		typography: {
 			htmlFontSize: 16,
@@ -42,7 +37,20 @@ export default (
 			},
 		},
 		overrides: {
-			MuiDrawer,
+			MuiToolbar: {
+				root: {
+					justifyContent: 'center',
+					[breakpoints.down('sm')]: {
+						justifyContent: 'flex-end',
+					},
+				},
+			},
+
+			TopMenuButton: {
+				root: {
+					margin: '0 8px',
+				},
+			},
 		},
 	};
 

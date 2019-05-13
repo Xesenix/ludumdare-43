@@ -72,45 +72,43 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 		} = this.props;
 
 		return (
-			<Grid container spacing={0} alignItems="center">
-				<Grid item xs={12}>
-					<AppBar position="fixed">
-						<Toolbar>
-							<Hidden smDown>
-								<Menu
-									key="menu"
-									MenuItem={TopMenuButton}
-								/>
-
-							</Hidden>
-							<Hidden mdUp>
-								<TopMenuButton
-									color="primary"
-									onClick={this.toggleDrawer}
-									variant="extended"
-									Icon={MenuIcon}
-								/>
-							</Hidden>
-						</Toolbar>
-						{loading ? <LinearProgress/> : null}
-					</AppBar>
-
-					<Hidden mdUp>
-						<Drawer
-							onClose={this.toggleDrawer}
-							open={this.state.drawerOpen}
-						>
+			<>
+				<AppBar position="fixed">
+					<Toolbar>
+						<Hidden smDown>
 							<Menu
-								key="drawer-menu"
-								MenuItem={DrawerMenuButton}
+								key="menu"
+								MenuItem={TopMenuButton}
 							/>
-						</Drawer>
-					</Hidden>
-					<Paper className={classes.root} elevation={0}>
-						{content}
-					</Paper>
-				</Grid>
-			</Grid>
+
+						</Hidden>
+						<Hidden mdUp>
+							<TopMenuButton
+								color="primary"
+								onClick={this.toggleDrawer}
+								variant="extended"
+								Icon={MenuIcon}
+							/>
+						</Hidden>
+					</Toolbar>
+					{loading ? <LinearProgress/> : null}
+				</AppBar>
+
+				<Hidden mdUp>
+					<Drawer
+						onClose={this.toggleDrawer}
+						open={this.state.drawerOpen}
+					>
+						<Menu
+							key="drawer-menu"
+							MenuItem={DrawerMenuButton}
+						/>
+					</Drawer>
+				</Hidden>
+				<Paper className={classes.root} elevation={0}>
+					{content}
+				</Paper>
+			</>
 		);
 	}
 
