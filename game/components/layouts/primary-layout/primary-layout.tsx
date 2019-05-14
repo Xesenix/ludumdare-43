@@ -1,6 +1,7 @@
-import { withStyles, WithStyles } from '@material-ui/core';
+import { Slide, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { connectToInjector } from 'lib/di/context';
 import {
@@ -14,7 +15,6 @@ import { IMenuExternalProps } from 'menu/menu';
 // elements
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
-import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
@@ -28,7 +28,7 @@ import TopMenuButton from 'components/core/top-menu-button';
 import { styles } from './primary-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IPrimaryLayoutExternalProps {
+export interface IPrimaryLayoutExternalProps extends RouteComponentProps {
 	content: any;
 	Menu: React.ComponentType<IMenuExternalProps>;
 	loading?: boolean;
@@ -69,6 +69,7 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 			content = null,
 			loading = false,
 			Menu,
+			location,
 		} = this.props;
 
 		return (
@@ -80,7 +81,6 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 								key="menu"
 								MenuItem={TopMenuButton}
 							/>
-
 						</Hidden>
 						<Hidden mdUp>
 							<TopMenuButton
@@ -105,8 +105,17 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 						/>
 					</Drawer>
 				</Hidden>
-				<Paper className={classes.root} elevation={0}>
-					{content}
+				<Paper
+					className={classes.root}
+					elevation={0}
+				>
+					<Slide
+						key={location.key}
+						in={true}
+						direction="left"
+					>
+						<div className={classes.container}>{content}</div>
+					</Slide>
 				</Paper>
 			</>
 		);
@@ -119,4 +128,4 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 	}
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(PrimaryLayoutComponent)));
+export default hot(module)(withStyles(styles)(withRouter(diDecorator(PrimaryLayoutComponent))));

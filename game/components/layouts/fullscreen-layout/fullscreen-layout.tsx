@@ -1,6 +1,7 @@
-import { withStyles, WithStyles } from '@material-ui/core';
+import { Slide, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { connectToInjector } from 'lib/di/context';
 import {
@@ -27,7 +28,7 @@ import TopMenuButton from 'components/core/top-menu-button';
 import { styles } from './fullscreen-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IFullscreenLayoutExternalProps {
+export interface IFullscreenLayoutExternalProps extends RouteComponentProps {
 	content: any;
 	Menu: React.ComponentType<IMenuExternalProps>;
 	loading?: boolean;
@@ -67,11 +68,12 @@ class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, I
 			classes,
 			content = null,
 			loading = false,
+			location,
 			Menu,
 		} = this.props;
 
 		return (
-			<Paper className={classes.root} elevation={0}>
+			<>
 				<AppBar position="fixed">
 					<Toolbar>
 						<Hidden smDown>
@@ -104,8 +106,19 @@ class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, I
 						/>
 					</Drawer>
 				</Hidden>
-				{content}
-			</Paper>
+				<Paper
+					className={classes.root}
+					elevation={0}
+				>
+					<Slide
+						key={location.key}
+						in={true}
+						direction="left"
+					>
+						<div className={classes.container}>{content}</div>
+					</Slide>
+				</Paper>
+			</>
 		);
 	}
 
@@ -116,4 +129,4 @@ class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, I
 	}
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(FullscreenLayoutComponent)));
+export default hot(module)(withStyles(styles)(withRouter(diDecorator(FullscreenLayoutComponent))));
