@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
 import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
@@ -19,6 +18,8 @@ import { IAppTheme } from 'theme';
 
 // elements
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { ConfigLink, GameLink } from 'components/core/navigation-links';
 
 const Loader = () => <CircularProgress />;
 const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
@@ -118,7 +119,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 					<MenuItem
 						// prettier-ignore
 						color="primary"
-						component={this.renderConfigLink}
+						component={ConfigLink}
 						key="config"
 						Icon={theme.icons.config}
 						label={__('Configuration')}
@@ -129,7 +130,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 					<MenuItem
 						// prettier-ignore
 						color="primary"
-						component={this.renderGameLink}
+						component={GameLink}
 						key="game"
 						Icon={theme.icons.undo}
 						label={__('Back')}
@@ -169,10 +170,6 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 			</>
 		);
 	}
-
-	private renderConfigLink = (props: IMenuItemExternalProps) => <RouterLink to="/config" {...props}/>;
-
-	private renderGameLink = (props: IMenuItemExternalProps) => <RouterLink to="/game" {...props}/>;
 
 	private toggleFullScreen = (): void => {
 		const { dispatchSetFullscreenAction, store } = this.props;

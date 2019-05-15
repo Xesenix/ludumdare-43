@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nLanguagesState } from 'lib/i18n';
@@ -71,11 +71,11 @@ class App extends StoreComponent<AppProps, IAppState> {
 		console.log('App:render');
 
 		const routing = (
-			<>
+			<Switch>
 				<Route exact path="/" component={IntroView}/>
 				<Route path="/game" component={GameView}/>
 				<Route path="/config" component={ConfigurationView}/>
-			</>
+			</Switch>
 		);
 
 		return (

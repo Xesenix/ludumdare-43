@@ -35,7 +35,9 @@ export const styles = (theme: Theme) => {
 			textAlign: 'justify',
 		},
 		cta: {
+			justifySelf: 'center',
 			padding: '0 24px',
+			width: '320px',
 		},
 	});
 };

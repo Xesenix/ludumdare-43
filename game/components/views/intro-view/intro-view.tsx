@@ -1,16 +1,17 @@
 import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Link as RouterLink } from 'react-router-dom';
 
 // elements
 import Button from '@material-ui/core/Button';
-import Fab, { FabProps } from '@material-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
+
+import { GameLink } from 'components/core/navigation-links';
 
 import { styles } from './intro-view.styles';
 
@@ -64,7 +65,7 @@ class IntroViewComponent extends React.Component<IIntroViewProps, IIntroViewStat
 				</Button>
 				<Fab
 					color="primary"
-					component={this.renderGameLink}
+					component={GameLink}
 					className={classes.cta}
 					variant="extended"
 				>
@@ -73,8 +74,6 @@ class IntroViewComponent extends React.Component<IIntroViewProps, IIntroViewStat
 			</Paper>
 		);
 	}
-
-	private renderGameLink = (props: FabProps) => <RouterLink to="/game" {...props}/>;
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(IntroViewComponent)));
