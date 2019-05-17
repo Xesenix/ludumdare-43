@@ -1,4 +1,4 @@
-import { createStyles, Grid, Theme } from '@material-ui/core';
+import { createStyles, Theme } from '@material-ui/core';
 
 import { IAppTheme } from 'theme';
 

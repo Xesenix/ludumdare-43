@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader';
 // elements
 import Fab from '@material-ui/core/Fab';
 
-import { IMenuItemExternalProps } from 'menu/menu';
+import { IMenuItemExternalProps } from 'components/menu/menu';
 
 export const styles = (theme: Theme) => {
 	return createStyles({

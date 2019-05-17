@@ -80,14 +80,14 @@ export default (
 			`${size}px ${size}px`,
 			`${size}px ${size}px`,
 			'200% 100%',
-		],
+		].join(', '),
 		backgroundPosition: [
 			`0px 0px`,
 			`${size / 2}px ${size / 2}px`,
 			`0px ${size / 2}px`,
 			`${size / 2}px 0px`,
 			'0',
-		],
+		].join(', '),
 	});
 
 	const inverseTheme = palette.type === 'dark';
@@ -131,11 +131,11 @@ export default (
 				bgGradient.backgroundImage,
 			].join(', '),
 			backgroundSize: [
-				...pattern.backgroundSize,
+				pattern.backgroundSize,
 				'100% 100%',
 			].join(', '),
 			backgroundPosition: [
-				...pattern.backgroundPosition,
+				pattern.backgroundPosition,
 				'0',
 			].join(', '),
 		};

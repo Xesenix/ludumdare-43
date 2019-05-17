@@ -10,7 +10,6 @@ import {
 	IStoreComponentInternalProps,
 	StoreComponent,
 } from 'lib/utils/store.component';
-import { IMenuExternalProps } from 'menu/menu';
 
 // elements
 import AppBar from '@material-ui/core/AppBar';
@@ -19,11 +18,13 @@ import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
+
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
 import DrawerMenuButton from 'components/core/drawer-menu-button';
 import TopMenuButton from 'components/core/top-menu-button';
+import { IMenuExternalProps } from 'components/menu/menu';
 
 import { styles } from './fullscreen-layout.styles';
 

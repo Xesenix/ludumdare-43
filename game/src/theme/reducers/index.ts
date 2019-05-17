@@ -16,7 +16,7 @@ export function reducer<S extends IThemeState | undefined, A extends IValueActio
 		case SET_THEME: {
 			const { value } = action as IValueAction<string>;
 			return {
-				...(state as any),
+				...state,
 				theme: value,
 			};
 		}

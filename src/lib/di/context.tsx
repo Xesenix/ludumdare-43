@@ -88,7 +88,6 @@ export function connectToInjector<T, I = any>(
 									key = key.replace(multipleMatch[0], '');
 								}
 
-
 								// handling keys with named dependencies like:
 								// some_key@name
 								if (!!multipleMatch) {
