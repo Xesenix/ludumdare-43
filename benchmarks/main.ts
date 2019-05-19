@@ -3,11 +3,12 @@ import * as ReactDOM from 'react-dom';
 import AppComponent from './app/app';
 
 Promise.all([
-	import('./suits/data-update-increase'),
-	import('./suits/data-update-push-immutable'),
-	import('./suits/functions-creation-simple'),
-	import('./suits/functions-creation-complex'),
-	import('./suits/data-selectors'),
+	import('./benchmarks/data-update-increase'),
+	import('./benchmarks/data-update-push-immutable'),
+	import('./benchmarks/functions-creation-simple'),
+	import('./benchmarks/functions-creation-complex'),
+	import('./benchmarks/data-selectors'),
+	import('./benchmarks/game-rules/game-rules'),
 ])
 .then((suites) => {
 	const root = document.getElementById('benchmarks');

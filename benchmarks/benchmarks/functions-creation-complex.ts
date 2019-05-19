@@ -10,7 +10,7 @@ const predefined = (model: IModel) => {
 	};
 };
 
-const suit: BenchmarkSuite = new BenchmarkSuite(`Functions creation complex`, {
+const suite: BenchmarkSuite = new BenchmarkSuite(`Functions creation complex`, {
 	async: true,
 }, `interface IModel {
 	a: number;
@@ -25,15 +25,14 @@ const predefined = (model: IModel) => {
 // prepare
 let data: IModel = { a: 0 };
 let test: (model: IModel, param: number, cb: (model: IModel) => void) => (param: number) => void
-	= (model: IModel, param: number, cb: (model: IModel) => (param: number) => void) => cb(model)(param);`,
-);
+	= (model: IModel, param: number, cb: (model: IModel) => (param: number) => void) => cb(model)(param);`);
 
 // prepare
 let data: IModel = { a: 0 };
 let test: (model: IModel, param: number, cb: (model: IModel) => void) => (param: number) => void
 	= (model: IModel, param: number, cb: (model: IModel) => (param: number) => void) => cb(model)(param);
 
-suit.on('cycle', () => {
+suite.on('cycle', () => {
 	data = { a: 0 };
 	test = (model: IModel, param: number, cb: (model: IModel) => (param: number) => void) => cb(model)(param);
 })
@@ -56,4 +55,4 @@ suit.on('cycle', () => {
 	code: `test(data, 1, predefined);`,
 });
 
-export default suit;
+export default suite;

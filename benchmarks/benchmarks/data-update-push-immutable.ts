@@ -1,27 +1,28 @@
-import produce, { createDraft, finishDraft } from 'immer';
+import produce, { createDraft, finishDraft, setAutoFreeze } from 'immer';
 
 import { BenchmarkSuite } from 'benchmark/benchmark-suite';
+
+setAutoFreeze(false);
 
 const options = {
 	async: true,
 	initCount: 100,
 	maxTime: 60 / 1000,
-	// maxTime: 1,
 	// minSamples: 200,
 	// minTime: 0.16666,
 };
 
 interface IModel {
-	a: number;
+	a: string[];
 }
 
-const doAction: { type: string } = { type: 'inc' };
+const doAction: { type: string } = { type: 'push' };
 
 // immer
 const recipe = (action: { type: string }) => (state: IModel) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'push':
+			state.a.push('x');
 			return;
 	}
 };
@@ -29,7 +30,7 @@ const recipe = (action: { type: string }) => (state: IModel) => {
 const curriedRecipe = (state: IModel, action: { type: string }) => {
 	switch (action.type) {
 		case 'inc':
-			state.a ++;
+			state.a.push('x');
 			return;
 	}
 };
@@ -37,12 +38,12 @@ const curriedRecipe = (state: IModel, action: { type: string }) => {
 const curriedProducer = produce(curriedRecipe);
 
 // redux
-const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: '' }) => {
+const reducer = (state: IModel = { a: [] }, action: { type: string } = { type: '' }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'push':
 			return {
 				...state,
-				a: state.a + 1,
+				a: [...state.a, 'x'],
 			};
 	}
 
@@ -51,29 +52,29 @@ const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: ''
 
 const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'push':
 			return {
 				...state,
-				a: state.a + 1,
+				a: [...state.a, 'x'],
 			};
 	}
 
 	return state;
 };
 
-const suit: BenchmarkSuite = new BenchmarkSuite(`Data update increase`, {
+const suite: BenchmarkSuite = new BenchmarkSuite(`Data update push immutable`, {
 	async: true,
 }, `interface IModel {
-	a: number;
+	a: string[];
 }
 
-const doAction: { type: string } = { type: 'inc' };
+const doAction: { type: string } = { type: 'push' };
 
 // immer
 const recipe = (action: { type: string }) => (state: IModel) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'push':
+			state.a.push('x');
 			return;
 	}
 };
@@ -81,7 +82,7 @@ const recipe = (action: { type: string }) => (state: IModel) => {
 const curriedRecipe = (state: IModel, action: { type: string }) => {
 	switch (action.type) {
 		case 'inc':
-			state.a ++;
+			state.a.push('x');
 			return;
 	}
 };
@@ -89,12 +90,12 @@ const curriedRecipe = (state: IModel, action: { type: string }) => {
 const curriedProducer = produce(curriedRecipe);
 
 // redux
-const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: '' }) => {
+const reducer = (state: IModel = { a: [] }, action: { type: string } = { type: '' }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'push':
 			return {
 				...state,
-				a: state.a + 1,
+				a: [...state.a, 'x'],
 			};
 	}
 
@@ -103,10 +104,10 @@ const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: ''
 
 const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'push':
 			return {
 				...state,
-				a: state.a + 1,
+				a: [...state.a, 'x'],
 			};
 	}
 
@@ -114,38 +115,43 @@ const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
 };
 
 // prepare
-let data: IModel = { a: 0 };
+let data: IModel = { a: [] };
 let draft = createDraft(data);
 let step = 0;`);
 
 // prepare
-let data: IModel = { a: 0 };
+let data: IModel = { a: [] };
 let draft = createDraft(data);
 let step = 0;
 
-suit
-.on('cycle', () => {
-	console.log('cycle', data);
+suite
+.on('cycle', ({ target }) => {
+	console.log('cycle', target.name, data);
 	// cleanup
 	draft = createDraft(data);
-	data = { a: 0 };
+	data = { a: [] };
 	step = 0;
 })
-.add(() => {
-	data.a++;
-}, {
-	...options,
-	id: 'mutable',
-	name: 'mutable',
-	code: `data.a++;`,
-})
+// .add(() => {
+// 	switch (doAction.type) {
+// 		case 'push':
+// 			data.a.push('x');
+// 			return;
+// 	}
+// }, {
+// 	...options,
+// 	id: 'mutable',
+// 	name: 'mutable',
+// 	code: `switch (doAction.type) {
+// 	case 'push':
+// 		data.a.push('x');
+// 		return;
+// }`,
+// })
 .add(() => {
 	switch (doAction.type) {
-		case 'inc':
-			data = {
-				...data,
-				a: data.a + 1,
-			};
+		case 'push':
+			data.a = [...data.a, 'x'];
 			return;
 	}
 }, {
@@ -153,11 +159,8 @@ suit
 	id: 'plain implementation',
 	name: 'plain implementation',
 	code: `switch (doAction.type) {
-	case 'inc':
-		data = {
-			...data,
-			a: data.a + 1,
-		};
+	case 'push':
+		data.a = [...data.a, 'x'];
 		return;
 }`,
 })
@@ -178,21 +181,21 @@ suit
 	code: `data = reducerWithoutDefault(data, doAction);`,
 })
 .add(() => {
-	data = produce(data, (state) => {
+	data = produce(data, (state: IModel) => {
 		switch (doAction.type) {
-			case 'inc':
-				state.a ++;
+			case 'push':
+				state.a.push('x');
 				return;
 		}
 	});
 }, {
 	...options,
-	id: 'immer inlined',
-	name: 'immer inlined',
-	code: `data = produce(data, (state) => {
+	id: 'immer inline',
+	name: 'immer inline',
+	code: `data = produce(data, (state: IModel) => {
 	switch (doAction.type) {
-		case 'inc':
-			state.a ++;
+		case 'push':
+			state.a.push('x');
 			return;
 	}
 });`,
@@ -266,4 +269,4 @@ step++;`,
 step++;`,
 });
 
-export default suit;
+export default suite;

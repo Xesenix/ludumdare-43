@@ -24,7 +24,7 @@ const config: [string, any, (model: IModel) => any][] = [
 
 const selectors = config.map(([path, defaultValue]) => get(path, defaultValue));
 
-const suit: BenchmarkSuite = new BenchmarkSuite('data selectors', {
+const suite: BenchmarkSuite = new BenchmarkSuite('data selectors', {
 	async: true,
 }, `interface IModel {
 	a: {
@@ -80,7 +80,7 @@ let data: IModel = {
 };
 let step: number = 0;
 
-suit
+suite
 .on('cycle', () => {
 	data = {
 		a: {
@@ -112,4 +112,4 @@ suit
 	code: `selectors[step++ % selectors.length](data as any);`,
 });
 
-export default suit;
+export default suite;

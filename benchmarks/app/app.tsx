@@ -41,6 +41,10 @@ class AppComponent extends React.Component<IAppProps, IAppState> {
 		};
 	}
 
+	public componentDidCatch(error, info) {
+		console.error('error', error, info);
+	}
+
 	public componentDidMount() {
 		this.props.suites.forEach((benchmarks: BenchmarkSuite) => {
 			benchmarks.on('start cycle', (event) => {
@@ -58,14 +62,15 @@ class AppComponent extends React.Component<IAppProps, IAppState> {
 			});
 
 			benchmarks.on('complete', (event) => {
+				console.log('Complete', benchmarks);
 				this.setState({
 					title: 'ready',
 					status: {
 						...this.state.status,
 						[benchmarks.name]: {
 							...this.state.status[benchmarks.name],
-							...benchmarks.reduce((result, test: Benchmark) => {
-								result[test.name] = benchmarks.aborted ? 'aborted' : test.running ? 'running' : test.error ? `error` : 'ready';
+							...benchmarks.reduce((result, benchmark: Benchmark) => {
+								result[benchmark.name] = benchmarks.aborted ? 'aborted' : benchmark.running ? 'running' : benchmark.error ? `error` : 'ready';
 								return result;
 							}, {}),
 						},
@@ -85,9 +90,9 @@ class AppComponent extends React.Component<IAppProps, IAppState> {
 			title: 'running...',
 			status: {
 				...this.state.status,
-				[benchmarks.name]: benchmarks.reduce((result, test: Benchmark) => {
-					test.running = true;
-					result[test.name] = 'awaiting...';
+				[benchmarks.name]: benchmarks.reduce((result, benchmark: Benchmark) => {
+					benchmark.running = true;
+					result[benchmark.name] = 'awaiting...';
 					return result;
 				}, {}),
 			},
