@@ -64,6 +64,10 @@ class App extends StoreComponent<AppProps, IAppState> {
 		]);
 	}
 
+	public componentDidCatch(error, info) {
+		console.error('error', error, info);
+	}
+
 	public render() {
 		const { fullscreen = false } = this.state;
 		const { getTheme } = this.props;
