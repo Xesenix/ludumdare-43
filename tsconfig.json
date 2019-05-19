@@ -44,6 +44,9 @@
 				"./game/app/*",
 				"./game/*",
 				"./game/src/*",
+				"./benchmarks/app/*",
+				"./benchmarks/*",
+				"./benchmarks/src/*",
 				"./src/*",
 				"./*"
 			],
@@ -81,6 +84,8 @@
 		"./src/**/*.tsx",
 		"./game/**/*.ts",
 		"./game/**/*.tsx",
+		"./benchmark/**/*.ts",
+		"./benchmark/**/*.tsx",
 	],
 	"exclude": [
 		"node_modules"

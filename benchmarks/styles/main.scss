@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+
+// FF fullscreen
+html {
+	overflow: auto;
+}
+
+body {
+	padding: 32px;
+
+	// FF fullscreen
+	&:fullscreen {
+		overflow: auto;
+	}
+
+	// Chrome fullscreen
+	&:-webkit-full-screen {
+		overflow: auto;
+	}
+}
+
+.container {
+	display: grid;
+	position: relative;
+	z-index: 0;
+
+	padding-top: 96px;
+
+	& > h1 {
+		font-family: "Oswald";
+		text-align: center;
+		font-size: 4rem;
+	}
+}
+
+.footer {
+	background-color: black;
+	bottom: 0;
+	color: white;
+	font-family: "Oswald", "Helvetica", "Arial", sans-serif;
+	left: 0;
+	padding: 4px 48px;
+	position: fixed;
+	right: 0;
+	text-align: right;
+}
