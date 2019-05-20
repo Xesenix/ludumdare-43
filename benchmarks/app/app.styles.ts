@@ -52,7 +52,8 @@ export const styles = (theme: Theme) => {
 			width: '100%',
 			height: '100%',
 			gridAutoRows: 'minmax(32px, 1fr)',
-			gridTemplateColumns: '1fr auto 1fr 1fr minmax(0, 1fr)',
+			gridTemplateColumns: '1fr auto minmax(320px, 1.5fr) minmax(0, 1fr)',
+			gridGap: '4px 0',
 			alignItems: 'center',
 			'& strong, & pre': {
 				padding: '8px 24px',
@@ -63,6 +64,47 @@ export const styles = (theme: Theme) => {
 				tabSize: '2',
 				boxShadow: 'inset 0 0 4px #333',
 			},
+			'& > *': {
+				borderBottom: '1px solid #ddd',
+				margin: '0',
+				alignSelf: 'normal',
+			},
+		},
+		result: {
+			display: 'grid',
+			gridTemplateColumns: '1fr minmax(0, 1fr)',
+			gridAutoRows: 'max-content',
+			alignItems: 'baseline',
+			gridGap: '4px',
+			'& div:nth-child(2n+1)': {
+				textAlign: 'right',
+			},
+		},
+		resultMeanPerSec: {
+			fontSize: '2rem',
+			whiteSpace: 'nowrap',
+			fontWeight: 'bold',
+		},
+		resultMeanPerSecUnit: {
+			fontSize: '1rem',
+		},
+		resultMeanTime: {
+			fontSize: '.875rem',
+			whiteSpace: 'nowrap',
+			color: '#666',
+		},
+		resultMeanTimeUnit: {
+			fontSize: '.875rem',
+			color: '#666',
+		},
+		resultCount: {
+			fontSize: '.875rem',
+			whiteSpace: 'nowrap',
+			color: '#666',
+		},
+		resultCountUnit: {
+			fontSize: '.875rem',
+			color: '#666',
 		},
 	});
 };

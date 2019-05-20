@@ -8,7 +8,7 @@ const predefined = (model: IModel) => {
 	model.a ++;
 };
 
-const suite: BenchmarkSuite = new BenchmarkSuite(`Functions creation simple`, {
+const suite: BenchmarkSuite = new BenchmarkSuite(`functions creation simple`, {
 	async: true,
 }, `interface IModel {
 	a: number;

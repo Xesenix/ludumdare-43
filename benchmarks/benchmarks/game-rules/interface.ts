@@ -8,4 +8,5 @@ export interface IGameState {
 		current: number;
 		stolen: { current: number; total: number };
 	};
+	junk: number[];
 }

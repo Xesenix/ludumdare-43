@@ -9,7 +9,7 @@ import { BenchmarkSuite } from 'benchmark/benchmark-suite';
 import { styles } from './app.styles';
 
 const formatNumber = formatNumberFactory({
-	integerSeparator: ' ',
+	integerSeparator: ` `,
 	round: 0,
 });
 
@@ -143,8 +143,14 @@ class AppComponent extends React.Component<IAppProps, IAppState> {
 												<React.Fragment key={test.options.id}>
 													<h3>{benchmarkName}</h3>
 													{ visible[suiteName] ? <pre>{benchmarkCode}</pre> : <span>&mdash;</span> }
-													<strong>{(test.stats.mean).toFixed(8)} sec</strong>
-													<strong>{formatNumber(test.stats.mean ? 1 / test.stats.mean : 0)} [times per sec]<br/>{formatNumber(test.count)} [count]</strong>
+													<div className={classes.result}>
+														<div className={classes.resultMeanPerSec}>{formatNumber(test.hz)}</div>
+														<div className={classes.resultMeanPerSecUnit}>times per sec</div>
+														<div className={classes.resultMeanTime}>{(test.stats.mean).toFixed(8)}</div>
+														<div className={classes.resultMeanTimeUnit}>sec</div>
+														<div className={classes.resultCount}>{formatNumber(test.count)}</div>
+														<div className={classes.resultCountUnit}>count</div>
+													</div>
 													<span>{ !!status[suiteName] ? status[suiteName][benchmarkName] : null }</span>
 												</React.Fragment>
 											);

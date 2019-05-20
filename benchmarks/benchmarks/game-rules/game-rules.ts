@@ -10,6 +10,9 @@ import rulesFactory from './rules-factory';
 
 setAutoFreeze(false);
 
+// increases time of cloneDeep
+const junkSize = 10000;
+
 const options = {
 	async: true,
 	initCount: 2000,
@@ -140,7 +143,80 @@ const progressNextTurnProducerV2 = produce((state: IGameState) => {
 
 const suite: BenchmarkSuite = new BenchmarkSuite(`game rules`, {
 	async: true,
-}, ``);
+}, `const junkSize = ${junkSize};
+
+const progressNextTurnMutableV1 = (state: IGameState) => {
+	return pipeline(
+		state,
+		incomeRuleV1,
+		populationIncRuleV1,
+		warRuleV1,
+		turnEndRuleV1,
+	);
+};
+
+const progressNextTurnImmutableV1 = (state: IGameState) => {
+	return pipeline(
+		cloneDeep(state),
+		incomeRuleV1,
+		populationIncRuleV1,
+		warRuleV1,
+		turnEndRuleV1,
+	);
+};
+
+const progressNextTurnProducerV1 = produce((state: IGameState) => {
+	return pipeline(
+		state,
+		incomeRuleV1,
+		populationIncRuleV1,
+		warRuleV1,
+		turnEndRuleV1,
+	);
+});
+
+const progressNextTurnMutableV2 = (state: IGameState) => {
+	return pipeline(
+		state,
+		incomeRuleV2,
+		populationIncRuleV2,
+		warRuleV2,
+		turnEndRuleV2,
+	);
+};
+
+const progressNextTurnImmutableV2 = (state: IGameState) => {
+	return pipeline(
+		cloneDeep(state),
+		incomeRuleV2,
+		populationIncRuleV2,
+		warRuleV2,
+		turnEndRuleV2,
+	);
+};
+
+const progressNextTurnProducerV2 = produce((state: IGameState) => {
+	return pipeline(
+		state,
+		incomeRuleV2,
+		populationIncRuleV2,
+		warRuleV2,
+		turnEndRuleV2,
+	);
+});
+
+let gameState: IGameState = {
+	turn: 0,
+	units: {
+		current: 10,
+		killed: { current: 0, total: 0 },
+	},
+	resources: {
+		current: 10,
+		stolen: { current: 0, total: 0 },
+	},
+	junk: (new Array(junkSize)).fill(0),
+}`);
 
 // prepare
 let gameState: IGameState = {
@@ -153,6 +229,7 @@ let gameState: IGameState = {
 		current: 10,
 		stolen: { current: 0, total: 0 },
 	},
+	junk: (new Array(junkSize)).fill(0),
 };
 
 suite
@@ -168,6 +245,7 @@ suite
 			current: 10,
 			stolen: { current: 0, total: 0 },
 		},
+		junk: (new Array(junkSize)).fill(0),
 	};
 })
 .add(() => {
@@ -190,16 +268,16 @@ suite
 	gameState = progressNextTurnImmutableV1(gameState);
 }, {
 	...options,
-	id: 'immutable cloneDeep v1',
-	name: 'immutable cloneDeep v1',
+	id: 'immutable cloneDeep v1 (depends on state size)',
+	name: 'immutable cloneDeep v1 (depends on state size)',
 	code: `gameState = progressNextTurnImmutableV1(gameState);`,
 })
 .add(() => {
 	gameState = progressNextTurnImmutableV2(gameState);
 }, {
 	...options,
-	id: 'immutable cloneDeep v2',
-	name: 'immutable cloneDeep v2',
+	id: 'immutable cloneDeep v2 (depends on state size)',
+	name: 'immutable cloneDeep v2 (depends on state size)',
 	code: `gameState = progressNextTurnImmutableV2(gameState);`,
 })
 .add(() => {

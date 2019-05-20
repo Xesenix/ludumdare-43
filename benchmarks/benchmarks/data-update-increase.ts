@@ -13,50 +13,79 @@ const options = {
 	// minTime: 0.16666,
 };
 
+const junkSize = 1000000;
+
+
 interface IModel {
 	a: number;
+	b: number;
+	junk: number[];
 }
 
-const doAction: { type: string } = { type: 'inc' };
+interface IAction {
+	type: string;
+	value: number;
+}
+
+const actions: IAction[] = [
+	{ type: 'incA', value: 2 },
+	{ type: 'incA', value: -1 },
+	{ type: 'incB', value: 1 },
+	{ type: 'incB', value: -2 },
+];
 
 // immer
-const recipe = (action: { type: string }) => (state: IModel) => {
+const recipe = (action: IAction) => (state: IModel) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'incA':
+			state.a += action.value;
+			return;
+		case 'incB':
+			state.b += action.value;
 			return;
 	}
 };
 
-const curriedRecipe = (state: IModel, action: { type: string }) => {
+const curriedRecipe = (state: IModel) => (action: IAction) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'incA':
+			state.a += action.value;
+			return;
+		case 'incB':
+			state.b += action.value;
 			return;
 	}
 };
-
-const curriedProducer = produce(curriedRecipe);
 
 // redux
-const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: '' }) => {
+const reducer = (state: IModel = { a: 0, b: 0, junk: [] }, action: IAction = { type: '', value: 0 }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'incA':
 			return {
 				...state,
-				a: state.a + 1,
+				a: state.a + action.value,
+			};
+		case 'incB':
+			return {
+				...state,
+				b: state.b + action.value,
 			};
 	}
 
 	return state;
 };
 
-const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
+const reducerWithoutDefault = (state: IModel, action: IAction) => {
 	switch (action.type) {
-		case 'inc':
+		case 'incA':
 			return {
 				...state,
-				a: state.a + 1,
+				a: state.a + action.value,
+			};
+		case 'incB':
+			return {
+				...state,
+				b: state.b + action.value,
 			};
 	}
 
@@ -67,48 +96,76 @@ const suite: BenchmarkSuite = new BenchmarkSuite(`Data update increase`, {
 	async: true,
 }, `interface IModel {
 	a: number;
+	b: number;
+	junk: number[];
 }
 
-const doAction: { type: string } = { type: 'inc' };
+interface IAction {
+	type: string;
+	value: number;
+}
+
+const junkSize = ${junkSize};
+
+const actions: IAction[] = [
+	{ type: 'incA', value: 2 },
+	{ type: 'incA', value: -1 },
+	{ type: 'incB', value: 1 },
+	{ type: 'incB', value: -2 },
+];
 
 // immer
-const recipe = (action: { type: string }) => (state: IModel) => {
+const recipe = (action: IAction) => (state: IModel) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'incA':
+			state.a += action.value;
+			return;
+		case 'incB':
+			state.b += action.value;
 			return;
 	}
 };
 
-const curriedRecipe = (state: IModel, action: { type: string }) => {
+const curriedRecipe = (state: IModel) => (action: IAction) => {
 	switch (action.type) {
-		case 'inc':
-			state.a ++;
+		case 'incA':
+			state.a += action.value;
+			return;
+		case 'incB':
+			state.b += action.value;
 			return;
 	}
 };
-
-const curriedProducer = produce(curriedRecipe);
 
 // redux
-const reducer = (state: IModel = { a: 0 }, action: { type: string } = { type: '' }) => {
+const reducer = (state: IModel = { a: 0, b: 0, junk: [] }, action: IAction = { type: '', value: 0 }) => {
 	switch (action.type) {
-		case 'inc':
+		case 'incA':
 			return {
 				...state,
-				a: state.a + 1,
+				a: state.a + action.value,
+			};
+		case 'incB':
+			return {
+				...state,
+				b: state.b + action.value,
 			};
 	}
 
 	return state;
 };
 
-const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
+const reducerWithoutDefault = (state: IModel, action: IAction) => {
 	switch (action.type) {
-		case 'inc':
+		case 'incA':
 			return {
 				...state,
-				a: state.a + 1,
+				a: state.a + action.value,
+			};
+		case 'incB':
+			return {
+				...state,
+				b: state.b + action.value,
 			};
 	}
 
@@ -116,12 +173,12 @@ const reducerWithoutDefault = (state: IModel, action: { type: string }) => {
 };
 
 // prepare
-let data: IModel = { a: 0 };
+let data: IModel = { a: 0, b: 0, junk: (new Array(junkSize)).fill(0) };
 let draft = createDraft(data);
 let step = 0;`);
 
 // prepare
-let data: IModel = { a: 0 };
+let data: IModel = { a: 0, b: 0, junk: (new Array(junkSize)).fill(0) };
 let draft = createDraft(data);
 let step = 0;
 
@@ -130,23 +187,32 @@ suite
 	console.log('cycle', target.name, data);
 	// cleanup
 	draft = createDraft(data);
-	data = { a: 0 };
+	data = { a: 0, b: 0, junk: (new Array(junkSize)).fill(0) };
 	step = 0;
 })
 .add(() => {
-	data.a++;
+	const doAction = actions[step++ % actions.length];
+	data.a += doAction.value;
 }, {
 	...options,
 	id: 'mutable',
 	name: 'mutable',
-	code: `data.a++;`,
+	code: `const doAction = actions[step++ % actions.length];
+data.a += doAction.value;`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	switch (doAction.type) {
-		case 'inc':
+		case 'incA':
 			data = {
 				...data,
-				a: data.a + 1,
+				a: data.a + doAction.value,
+			};
+			return;
+		case 'incB':
+			data = {
+				...data,
+				b: data.b + doAction.value,
 			};
 			return;
 	}
@@ -154,36 +220,51 @@ suite
 	...options,
 	id: 'plain implementation',
 	name: 'plain implementation',
-	code: `switch (doAction.type) {
-	case 'inc':
+	code: `const doAction = actions[step++ % actions.length];
+switch (doAction.type) {
+	case 'incA':
 		data = {
 			...data,
-			a: data.a + 1,
+			a: data.a + doAction.value,
+		};
+		return;
+	case 'incB':
+		data = {
+			...data,
+			b: data.b + doAction.value,
 		};
 		return;
 }`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	data = reducer(data, doAction);
 }, {
 	...options,
 	id: 'reducer with defaults',
 	name: 'reducer with defaults',
-	code: `data = reducer(data, doAction);`,
+	code: `const doAction = actions[step++ % actions.length];
+data = reducer(data, doAction);`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	data = reducerWithoutDefault(data, doAction);
 }, {
 	...options,
 	id: 'reducer without defaults',
 	name: 'reducer without defaults',
-	code: `data = reducerWithoutDefault(data, doAction);`,
+	code: `const doAction = actions[step++ % actions.length];
+data = reducerWithoutDefault(data, doAction);`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	data = produce(data, (state) => {
 		switch (doAction.type) {
-			case 'inc':
-				state.a ++;
+			case 'incA':
+				state.a += doAction.value;
+				return;
+			case 'incB':
+				state.b += doAction.value;
 				return;
 		}
 	});
@@ -191,81 +272,81 @@ suite
 	...options,
 	id: 'immer inlined',
 	name: 'immer inlined',
-	code: `data = produce(data, (state) => {
+	code: `const doAction = actions[step++ % actions.length];
+data = produce(data, (state) => {
 	switch (doAction.type) {
-		case 'inc':
-			state.a ++;
+		case 'incA':
+			state.a += doAction.value;
+			return;
+		case 'incB':
+			state.b += doAction.value;
 			return;
 	}
 });`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	data = produce(data, recipe(doAction));
 }, {
 	...options,
 	id: 'immer predefined',
 	name: 'immer predefined',
-	code: `data = produce(data, recipe(doAction));`,
+	code: `const doAction = actions[step++ % actions.length];
+data = produce(data, recipe(doAction));`,
 })
 .add(() => {
-	data = curriedProducer(data, doAction);
-}, {
-	...options,
-	id: 'immer curriedProducer predefined',
-	name: 'immer curriedProducer predefined',
-	code: `data = curriedProducer(data, doAction);`,
-})
-.add(() => {
+	const doAction = actions[step++ % actions.length];
 	draft = createDraft(data);
-	curriedRecipe(draft, doAction);
+	curriedRecipe(draft)(doAction);
 	data = finishDraft(draft);
 }, {
 	...options,
 	id: 'immer batched(1)',
 	name: 'immer batched(1)',
-	code: `draft = createDraft(data);
-curriedRecipe(draft, doAction);
+	code: `const doAction = actions[step++ % actions.length];
+draft = createDraft(data);
+curriedRecipe(draft)(doAction);
 data = finishDraft(draft);`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	if (step % 20 === 0) {
 		data = finishDraft(draft);
 		draft = createDraft(data);
 	} else {
-		curriedRecipe(draft, doAction);
+		curriedRecipe(draft)(doAction);
 	}
-	step++;
 }, {
 	...options,
 	id: 'immer batched(20)',
 	name: 'immer batched(20)',
-	code: `if (step % 20 === 0) {
+	code: `const doAction = actions[step++ % actions.length];
+if (step % 20 === 0) {
 	data = finishDraft(draft);
 	draft = createDraft(data);
 } else {
-	draft = curriedRecipe(draft, doAction);
-}
-step++;`,
+	draft = curriedRecipe(draft)(doAction);
+}`,
 })
 .add(() => {
+	const doAction = actions[step++ % actions.length];
 	if (step % 100 === 0) {
 		data = finishDraft(draft);
 		draft = createDraft(data);
 	} else {
-		curriedRecipe(draft, doAction);
+		curriedRecipe(draft)(doAction);
 	}
-	step++;
 }, {
 	...options,
 	id: 'immer batched(100)',
 	name: 'immer batched(100)',
-	code: `if (step % 100 === 0) {
+	code: `const doAction = actions[step++ % actions.length];
+if (step % 100 === 0) {
 	data = finishDraft(draft);
 	draft = createDraft(data);
 } else {
-	draft = curriedRecipe(draft, doAction);
-}
-step++;`,
+	draft = curriedRecipe(draft)(doAction);
+}`,
 });
 
 export default suite;

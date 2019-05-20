@@ -10,7 +10,7 @@ const predefined = (model: IModel) => {
 	};
 };
 
-const suite: BenchmarkSuite = new BenchmarkSuite(`Functions creation complex`, {
+const suite: BenchmarkSuite = new BenchmarkSuite(`functions creation complex`, {
 	async: true,
 }, `interface IModel {
 	a: number;

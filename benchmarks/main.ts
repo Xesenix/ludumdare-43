@@ -9,6 +9,7 @@ Promise.all([
 	import('./benchmarks/functions-creation-complex'),
 	import('./benchmarks/data-selectors'),
 	import('./benchmarks/game-rules/game-rules'),
+	import('./benchmarks/deep-copy'),
 ])
 .then((suites) => {
 	const root = document.getElementById('benchmarks');
