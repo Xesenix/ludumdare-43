@@ -82,3 +82,5 @@ typings/
 
 # xes-bdf build directory
 dist/
+
+.vscode

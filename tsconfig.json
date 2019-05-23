@@ -85,7 +85,7 @@
 		"./game/**/*.ts",
 		"./game/**/*.tsx",
 		"./benchmark/**/*.ts",
-		"./benchmark/**/*.tsx",
+		"./benchmark/**/*.tsx"
 	],
 	"exclude": [
 		"node_modules"
