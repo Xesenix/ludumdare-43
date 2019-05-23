@@ -1,4 +1,3 @@
-import { get } from 'game/data';
 import { IGameState } from 'game/store';
 
 import { getCottagesLevel } from '../buildings/cottages';
@@ -53,7 +52,7 @@ export const getPopulationKilledInTotal = (state: IGameState) => getChildrenKill
 
 // === POPULATION_MAX
 
-const getBaseMaxPopulation = get<number>('population.max', 0);
+const getBaseMaxPopulation = (state: IGameState) => state.population.max;
 
 // prettier-ignore
 export const getMaxPopulation = (state: IGameState) => getBaseMaxPopulation(state)

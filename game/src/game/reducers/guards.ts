@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import {
 	// prettier-ignore
 	getResourcesAmount,
@@ -13,16 +11,14 @@ import {
 import { changeAmountOfCurrentIdles } from 'game/features/units/idles';
 import { IGameState } from 'game/store';
 
-export const reducePayGuards = (state: IGameState) => {
+export const reducePayGuards = (state: IGameState): IGameState => {
 	const guards = getCurrentGuards(state);
 	const resourcesAmount = getResourcesAmount(state);
 	const guardsPaid = Math.min(guards, resourcesAmount);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		setCurrentGuards(guardsPaid),
-		changeAmountOfCurrentIdles(guards - guardsPaid),
-		useResources(guardsPaid),
-	);
+	setCurrentGuards(guardsPaid)(state);
+	changeAmountOfCurrentIdles(guards - guardsPaid)(state);
+	useResources(guardsPaid)(state);
+
+	return state;
 };

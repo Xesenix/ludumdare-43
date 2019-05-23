@@ -1,12 +1,33 @@
 import produce, { createDraft, finishDraft, setAutoFreeze } from 'immer';
-import { cloneDeep } from 'lodash';
+import {
+	cloneDeep,
+	get as lodashGet,
+	set as lodashSet,
+} from 'lodash';
 import pipeline from 'pipeline-operator';
 
-import { BenchmarkSuite } from 'benchmark/benchmark-suite';
+import { BenchmarkSuite } from 'src/benchmark/benchmark-suite';
 
-import { changeAmountOf, get } from './../../../game/src/game/data';
 import { IGameState } from './interface';
 import rulesFactory from './rules-factory';
+
+const get = <T = any>(
+	// prettier-ignore
+	path: string,
+	defaultValue: T,
+) => (state: IGameState): T => lodashGet(state, path, defaultValue);
+
+const changeAmountOf = (
+	// prettier-ignore
+	path: string,
+	cloneState: boolean = false,
+) => (value: number) => (state: IGameState): IGameState =>
+	lodashSet<IGameState>(
+		// prettier-ignore
+		cloneState ? cloneDeep(state) : state,
+		path,
+		(lodashGet(state, path, 0) as number) + value,
+	);
 
 setAutoFreeze(false);
 

@@ -1,21 +1,5 @@
-import { cloneDeep } from 'lodash';
-import pipeline from 'pipeline-operator';
-import {
-	// prettier-ignore
-	setSacrificedPopulationInLastTurn,
-	setSacrificedResourcesInLastTurn,
-} from './features/skills/sacrifice';
-import { getCurrentPopulation } from './features/units/population';
+import produce, { createDraft, finishDraft } from 'immer';
 
-import {
-	// prettier-ignore
-	reduceGatherResources,
-	reduceHandleEvent,
-	reduceMakeNewPeople,
-	reducePayGuards,
-	reducePopulationLimit,
-	reduceTrainUnits,
-} from '../reducers/index';
 import {
 	// prettier-ignore
 	buildCottages,
@@ -38,10 +22,25 @@ import {
 	setResourcesStolenInLastTurn,
 	setResourcesUsedInLastTurn,
 } from './features/resources/resources';
+import {
+	// prettier-ignore
+	setSacrificedPopulationInLastTurn,
+	setSacrificedResourcesInLastTurn,
+} from './features/skills/sacrifice';
 import { setChildrenKilledInLastTurn } from './features/units/children';
 import { setGuardsKilledInLastTurn } from './features/units/guards';
 import { setIdlesKilledInLastTurn } from './features/units/idles';
+import { getCurrentPopulation } from './features/units/population';
 import { setWorkersKilledInLastTurn } from './features/units/workers';
+import {
+	// prettier-ignore
+	reduceGatherResources,
+	reduceHandleEvent,
+	reduceMakeNewPeople,
+	reducePayGuards,
+	reducePopulationLimit,
+	reduceTrainUnits,
+} from './reducers';
 import {
 	// prettier-ignore
 	DataStore,
@@ -49,14 +48,6 @@ import {
 } from './store';
 
 // prepare constant modifiers instead of recreating them with each method call
-const resetResourcesUsedInLastTurn = setResourcesUsedInLastTurn(0);
-const resetResourcesStolenInLastTurn = setResourcesStolenInLastTurn(0);
-const resetChildrenKilledInLastTurn = setChildrenKilledInLastTurn(0);
-const resetIdlesKilledInLastTurn = setIdlesKilledInLastTurn(0);
-const resetGuardsKilledInLastTurn = setGuardsKilledInLastTurn(0);
-const resetWorkersKilledInLastTurn = setWorkersKilledInLastTurn(0);
-const resetSacrificedPopulationInLastTurn = setSacrificedPopulationInLastTurn(0);
-const resetSacrificedResourcesInLastTurn = setSacrificedResourcesInLastTurn(0);
 
 export class Game {
 	constructor(
@@ -68,89 +59,79 @@ export class Game {
 	}
 
 	public getState(): IGameState {
-		return cloneDeep(this.dataStore.getState());
+		return produce(this.dataStore.getState(), () => {});
 	}
 
 	public sacrificeResourcesForImmunityAction = (): void => {
-		this.dataStore.setState(sacrificeResourcesForImmunity(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), sacrificeResourcesForImmunity));
 	}
 
 	public sacrificeIdlesForEnemiesWeaknessAction = (): void => {
-		this.dataStore.setState(sacrificeIdlesForEnemiesWeakness(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), sacrificeIdlesForEnemiesWeakness));
 	}
 
 	public makeUltimateSacrificeAction = (): void => {
-		this.dataStore.setState(makeUltimateSacrifice(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), makeUltimateSacrifice));
 	}
 
 	public trainWorkers = (amount: number): void => {
-		this.dataStore.setState(scheduleTrainingWorkers(amount)(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), scheduleTrainingWorkers(amount)));
 	}
 
 	public trainGuards = (amount: number): void => {
-		this.dataStore.setState(scheduleTrainingGuards(amount)(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), scheduleTrainingGuards(amount)));
 	}
 
 	public buildWalls = (amount: number = 1): void => {
-		this.dataStore.setState(buildWalls(amount)(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), buildWalls(amount)));
 	}
 
 	public buildCottages = (amount: number = 1): void => {
-		this.dataStore.setState(buildCottages(amount)(this.dataStore.getState()));
+		this.dataStore.setState(produce(this.dataStore.getState(), buildCottages(amount)));
 	}
 
 	public resetGame = (): void => {
-		this.dataStore.setState(cloneDeep(this.initialState));
+		this.dataStore.setState(produce(this.initialState, () => {}));
 	}
 
 	public commitNextTurn(): void {
-		this.dataStore.setState(this.prepareNextTurn(this.calculateConsequences()));
+		this.dataStore.setState(produce(this.dataStore.getState(), this.prepareNextTurn.bind(this)));
 	}
 
 	public calculateConsequences(): IGameState {
-		const state = this.getState();
-
-		return pipeline(
-			// prettier-ignore
-			state,
-			this.progress,
-		);
+		return produce(this.getState(), this.progress);
 	}
 
 	private progress(state: IGameState): IGameState {
-		return pipeline(
-			// prettier-ignore
-			state,
-			reduceGatherResources,
-			reducePayGuards,
-			reduceMakeNewPeople,
-			reduceTrainUnits,
-			trainGuardsRule,
-			reducePopulationLimit,
-			reduceHandleEvent,
-			(nextState: IGameState) => ({
-				...nextState,
-				turn: nextState.turn + 1,
-				lose: getCurrentPopulation(nextState) === 0,
-			}),
-		);
+		reduceGatherResources(state);
+		reducePayGuards(state);
+		reduceMakeNewPeople(state);
+		reduceTrainUnits(state);
+		trainGuardsRule(state);
+		reducePopulationLimit(state);
+		reduceHandleEvent(state);
+		state.turn ++;
+		state.lose = getCurrentPopulation(state) === 0;
+		return state;
 	}
 
 	private prepareNextTurn(state: IGameState): IGameState {
 		// prettier-ignore
-		return pipeline({
-				...state,
-				event: 'orcs',
-				immunity: false,
-			},
-			resetResourcesUsedInLastTurn,
-			resetResourcesStolenInLastTurn,
-			resetChildrenKilledInLastTurn,
-			resetIdlesKilledInLastTurn,
-			resetGuardsKilledInLastTurn,
-			resetWorkersKilledInLastTurn,
-			resetSacrificedPopulationInLastTurn,
-			resetSacrificedResourcesInLastTurn,
-		);
+		const draft = createDraft(state);
+
+		draft.event = 'orcs';
+		draft.immunity = false;
+
+		this.progress(draft);
+		setResourcesUsedInLastTurn(0)(draft);
+		setResourcesStolenInLastTurn(0)(draft);
+		setChildrenKilledInLastTurn(0)(draft);
+		setIdlesKilledInLastTurn(0)(draft);
+		setGuardsKilledInLastTurn(0)(draft);
+		setWorkersKilledInLastTurn(0)(draft);
+		setSacrificedPopulationInLastTurn(0)(draft);
+		setSacrificedResourcesInLastTurn(0)(draft);
+
+		return finishDraft(draft);
 	}
 }

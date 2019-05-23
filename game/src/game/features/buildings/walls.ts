@@ -1,16 +1,10 @@
-import {
-	// prettier-ignore
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
 import { IGameState } from 'game/store';
 
 // === WALLS_LEVEL
 
-export const getWallsLevel = get<number>('walls.level', 0);
-export const setWallsLevel = set<number>('walls.level');
-export const changeWallsLevel = changeAmountOf('walls.level');
+export const getWallsLevel = (state: IGameState) => state.walls.level;
+export const setWallsLevel = (value: number) => (state: IGameState) => { state.walls.level = value; return state; };
+export const changeWallsLevel = (amount: number) => (state: IGameState) => { state.walls.level += amount; };
 
 // === WALLS_REDUCTION
 
@@ -18,11 +12,11 @@ export const getWallsReduction = (state: IGameState) => getWallsLevel(state) * g
 
 // === WALLS_COST_MULTIPLIER
 
-export const getWallsCostMultiplier = get<number>('walls.costMultiplier', 1);
+export const getWallsCostMultiplier = (state: IGameState) => state.walls.costMultiplier || 1;
 
 // === WALLS_PER_LEVEL_REDUCTION
 
-export const getWallsPerLevelReduction = get<number>('walls.perLevelReduction', 0);
+export const getWallsPerLevelReduction = (state: IGameState) => state.walls.perLevelReduction;
 
 // === WALLS_BUILD_COST
 
@@ -34,9 +28,7 @@ export const getWallsBuildCost = (state: IGameState) => (amount: number) => {
 	return Math.floor(0.5 * ((from + to - 1) * perLevelReduction + 10) * amount * costMultiplier);
 };
 
-export const applyWallReductionToAttackPower = (state: IGameState) => {
+export const applyWallReductionToAttackPower = (state: IGameState, power: number) => {
 	const reduction = getWallsReduction(state);
-	return (power: number) => {
-		return Math.max(0, power - reduction);
-	};
+	return Math.max(0, power - reduction);
 };

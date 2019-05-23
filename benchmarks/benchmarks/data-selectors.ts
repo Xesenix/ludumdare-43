@@ -1,6 +1,6 @@
-import { BenchmarkSuite } from 'benchmark/benchmark-suite';
+import { get as lodashGet } from 'lodash';
 
-import { get } from './../../game/src/game/data';
+import { BenchmarkSuite } from 'src/benchmark/benchmark-suite';
 
 interface IModel {
 	a: {
@@ -11,6 +11,12 @@ interface IModel {
 		},
 	};
 }
+
+const get = <T = any>(
+	// prettier-ignore
+	path: string,
+	defaultValue: T,
+) => (state: IModel): T => lodashGet(state, path, defaultValue);
 
 // configure few ways of selecting data from same paths
 const config: [string, any, (model: IModel) => any][] = [

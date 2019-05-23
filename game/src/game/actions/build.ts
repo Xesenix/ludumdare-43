@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import {
 	// prettier-ignore
 	changeCottagesLevel,
@@ -24,15 +22,13 @@ export const canBuildCottages = (state: IGameState) => (amount: number = 1) => {
 	return resources >= cost;
 };
 
-export const buildCottages = (amount: number = 1) => (state: IGameState) => {
+export const buildCottages = (amount: number = 1) => (state: IGameState): IGameState => {
 	const cost = getCottagesBuildCost(state)(amount);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfResources(-cost),
-		changeCottagesLevel(1),
-	);
+	changeAmountOfResources(-cost)(state);
+	changeCottagesLevel(1)(state);
+
+	return state;
 };
 
 export const canBuildWalls = (state: IGameState) => (amount: number = 1) => {
@@ -42,13 +38,11 @@ export const canBuildWalls = (state: IGameState) => (amount: number = 1) => {
 	return resources >= cost;
 };
 
-export const buildWalls = (amount: number = 1) => (state: IGameState) => {
+export const buildWalls = (amount: number = 1) => (state: IGameState): IGameState => {
 	const cost = getWallsBuildCost(state)(amount);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfResources(-cost),
-		changeWallsLevel(1),
-	);
+	changeAmountOfResources(-cost)(state);
+	changeWallsLevel(1)(state);
+
+	return state;
 };

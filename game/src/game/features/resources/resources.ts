@@ -1,48 +1,40 @@
-import pipeline from 'pipeline-operator';
-
-import {
-	// prettier-ignore
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
 import { IGameState } from 'game/store';
 
 // === RESOURCES_AMOUNT
 
-export const getResourcesAmount = get<number>('resources.amount', 0);
-export const setResourcesAmount = set<number>('resources.amount');
-export const changeAmountOfResources = changeAmountOf('resources.amount');
+export const getResourcesAmount = (state: IGameState) => state.resources.amount;
+export const setResourcesAmount = (value: number) => (state: IGameState) => { state.resources.amount = value; return state; };
+export const changeAmountOfResources = (amount: number) => (state: IGameState) => { state.resources.amount += amount; return state; };
 
 // === RESOURCES_RESERVED
 
-export const getReservedResources = get<number>('resources.reserved', 0);
-export const setResourcesReserved = set<number>('resources.reserved');
-export const changeAmountOfReservedResources = changeAmountOf('resources.reserved');
+export const getReservedResources = (state: IGameState) => state.resources.reserved;
+export const setResourcesReserved = (value: number) => (state: IGameState) => { state.resources.reserved = value; return state; };
+export const changeAmountOfReservedResources = (amount: number) => (state: IGameState) => { state.resources.reserved += amount; return state; };
 
 // === RESOURCES_USED_IN_LAST_TURN
 
-export const getResourcesUsedInLastTurn = get<number>('resources.used.current', 0);
-export const setResourcesUsedInLastTurn = set<number>('resources.used.current');
-export const changeAmountOfResourcesUsedInLastTurn = changeAmountOf('resources.used.current');
+export const getResourcesUsedInLastTurn = (state: IGameState) => state.resources.used.current;
+export const setResourcesUsedInLastTurn = (value: number) => (state: IGameState) => { state.resources.used.current = value; return state; };
+export const changeAmountOfResourcesUsedInLastTurn = (amount: number) => (state: IGameState) => { state.resources.used.current += amount; return state; };
 
 // === RESOURCES_USED_IN_TOTAL
 
-export const getResourcesUsedInTotal = get<number>('resources.used.total', 0);
-export const setResourcesUsedInTotal = set<number>('resources.used.total');
-export const changeAmountOfResourcesUsedInTotal = changeAmountOf('resources.used.total');
+export const getResourcesUsedInTotal = (state: IGameState) => state.resources.used.total;
+export const setResourcesUsedInTotal = (value: number) => (state: IGameState) => { state.resources.used.total = value; return state; };
+export const changeAmountOfResourcesUsedInTotal = (amount: number) => (state: IGameState) => { state.resources.used.total += amount; return state; };
 
 // === RESOURCES_STOLEN_IN_LAST_TURN
 
-export const getResourcesStolenInLastTurn = get<number>('resources.stolen.current', 0);
-export const setResourcesStolenInLastTurn = set<number>('resources.stolen.current');
-export const changeAmountOfResourcesStolenInLastTurn = changeAmountOf('resources.stolen.current');
+export const getResourcesStolenInLastTurn = (state: IGameState) => state.resources.stolen.current;
+export const setResourcesStolenInLastTurn = (value: number) => (state: IGameState) => { state.resources.stolen.current = value; return state; };
+export const changeAmountOfResourcesStolenInLastTurn = (amount: number) => (state: IGameState) => { state.resources.stolen.current += amount; return state; };
 
 // === RESOURCES_STOLEN_IN_TOTAL
 
-export const getResourcesStolenInTotal = get<number>('resources.stolen.total', 0);
-export const setResourcesStolenInTotal = set<number>('resources.stolen.total');
-export const changeAmountOfResourcesStolenInTotal = changeAmountOf('resources.stolen.total');
+export const getResourcesStolenInTotal = (state: IGameState) => state.resources.stolen.total;
+export const setResourcesStolenInTotal = (value: number) => (state: IGameState) => { state.resources.stolen.total = value; return state; };
+export const changeAmountOfResourcesStolenInTotal = (amount: number) => (state: IGameState) => { state.resources.stolen.total += amount; return state; };
 
 // === Combined
 
@@ -53,19 +45,13 @@ export const getFreeResourcesAmount = (state: IGameState) => {
 	return amount - reserved;
 };
 
-export const payReservedResources = (amount: number) => (state: IGameState) =>
-	pipeline(
-		// prettier-ignore
-		state,
-		useResources(amount),
-		changeAmountOfReservedResources(-amount),
-	);
+export const payReservedResources = (amount: number) => (state: IGameState) => {
+	useResources(amount)(state);
+	changeAmountOfReservedResources(-amount)(state);
+};
 
-export const useResources = (amount: number) => (state: IGameState) =>
-	pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfResources(-amount),
-		changeAmountOfResourcesUsedInLastTurn(amount),
-		changeAmountOfResourcesUsedInTotal(amount),
-	);
+export const useResources = (amount: number) => (state: IGameState) => {
+	changeAmountOfResources(-amount)(state);
+	changeAmountOfResourcesUsedInLastTurn(amount)(state);
+	changeAmountOfResourcesUsedInTotal(amount)(state);
+};

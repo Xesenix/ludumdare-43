@@ -1,6 +1,3 @@
-import pipeline from 'pipeline-operator';
-
-import { update } from 'game/data';
 import { changeAmountOfResources } from 'game/features/resources/resources';
 import { getFreeResourcesAmount } from 'game/features/resources/resources';
 import {
@@ -35,14 +32,12 @@ export const sacrificeResourcesForImmunity = (state: IGameState): IGameState => 
 		return state;
 	}
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfSacrificeCount(1),
-		changeAmountOfResources(-cost),
-		changeAmountOfSacrificedResources(cost),
-		update<boolean>('immunity', () => true)(),
-	);
+	changeAmountOfSacrificeCount(1)(state);
+	changeAmountOfResources(-cost)(state);
+	changeAmountOfSacrificedResources(cost)(state);
+	state.immunity = true;
+
+	return state;
 };
 
 export const canSacraficeForEnemiesWeakness = (state: IGameState): boolean => {
@@ -55,14 +50,12 @@ export const canSacraficeForEnemiesWeakness = (state: IGameState): boolean => {
 export const sacrificeIdlesForEnemiesWeakness = (state: IGameState): IGameState => {
 	const cost = getSacrificePopulationCost(state);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfSacrificeCount(1),
-		changeAmountOfCurrentIdles(-cost),
-		changeAmountOfWeaknessLevel(1),
-		changeAmountOfSacrificedPopulation(cost),
-	);
+	changeAmountOfSacrificeCount(1)(state);
+	changeAmountOfCurrentIdles(-cost)(state);
+	changeAmountOfWeaknessLevel(1)(state);
+	changeAmountOfSacrificedPopulation(cost)(state);
+
+	return state;
 };
 
 export const canMakeUltimateSacrifice = (state: IGameState): boolean => {
@@ -77,14 +70,12 @@ export const canMakeUltimateSacrifice = (state: IGameState): boolean => {
 export const makeUltimateSacrifice = (state: IGameState): IGameState => {
 	const cost = getUltimateSacrificeCost(state);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfSacrificeCount(1),
-		changeAmountOfCurrentIdles(-cost),
-		changeAmountOfResources(cost),
-		changeAmountOfSacrificedPopulation(cost),
-		changeAmountOfSacrificedResources(cost),
-		update<boolean>('win', () => true)(),
-	);
+	changeAmountOfSacrificeCount(1)(state);
+	changeAmountOfCurrentIdles(-cost)(state);
+	changeAmountOfResources(cost)(state);
+	changeAmountOfSacrificedPopulation(cost)(state);
+	changeAmountOfSacrificedResources(cost)(state);
+	state.win = true;
+
+	return state;
 };

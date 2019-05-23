@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import {
 	// prettier-ignore
 	killChildren,
@@ -27,7 +25,7 @@ export const reduceHandleEvent = (state: IGameState) => {
 	return state;
 };
 
-export const reduceHandleOrcAttack = (state: IGameState) => {
+export const reduceHandleOrcAttack = (state: IGameState): IGameState => {
 	const attackPower = getAttackPower(state);
 	let power = Math.floor(attackPower);
 	const guards = getCurrentGuards(state);
@@ -46,13 +44,11 @@ export const reduceHandleOrcAttack = (state: IGameState) => {
 	const workersKilled = Math.ceil(Math.min(workers, power));
 	power = Math.max(0, power - workersKilled);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		killGuards(guardsKilled),
-		killChildren(childrenKilled),
-		stealResources(resourcesStolen),
-		killIdles(idlesKilled),
-		killWorkers(workersKilled),
-	);
+	killGuards(guardsKilled)(state);
+	killChildren(childrenKilled)(state);
+	stealResources(resourcesStolen)(state);
+	killIdles(idlesKilled)(state);
+	killWorkers(workersKilled)(state);
+
+	return state;
 };

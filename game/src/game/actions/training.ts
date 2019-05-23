@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import {
 	// prettier-ignore
 	changeAmountOfReservedResources,
@@ -32,9 +30,6 @@ import {
 } from 'game/features/units/workers';
 import { IGameState } from 'game/store';
 
-const resetTrainedGuards = setTrainedGuards(0);
-const resetTrainedWorkers = setTrainedWorkers(0);
-
 /**
  *
  * @param IGameState state
@@ -51,23 +46,19 @@ export const scheduleTrainingWorkers = (amount: number) => (state: IGameState): 
 	const idles = getCurrentIdles(state);
 	const trainedWorkers = Math.max(-workers - alreadyTrainedWorkers, Math.min(idles - alreadyTrainedWorkers, amount));
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfTrainedWorkers(trainedWorkers),
-	);
+	changeAmountOfTrainedWorkers(trainedWorkers)(state);
+
+	return state;
 };
 
-export const trainWorkersRule = (state: IGameState) => {
+export const trainWorkersRule = (state: IGameState): IGameState => {
 	const trained = getTrainedWorkers(state);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		resetTrainedWorkers,
-		changeAmountOfCurrentWorkers(trained),
-		changeAmountOfCurrentIdles(-trained),
-	);
+	setTrainedWorkers(0)(state);
+	changeAmountOfCurrentWorkers(trained)(state);
+	changeAmountOfCurrentIdles(-trained)(state);
+
+	return state;
 };
 
 export const canTrainGuards = (state: IGameState) => {
@@ -88,24 +79,20 @@ export const scheduleTrainingGuards = (amount: number) => (state: IGameState): I
 	const trainedGuards = Math.max(-alreadyTrainedGuards - guards, Math.min(availableIdles, freeResources, amount));
 	const resourcesChange = Math.max(-resourcesReservedForTrainingGuards, trainedGuards);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfTrainedGuards(trainedGuards),
-		changeAmountOfReservedResources(resourcesChange),
-	);
+	changeAmountOfTrainedGuards(trainedGuards)(state);
+	changeAmountOfReservedResources(resourcesChange)(state);
+
+	return state;
 };
 
-export const trainGuardsRule = (state: IGameState) => {
+export const trainGuardsRule = (state: IGameState): IGameState => {
 	const trained = getTrainedGuards(state);
 	const reservedResources = Math.max(0, trained);
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		resetTrainedGuards,
-		changeAmountOfCurrentGuards(trained),
-		changeAmountOfCurrentIdles(-trained),
-		payReservedResources(reservedResources),
-	);
+	setTrainedGuards(0)(state);
+	changeAmountOfCurrentGuards(trained)(state);
+	changeAmountOfCurrentIdles(-trained)(state);
+	payReservedResources(reservedResources)(state);
+
+	return state;
 };

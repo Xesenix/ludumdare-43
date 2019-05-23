@@ -1,30 +1,25 @@
-import {
-	// prettier-ignore
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
+import { IGameState } from 'game/store';
 
 // === GUARDS_CURRENT
 
-export const getCurrentGuards = get<number>('guards.current', 0);
-export const setCurrentGuards = set<number>('guards.current');
-export const changeAmountOfCurrentGuards = changeAmountOf('guards.current');
+export const getCurrentGuards = (state: IGameState) => state.guards.current;
+export const setCurrentGuards = (value: number) => (state: IGameState) => { state.guards.current = value; return state; };
+export const changeAmountOfCurrentGuards = (amount: number) => (state: IGameState) => { state.guards.current += amount; return state; };
 
 // === GUARDS_TRAINED
 
-export const getTrainedGuards = get<number>('guards.trained', 0);
-export const setTrainedGuards = set<number>('guards.trained');
-export const changeAmountOfTrainedGuards = changeAmountOf('guards.trained');
+export const getTrainedGuards = (state: IGameState) => state.guards.trained;
+export const setTrainedGuards = (value: number) => (state: IGameState) => { state.guards.trained = value; return state; };
+export const changeAmountOfTrainedGuards = (amount: number) => (state: IGameState) => { state.guards.trained += amount; return state; };
 
 // === GUARDS_KILLED_IN_THIS_TURN
 
-export const getGuardsKilledInLastTurn = get<number>('guards.killed.current', 0);
-export const setGuardsKilledInLastTurn = set<number>('guards.killed.current');
-export const changeAmountOfGuardsKilledInLastTurn = changeAmountOf('guards.killed.current');
+export const getGuardsKilledInLastTurn = (state: IGameState) => state.guards.killed.current;
+export const setGuardsKilledInLastTurn = (value: number) => (state: IGameState) => { state.guards.killed.current = value; return state; };
+export const changeAmountOfGuardsKilledInLastTurn = (amount: number) => (state: IGameState) => { state.guards.killed.current += amount; return state; };
 
 // === GUARDS_KILLED_IN_TOTAL
 
-export const getGuardsKilledInTotal = get<number>('guards.killed.total', 0);
-export const setGuardsKilledInTotal = set<number>('guards.killed.total');
-export const changeAmountOfGuardsKilledInTotal = changeAmountOf('guards.killed.total');
+export const getGuardsKilledInTotal = (state: IGameState) => state.guards.killed.total;
+export const setGuardsKilledInTotal = (value: number) => (state: IGameState) => { state.guards.killed.total = value; return state; };
+export const changeAmountOfGuardsKilledInTotal = (amount: number) => (state: IGameState) => { state.guards.killed.total += amount; return state; };

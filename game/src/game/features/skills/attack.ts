@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import { IGameState } from 'game/store';
 
 import { applyWallReductionToAttackPower } from '../buildings/walls';
@@ -14,10 +12,7 @@ export const getBaseAttackPower = (state: IGameState): number => {
 	return power;
 };
 
-export const getAttackPower = (state: IGameState): number =>
-	pipeline(
-		// prettier-ignore
-		getBaseAttackPower(state),
-		applyWeaknessToAttackPower(state),
-		applyWallReductionToAttackPower(state),
-	);
+export const getAttackPower = (state: IGameState): number => {
+	const power = getBaseAttackPower(state);
+	return applyWallReductionToAttackPower(state, applyWeaknessToAttackPower(state, power));
+};

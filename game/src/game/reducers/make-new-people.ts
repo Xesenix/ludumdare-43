@@ -1,5 +1,3 @@
-import pipeline from 'pipeline-operator';
-
 import {
 	// prettier-ignore
 	getCurrentChildren,
@@ -12,16 +10,14 @@ import {
 } from 'game/features/units/idles';
 import { IGameState } from 'game/store';
 
-export const reduceMakeNewPeople = (state: IGameState) => {
+export const reduceMakeNewPeople = (state: IGameState): IGameState => {
 	const idles = getCurrentIdles(state);
 	const newChildren = Math.floor(idles / 2);
 	const children = getCurrentChildren(state);
 	const newAdults = children;
 
-	return pipeline(
-		// prettier-ignore
-		state,
-		changeAmountOfCurrentIdles(newAdults),
-		setCurrentChildren(newChildren),
-	);
+	changeAmountOfCurrentIdles(newAdults)(state);
+	setCurrentChildren(newChildren)(state);
+
+	return state;
 };

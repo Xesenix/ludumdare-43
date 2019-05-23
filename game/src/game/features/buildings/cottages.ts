@@ -1,16 +1,10 @@
-import {
-	// prettier-ignore
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
 import { IGameState } from 'game/store';
 
 // === COTTAGES_LEVEL
 
-export const getCottagesLevel = get<number>('cottages.level', 0);
-export const setCottagesLevel = set<number>('cottages.level');
-export const changeCottagesLevel = changeAmountOf('cottages.level');
+export const getCottagesLevel = (state: IGameState) => state.cottages.level;
+export const setCottagesLevel = (value: number) => (state: IGameState) => { state.cottages.level = value; return state; };
+export const changeCottagesLevel = (amount: number) => (state: IGameState) => { state.cottages.level += amount; };
 
 // === COTTAGES_BUILD_COST
 

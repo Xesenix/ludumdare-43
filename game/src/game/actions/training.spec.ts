@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import produce, { createDraft, finishDraft } from 'immer';
 
 import { IGameState } from '../store';
 import {
@@ -10,15 +10,19 @@ import {
 	trainWorkersRule,
 } from './training';
 
+const workers = { current: 0, trained: 0, killed: { current: 0, total: 0 } };
+const guards = { current: 0, trained: 0, killed: { current: 0, total: 0 } };
+
 describe('features/training', () => {
 	describe('scheduleTrainingWorkers', () => {
 		it('should not break anything if there is no scheduled training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 0, trained: 0, killed: { current: 0, total: 0 } },
+				workers,
+				guards,
 			};
 
-			const state = scheduleTrainingWorkers(0)(cloneDeep(baseState) as IGameState);
+			const state = produce(baseState as IGameState, scheduleTrainingWorkers(0));
 
 			expect(state).toEqual(baseState as IGameState, 'game state');
 		});
@@ -28,14 +32,15 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
 				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				guards,
 			};
 
-			const expectedState = cloneDeep(baseState) as IGameState;
+			const expectedState = createDraft(baseState) as IGameState;
 			expectedState.workers.trained += amount;
 
-			const state = scheduleTrainingWorkers(amount)(baseState as IGameState);
+			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
-			expect(state).toEqual(expectedState, 'game state');
+			expect(state).toEqual(finishDraft(expectedState), 'game state');
 		});
 
 		it('should scheduled release', () => {
@@ -43,14 +48,15 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
 				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				guards,
 			};
 
-			const expectedState = cloneDeep(baseState) as IGameState;
+			const expectedState = createDraft(baseState) as IGameState;
 			expectedState.workers.trained += amount;
 
-			const state = scheduleTrainingWorkers(amount)(baseState as IGameState);
+			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
-			expect(state).toEqual(expectedState, 'game state');
+			expect(state).toEqual(finishDraft(expectedState), 'game state');
 		});
 
 		it('should scheduled conform max training capacity', () => {
@@ -58,14 +64,15 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
 				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				guards,
 			};
 
-			const expectedState = cloneDeep(baseState) as IGameState;
+			const expectedState = createDraft(baseState) as IGameState;
 			expectedState.workers.trained = 20;
 
-			const state = scheduleTrainingWorkers(amount)(baseState as IGameState);
+			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
-			expect(state).toEqual(expectedState, 'game state');
+			expect(state).toEqual(finishDraft(expectedState), 'game state');
 		});
 
 		it('should scheduled conform min training capacity', () => {
@@ -73,14 +80,15 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
 				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				guards,
 			};
 
-			const expectedState = cloneDeep(baseState) as IGameState;
+			const expectedState = createDraft(baseState) as IGameState;
 			expectedState.workers.trained = -3;
 
-			const state = scheduleTrainingWorkers(amount)(baseState as IGameState);
+			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
-			expect(state).toEqual(expectedState, 'game state');
+			expect(state).toEqual(finishDraft(expectedState), 'game state');
 		});
 	});
 
@@ -89,11 +97,12 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 120, killed: { current: 0, total: 0 } },
 				workers: { current: 20, trained: 0, killed: { current: 0, total: 0 } },
+				guards,
 			};
 
-			const state = trainWorkersRule(cloneDeep(baseState) as IGameState);
+			const state = produce(baseState as IGameState, trainWorkersRule);
 
-			expect(state).toEqual(baseState, 'game state');
+			expect(state).toEqual(baseState as IGameState, 'game state');
 		});
 
 		it('should recalculate scheduled workers training', () => {
@@ -101,14 +110,15 @@ describe('features/training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
 				workers: { current: 3, trained: 0, killed: { current: 0, total: 0 } },
+				guards,
 			};
-			const expectedState = cloneDeep(baseState) as IGameState;
+			const expectedState = createDraft(baseState) as IGameState;
 			expectedState.idles.current -= amount;
 			expectedState.workers.current += amount;
 
-			const state = trainWorkersRule(scheduleTrainingWorkers(amount)(cloneDeep(baseState) as IGameState));
+			const state = finishDraft(trainWorkersRule(scheduleTrainingWorkers(amount)(createDraft(baseState) as IGameState)));
 
-			expect(state).toEqual(expectedState, 'game state');
+			expect(state).toEqual(finishDraft(expectedState), 'game state');
 		});
 	});
 
@@ -171,6 +181,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 0, trained: 0, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 30,
 						reserved: 15,
@@ -179,7 +190,7 @@ describe('features/training', () => {
 					},
 				};
 
-				const state = scheduleTrainingGuards(0)(cloneDeep(baseState) as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(0));
 
 				expect(state).toEqual(baseState as IGameState, 'game state');
 			});
@@ -189,6 +200,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -197,13 +209,13 @@ describe('features/training', () => {
 					},
 				};
 
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.guards.trained += amount;
 				expectedState.resources.reserved += amount;
 
-				const state = scheduleTrainingGuards(amount)(baseState as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 
 			it('should scheduled release', () => {
@@ -211,6 +223,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -219,13 +232,13 @@ describe('features/training', () => {
 					},
 				};
 
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.guards.trained += amount;
 				expectedState.resources.reserved += amount;
 
-				const state = scheduleTrainingGuards(amount)(cloneDeep(baseState) as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 
 			it('should scheduled conform min training capacity', () => {
@@ -233,6 +246,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -241,13 +255,13 @@ describe('features/training', () => {
 					},
 				};
 
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.guards.trained = -3;
 				expectedState.resources.reserved = 1;
 
-				const state = scheduleTrainingGuards(amount)(baseState as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 
 			it('should scheduled conform max training capacity', () => {
@@ -255,6 +269,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 30,
 						reserved: 5,
@@ -263,13 +278,13 @@ describe('features/training', () => {
 					},
 				};
 
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.guards.trained = 20;
 				expectedState.resources.reserved = 21;
 
-				const state = scheduleTrainingGuards(amount)(baseState as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 
 			it('should scheduled conform max training resource amount', () => {
@@ -277,6 +292,7 @@ describe('features/training', () => {
 				const baseState: Partial<IGameState> = {
 					idles: { current: 20, killed: { current: 0, total: 0 } },
 					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -285,13 +301,13 @@ describe('features/training', () => {
 					},
 				};
 
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.guards.trained = 9;
 				expectedState.resources.reserved = 10;
 
-				const state = scheduleTrainingGuards(amount)(baseState as IGameState);
+				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 		});
 
@@ -307,6 +323,7 @@ describe('features/training', () => {
 						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
+					workers,
 					resources: {
 						amount: 120,
 						reserved: 25,
@@ -315,9 +332,9 @@ describe('features/training', () => {
 					},
 				};
 
-				const state = trainGuardsRule(cloneDeep(baseState) as IGameState);
+				const state = produce(baseState as IGameState, trainGuardsRule);
 
-				expect(state).toEqual(baseState, 'game state');
+				expect(state).toEqual(baseState as IGameState, 'game state');
 			});
 
 			it('should recalculate scheduled guards training', () => {
@@ -332,6 +349,7 @@ describe('features/training', () => {
 						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -339,16 +357,16 @@ describe('features/training', () => {
 						stolen: { current: 0, total: 0 },
 					},
 				};
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.idles.current -= amount;
 				expectedState.guards.current += amount;
 				expectedState.resources.amount -= amount;
 				expectedState.resources.used.current += amount;
 				expectedState.resources.used.total += amount;
 
-				const state = trainGuardsRule(scheduleTrainingGuards(amount)(cloneDeep(baseState) as IGameState));
+				const state = finishDraft(trainGuardsRule(scheduleTrainingGuards(amount)(createDraft(baseState as IGameState))));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 
 			it('should recalculate scheduled guards release', () => {
@@ -363,6 +381,7 @@ describe('features/training', () => {
 						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
+					workers,
 					resources: {
 						amount: 10,
 						reserved: 5,
@@ -370,13 +389,13 @@ describe('features/training', () => {
 						stolen: { current: 0, total: 0 },
 					},
 				};
-				const expectedState = cloneDeep(baseState) as IGameState;
+				const expectedState = createDraft(baseState) as IGameState;
 				expectedState.idles.current -= amount;
 				expectedState.guards.current += amount;
 
-				const state = trainGuardsRule(scheduleTrainingGuards(amount)(cloneDeep(baseState) as IGameState));
+				const state = finishDraft(trainGuardsRule(scheduleTrainingGuards(amount)(createDraft(baseState as IGameState))));
 
-				expect(state).toEqual(expectedState, 'game state');
+				expect(state).toEqual(finishDraft(expectedState), 'game state');
 			});
 		});
 	});

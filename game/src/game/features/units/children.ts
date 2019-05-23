@@ -1,24 +1,19 @@
-import {
-	// prettier-ignore
-	changeAmountOf,
-	get,
-	set,
-} from 'game/data';
+import { IGameState } from 'game/store';
 
 // === CHILDREN_CURRENT
 
-export const getCurrentChildren = get<number>('children.current', 0);
-export const setCurrentChildren = set<number>('children.current');
-export const changeAmountOfCurrentChildren = changeAmountOf('children.current');
+export const getCurrentChildren = (state: IGameState) => state.children.current;
+export const setCurrentChildren = (value: number) => (state: IGameState) => { state.children.current = value; return state; };
+export const changeAmountOfCurrentChildren = (amount: number) => (state: IGameState) => { state.children.current += amount; return state; };
 
 // === CHILDREN_KILLED_IN_THIS_TURN
 
-export const getChildrenKilledInLastTurn = get<number>('children.killed.current', 0);
-export const setChildrenKilledInLastTurn = set<number>('children.killed.current');
-export const changeAmountOfChildrenKilledInLastTurn = changeAmountOf('children.killed.current');
+export const getChildrenKilledInLastTurn = (state: IGameState) => state.children.killed.current;
+export const setChildrenKilledInLastTurn = (value: number) => (state: IGameState) => { state.children.killed.current = value; return state; };
+export const changeAmountOfChildrenKilledInLastTurn = (amount: number) => (state: IGameState) => { state.children.killed.current += amount; return state; };
 
 // === CHILDREN_KILLED_IN_TOTAL
 
-export const getChildrenKilledInTotal = get<number>('children.killed.total', 0);
-export const setChildrenKilledInTotal = set<number>('children.killed.total');
-export const changeAmountOfChildrenKilledInTotal = changeAmountOf('children.killed.total');
+export const getChildrenKilledInTotal = (state: IGameState) => state.children.killed.total;
+export const setChildrenKilledInTotal = (value: number) => (state: IGameState) => { state.children.killed.total = value; return state; };
+export const changeAmountOfChildrenKilledInTotal = (amount: number) => (state: IGameState) => { state.children.killed.total += amount; return state; };

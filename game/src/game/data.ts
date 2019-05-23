@@ -10,6 +10,7 @@ import { IGameState } from './store';
 
 /**
  * Scoped property selector.
+ * This is very slow just hardcode getters they are much faster and only slightly longer to write.
  *
  * @param path path on which property value is stored
  * @param defaultValue value retrived if nothing is set on path
@@ -22,6 +23,7 @@ export const get = <T = any>(
 
 /**
  * Scoped property set action.
+ * This is very slow just hardcode setters they are much faster and only slightly longer to write.
  *
  * @param path path on which property value is stored
  */
@@ -39,6 +41,7 @@ export const set = <T = any>(
 
 /**
  * Scoped property changeAmountOf action.
+ * This is very slow just hardcode change functions they are much faster and only slightly longer to write.
  *
  * @param path path on which property value is stored
  */

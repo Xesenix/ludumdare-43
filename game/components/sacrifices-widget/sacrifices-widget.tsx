@@ -1,4 +1,5 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import produce from 'immer';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
@@ -80,7 +81,7 @@ class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps, 
 
 		const turn = currentState.turn;
 		const futureResourceCost = getSacrificeResourcesCost({ ...currentState, turn: turn + 1 });
-		const nextLevelWeaknessReduction = (getWeaknessDamageReduction(changeAmountOfWeaknessLevel(1)(currentState)) * 100).toFixed(2);
+		const nextLevelWeaknessReduction = (getWeaknessDamageReduction(produce(currentState, changeAmountOfWeaknessLevel(1))) * 100).toFixed(2);
 		const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
 		const populationCost = getSacrificePopulationCost(currentState);
 		const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
