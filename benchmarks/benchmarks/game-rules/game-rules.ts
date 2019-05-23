@@ -81,9 +81,24 @@ const {
 		state.turn ++;
 		return state;
 	},
+	randomJunkWrite: (index: number) => (state: IGameState) => {
+		for (let i = 0; i < 100; i++) {
+			state.junk[(i % 100) * 100 + index % 100]++;
+		}
+
+		return state;
+	},
 });
 
 const progressNextTurnMutableV1 = (state: IGameState) => {
+	incomeRuleV1(state);
+	populationIncRuleV1(state);
+	warRuleV1(state);
+	turnEndRuleV1(state);
+	return state;
+};
+
+const progressNextTurnMutablePipelineV1 = (state: IGameState) => {
 	return pipeline(
 		state,
 		incomeRuleV1,
@@ -93,7 +108,7 @@ const progressNextTurnMutableV1 = (state: IGameState) => {
 	);
 };
 
-const progressNextTurnImmutableV1 = (state: IGameState) => {
+const progressNextTurnImmutableCloneDeepV1 = (state: IGameState) => {
 	return pipeline(
 		cloneDeep(state),
 		incomeRuleV1,
@@ -104,13 +119,10 @@ const progressNextTurnImmutableV1 = (state: IGameState) => {
 };
 
 const progressNextTurnProducerV1 = produce((state: IGameState) => {
-	return pipeline(
-		state,
-		incomeRuleV1,
-		populationIncRuleV1,
-		warRuleV1,
-		turnEndRuleV1,
-	);
+	incomeRuleV1(state);
+	populationIncRuleV1(state);
+	warRuleV1(state);
+	turnEndRuleV1(state);
 });
 
 const {
@@ -130,6 +142,13 @@ const {
 	currentResourcesStolenChange: changeAmountOf('resources.stolen.current'),
 	totalResourcesStolenChange: changeAmountOf('resources.stolen.total'),
 	turnInc: changeAmountOf('turn')(1),
+	randomJunkWrite: (index: number) => (state: IGameState) => {
+		for (let i = 0; i < 100; i++) {
+			state.junk[(i % 100) * 100 + index % 100]++;
+		}
+
+		return state;
+	},
 });
 
 const progressNextTurnMutableV2 = (state: IGameState) => {
@@ -153,13 +172,12 @@ const progressNextTurnImmutableV2 = (state: IGameState) => {
 };
 
 const progressNextTurnProducerV2 = produce((state: IGameState) => {
-	return pipeline(
-		state,
-		incomeRuleV2,
-		populationIncRuleV2,
-		warRuleV2,
-		turnEndRuleV2,
-	);
+	incomeRuleV2(state);
+	populationIncRuleV2(state);
+	warRuleV2(state);
+	turnEndRuleV2(state);
+
+	return state;
 });
 
 const suite: BenchmarkSuite = new BenchmarkSuite(`game rules`, {
@@ -167,6 +185,14 @@ const suite: BenchmarkSuite = new BenchmarkSuite(`game rules`, {
 }, `const junkSize = ${junkSize};
 
 const progressNextTurnMutableV1 = (state: IGameState) => {
+	incomeRuleV1(state);
+	populationIncRuleV1(state);
+	warRuleV1(state);
+	turnEndRuleV1(state);
+	return state;
+};
+
+const progressNextTurnMutablePipelineV1 = (state: IGameState) => {
 	return pipeline(
 		state,
 		incomeRuleV1,
@@ -176,7 +202,7 @@ const progressNextTurnMutableV1 = (state: IGameState) => {
 	);
 };
 
-const progressNextTurnImmutableV1 = (state: IGameState) => {
+const progressNextTurnImmutableCloneDeepV1 = (state: IGameState) => {
 	return pipeline(
 		cloneDeep(state),
 		incomeRuleV1,
@@ -217,13 +243,12 @@ const progressNextTurnImmutableV2 = (state: IGameState) => {
 };
 
 const progressNextTurnProducerV2 = produce((state: IGameState) => {
-	return pipeline(
-		state,
-		incomeRuleV2,
-		populationIncRuleV2,
-		warRuleV2,
-		turnEndRuleV2,
-	);
+	state = incomeRuleV2(state);
+	state = populationIncRuleV2(state);
+	state = warRuleV2(state);
+	state = turnEndRuleV2(state);
+
+	return state;
 });
 
 let gameState: IGameState = {
@@ -278,6 +303,14 @@ suite
 	code: `gameState = progressNextTurnMutableV1(gameState);`,
 })
 .add(() => {
+	gameState = progressNextTurnMutablePipelineV1(gameState);
+}, {
+	...options,
+	id: 'mutable pipeline v1',
+	name: 'mutable pipeline v1',
+	code: `gameState = progressNextTurnMutablePipelineV1(gameState);`,
+})
+.add(() => {
 	gameState = progressNextTurnMutableV2(gameState);
 }, {
 	...options,
@@ -286,12 +319,12 @@ suite
 	code: `gameState = progressNextTurnMutableV2(gameState);`,
 })
 .add(() => {
-	gameState = progressNextTurnImmutableV1(gameState);
+	gameState = progressNextTurnImmutableCloneDeepV1(gameState);
 }, {
 	...options,
 	id: 'immutable cloneDeep v1 (depends on state size)',
 	name: 'immutable cloneDeep v1 (depends on state size)',
-	code: `gameState = progressNextTurnImmutableV1(gameState);`,
+	code: `gameState = progressNextTurnImmutableCloneDeepV1(gameState);`,
 })
 .add(() => {
 	gameState = progressNextTurnImmutableV2(gameState);

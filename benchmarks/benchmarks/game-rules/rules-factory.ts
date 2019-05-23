@@ -13,6 +13,7 @@ export default ({
 	currentResourcesStolenChange,
 	totalResourcesStolenChange,
 	turnInc,
+	randomJunkWrite,
 }) => ({
 	incomeRule: (state: IGameState) => {
 		return pipeline(state, currentResourcesChange(Math.min(Math.floor(currentUnitsSelector(state) / 20), 100)));
@@ -25,8 +26,10 @@ export default ({
 	warRule: (state: IGameState) => {
 		const killedPopulation = Math.floor(currentUnitsSelector(state) / 10);
 		const resourcesStolen = Math.floor(currentResourcesSelector(state) / 5);
+
 		return pipeline(
 			state,
+			randomJunkWrite(killedPopulation),
 			currentUnitsChange(-killedPopulation),
 			currentUnitsKilledChange(killedPopulation),
 			currentResourcesChange(-resourcesStolen),
