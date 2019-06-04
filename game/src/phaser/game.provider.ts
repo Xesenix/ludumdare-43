@@ -1,7 +1,7 @@
 import { interfaces } from 'inversify';
 import { Store } from 'redux';
 
-import { createProvider } from 'lib/di/decorators';
+import { createProvider } from 'lib/di';
 
 export type IPhaserGameProvider = (forceNew?: boolean) => Promise<Phaser.Game>;
 

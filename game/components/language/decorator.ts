@@ -1,5 +1,3 @@
-import { Store } from 'redux';
-
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';

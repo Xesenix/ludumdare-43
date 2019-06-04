@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 import Loadable from 'react-loadable';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 
-import { connectToInjector } from 'lib/di/context';
+import { connectToInjector } from 'lib/di';
 import { II18nLanguagesState } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
 import {

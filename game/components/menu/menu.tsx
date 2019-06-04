@@ -3,7 +3,7 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { connectToInjector } from 'lib/di/context';
+import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
 import {
