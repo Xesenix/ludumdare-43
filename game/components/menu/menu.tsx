@@ -1,9 +1,7 @@
 import { PropTypes } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import Loadable from 'react-loadable';
-import { withRouter } from 'react-router';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { connectToInjector } from 'lib/di/context';
 import { II18nTranslation } from 'lib/i18n';
@@ -17,12 +15,9 @@ import {
 import { IAppTheme } from 'theme';
 
 // elements
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import { ConfigLink, GameLink } from 'components/core/navigation-links';
 
-const Loader = () => <CircularProgress />;
-const LanguageSelectorComponent = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "ui" */ 'components/containers/language-selector/language-selector') });
+import LanguageSelectorComponent from './language-selector/language-selector';
 
 export interface IMenuItemExternalProps {
 	active?: boolean;
@@ -166,7 +161,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 					label={__('Compact')}
 				/>
 
-				<LanguageSelectorComponent view={this.renderLanguageSelector} />
+				<LanguageSelectorComponent MenuItem={MenuItem}/>
 			</>
 		);
 	}
@@ -188,33 +183,6 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 		const { compactMode = false } = store ? store.getState() : {};
 		dispatchCreateSetCompactModeAction(!compactMode);
 	}
-
-	private renderLanguageSelector = (language: string, updateLanguage: any) => {
-		const {
-			MenuItem,
-		} = this.props;
-		// tslint:disable:jsx-no-lambda
-		return (
-			<>
-				<MenuItem
-					// prettier-ignore
-					active={language === 'pl'}
-					color="default"
-					activeColor="secondary"
-					onClick={() => updateLanguage('pl')}
-					label="PL"
-				/>
-				<MenuItem
-					// prettier-ignore
-					active={language === 'en'}
-					color="default"
-					activeColor="secondary"
-					onClick={() => updateLanguage('en')}
-					label="EN"
-				/>
-			</>
-		);
-	}
 }
 
-export default hot(module)(withRouter<IMenuExternalProps & RouteComponentProps>(diDecorator(MenuComponent)));
+export default hot(module)(withRouter<IMenuExternalProps>(diDecorator<IMenuExternalProps>(MenuComponent)));

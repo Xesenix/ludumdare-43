@@ -3,7 +3,7 @@ import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import { connectToInjector } from 'lib/di';
+import { connectToDI } from 'lib/di';
 import { IPhaserGameProvider } from 'phaser/game.provider';
 
 import { styles } from './phaser-view.styles';
@@ -18,14 +18,11 @@ export interface IPhaserViewExternalProps {
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IPhaserViewInternalProps {
-	di?: Container;
+	di: Container | null;
 }
 
 /** Internal component state. */
 interface IPhaserViewState {}
-
-const diDecorator = connectToInjector<IPhaserViewExternalProps, IPhaserViewInternalProps>({
-});
 
 type IPhaserViewProps = IPhaserViewExternalProps & IPhaserViewInternalProps & WithStyles<typeof styles>;
 
@@ -72,4 +69,4 @@ class PhaserViewComponent extends React.PureComponent<IPhaserViewProps, IPhaserV
 	}
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(PhaserViewComponent)));
+export default hot(module)(withStyles(styles)(connectToDI(PhaserViewComponent)));

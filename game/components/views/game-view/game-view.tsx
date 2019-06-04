@@ -158,7 +158,7 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 		} = this.state;
 
 		const blockNextTurn = false;
-		const currentState = game.getState();
+		const currentState: IGameState = game.getState();
 		const consequences: IGameState = game.calculateConsequences();
 
 		const restartBlock = (

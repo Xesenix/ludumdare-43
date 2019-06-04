@@ -1,7 +1,7 @@
+import { isEqual } from 'lodash';
 import * as React from 'react';
 import { Store } from 'redux';
 
-import { isEqual } from 'lodash';
 import { filterByKeys } from './filter-keys';
 
 export interface IStoreComponentInternalProps<S> {
@@ -72,3 +72,4 @@ export abstract class StoreComponent<P extends IStoreComponentInternalProps<S>, 
 		}
 	}
 }
+

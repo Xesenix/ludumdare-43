@@ -4,6 +4,7 @@ import { Action, DeepPartial, Reducer } from 'redux';
 import { IApplication } from 'lib/interfaces';
 
 import { DataStoreProvider, IDataStoreProvider } from './data-store.provider';
+import { useStore } from './use-store';
 
 // prettier-ignore
 export class DataStoreModule {
@@ -22,5 +23,10 @@ export class DataStoreModule {
 			return (state: T | undefined = {} as T, action: A) => actionReducer.reduce((prev: T, reducer: Reducer<T, A>) => reducer(prev, action), state);
 		});
 		app.bind<IDataStoreProvider<T, A>>('data-store:provider').toProvider(DataStoreProvider);
+
+		app.bind('data-store:bind').toProvider(async ({ container }: interfaces.Context) => {
+			const store = await container.get('data-store:provider')();
+			return (keys) => useStore(store, keys);
+		});
 	}
 }
