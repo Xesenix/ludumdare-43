@@ -96,7 +96,9 @@ interface IGameViewState {
 	languages: II18nLanguagesState;
 }
 
-const diDecorator = connectToInjector<IGameViewExternalProps, IGameViewInternalProps>({
+type IGameViewProps = IGameViewExternalProps & IGameViewInternalProps & WithStyles<typeof styles>;
+
+const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	...diStoreComponentDependencies,
 	__: {
 		dependencies: ['i18n:translate'],
@@ -111,8 +113,6 @@ const diDecorator = connectToInjector<IGameViewExternalProps, IGameViewInternalP
 		dependencies: ['game'],
 	},
 });
-
-type IGameViewProps = IGameViewExternalProps & IGameViewInternalProps & WithStyles<typeof styles>;
 
 class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 	private unsubscribeEventManager?: any;

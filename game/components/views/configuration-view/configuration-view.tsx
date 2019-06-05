@@ -2,7 +2,6 @@ import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
 import { II18nLanguagesState, II18nTranslation } from 'lib/i18n';
@@ -54,6 +53,8 @@ interface IConfigurationViewState {
 	volume: number;
 }
 
+type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
+
 const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
@@ -89,8 +90,6 @@ const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationVie
 		dependencies: ['data-store:bind'],
 	},
 });
-
-type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
 
 export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	const {

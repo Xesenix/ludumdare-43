@@ -24,13 +24,13 @@ interface IIntroViewInternalProps {
 	__: II18nTranslation;
 }
 
+type IIntroViewProps = IIntroViewExternalProps & IIntroViewInternalProps & WithStyles<typeof styles>;
+
 const diDecorator = connectToInjector<IIntroViewProps, IIntroViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
-
-type IIntroViewProps = IIntroViewExternalProps & IIntroViewInternalProps & WithStyles<typeof styles>;
 
 function IntroViewComponent(props: IIntroViewProps) {
 	const { classes, __ } = props;

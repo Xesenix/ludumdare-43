@@ -48,10 +48,9 @@ interface ISacrificesWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-/** Internal component state. */
-interface ISacrificesWidgetState {}
+type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrificesWidgetInternalProps>({
+const diDecorator = connectToInjector<ISacrificesWidgetProps, ISacrificesWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -60,122 +59,113 @@ const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrifice
 	},
 });
 
-type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>;
+function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
+	const {
+		// prettier-ignore
+		__,
+		classes,
+		compact,
+		disabled,
+		game,
+	} = props;
+	const currentState = game.getState();
 
-class SacrificesWidgetComponent extends React.Component<ISacrificesWidgetProps, ISacrificesWidgetState> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+	const turn = currentState.turn;
+	const futureResourceCost = getSacrificeResourcesCost({ ...currentState, turn: turn + 1 });
+	const nextLevelWeaknessReduction = (getWeaknessDamageReduction(produce(currentState, changeAmountOfWeaknessLevel(1))) * 100).toFixed(2);
+	const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
+	const populationCost = getSacrificePopulationCost(currentState);
+	const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
+	const resourceCost = getSacrificeResourcesCost(currentState);
+	const sacrificeCount = getSacrificeCount(currentState);
+	const weaknessLevel = getWeaknessLevel(currentState);
 
-	public render(): any {
-		const {
-			// prettier-ignore
-			__,
-			classes,
-			compact,
-			disabled,
-			game,
-		} = this.props;
-		const currentState = game.getState();
-
-		const turn = currentState.turn;
-		const futureResourceCost = getSacrificeResourcesCost({ ...currentState, turn: turn + 1 });
-		const nextLevelWeaknessReduction = (getWeaknessDamageReduction(produce(currentState, changeAmountOfWeaknessLevel(1))) * 100).toFixed(2);
-		const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
-		const populationCost = getSacrificePopulationCost(currentState);
-		const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
-		const resourceCost = getSacrificeResourcesCost(currentState);
-		const sacrificeCount = getSacrificeCount(currentState);
-		const weaknessLevel = getWeaknessLevel(currentState);
-
-		return (
-			<Grid className={classes.root} container spacing={8}>
-				<Grid item xs={12}>
-					<Typography variant="h4" component="h3">
-						{__(`Sacrifices made %{count}`, { count: sacrificeCount })}:
-					</Typography>
-					{compact ? null : (
-						<Typography
-							variant="caption"
-							component="p"
-							dangerouslySetInnerHTML={{
-								__html: __(
-									// prettier-ignore
-									`Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>
-and every 5th by additional&nbsp;<strong>5</strong>.<br/>
-Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
-									{
-										futureResourceCost,
-									},
-								),
-							}}
-						/>
-					)}
-				</Grid>
-				<Grid item xs={12}>
-					<Typography variant="h6" component="h4">
-						{__(`Immunity`)}
-					</Typography>
-					{compact ? null : (
-						<Typography variant="caption" component="p">
-							{__(`Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year.`, {
-								resourceCost,
-							})}
-						</Typography>
-					)}
-					<Button
-						// prettier-ignore
-						color="secondary"
-						variant="contained"
-						disabled={disabled || !canSacraficeForImmunity(currentState)}
-						onClick={game.sacrificeResourcesForImmunityAction}
-						size="small"
-					>
-						{__(`Sacrifice %{resourceCost}&nbsp;resources`, { resourceCost })}
-					</Button>
-				</Grid>
-
-				<Grid item xs={12}>
-					<Typography variant="h6" component="h4">
-						{__(`Weakness lvl %{weaknessLevel}`, { weaknessLevel })}
-					</Typography>
-					{compact ? null : (
-						<Typography
-							variant="caption"
-							component="p"
-							dangerouslySetInnerHTML={{
-								__html: __(`This sacrifice permanently weakness enemies by -%{perLevelWeaknessReduction}% multiplicative for every level.`, {
-									perLevelWeaknessReduction,
-								}),
-							}}
-						/>
-					)}
+	return (
+		<Grid className={classes.root} container spacing={8}>
+			<Grid item xs={12}>
+				<Typography variant="h4" component="h3">
+					{__(`Sacrifices made %{count}`, { count: sacrificeCount })}:
+				</Typography>
+				{compact ? null : (
 					<Typography
 						variant="caption"
 						component="p"
 						dangerouslySetInnerHTML={{
-							__html: __(`Current enemy power reduction <strong>%{powerReduction}%</strong>`, {
-								powerReduction,
+							__html: __(
+								// prettier-ignore
+								`Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>
+and every 5th by additional&nbsp;<strong>5</strong>.<br/>
+Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
+								{
+									futureResourceCost,
+								},
+							),
+						}}
+					/>
+				)}
+			</Grid>
+			<Grid item xs={12}>
+				<Typography variant="h6" component="h4">
+					{__(`Immunity`)}
+				</Typography>
+				{compact ? null : (
+					<Typography variant="caption" component="p">
+						{__(`Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year.`, {
+							resourceCost,
+						})}
+					</Typography>
+				)}
+				<Button
+					// prettier-ignore
+					color="secondary"
+					variant="contained"
+					disabled={disabled || !canSacraficeForImmunity(currentState)}
+					onClick={game.sacrificeResourcesForImmunityAction}
+					size="small"
+				>
+					{__(`Sacrifice %{resourceCost}&nbsp;resources`, { resourceCost })}
+				</Button>
+			</Grid>
+
+			<Grid item xs={12}>
+				<Typography variant="h6" component="h4">
+					{__(`Weakness lvl %{weaknessLevel}`, { weaknessLevel })}
+				</Typography>
+				{compact ? null : (
+					<Typography
+						variant="caption"
+						component="p"
+						dangerouslySetInnerHTML={{
+							__html: __(`This sacrifice permanently weakness enemies by -%{perLevelWeaknessReduction}% multiplicative for every level.`, {
+								perLevelWeaknessReduction,
 							}),
 						}}
 					/>
-					<Button
-						color="secondary"
-						variant="contained"
-						disabled={disabled || !canSacraficeForEnemiesWeakness(currentState)}
-						onClick={game.sacrificeIdlesForEnemiesWeaknessAction}
-						size="small"
-					>
-						{__(`Sacrifice %{populationCost}&nbsp;idle population (next level %{nextLevelWeaknessReduction}%)`, {
-							nextLevelWeaknessReduction,
-							populationCost,
-						})}
-					</Button>
-				</Grid>
+				)}
+				<Typography
+					variant="caption"
+					component="p"
+					dangerouslySetInnerHTML={{
+						__html: __(`Current enemy power reduction <strong>%{powerReduction}%</strong>`, {
+							powerReduction,
+						}),
+					}}
+				/>
+				<Button
+					color="secondary"
+					variant="contained"
+					disabled={disabled || !canSacraficeForEnemiesWeakness(currentState)}
+					onClick={game.sacrificeIdlesForEnemiesWeaknessAction}
+					size="small"
+				>
+					{__(`Sacrifice %{populationCost}&nbsp;idle population (next level %{nextLevelWeaknessReduction}%)`, {
+						nextLevelWeaknessReduction,
+						populationCost,
+					})}
+				</Button>
 			</Grid>
-		);
-	}
+		</Grid>
+	);
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(SacrificesWidgetComponent)));

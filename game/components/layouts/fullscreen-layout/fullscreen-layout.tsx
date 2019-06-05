@@ -45,15 +45,15 @@ interface IFullscreenLayoutState {
 	drawerOpen: boolean;
 }
 
-const diDecorator = connectToInjector<IFullscreenLayoutExternalProps, IFullscreenLayoutInternalProps>({
+type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & WithStyles<typeof styles>;
+
+const diDecorator = connectToInjector<IFullscreenLayoutProps, IFullscreenLayoutInternalProps>({
 	...diStoreComponentDependencies,
 	dispatchSetDrawerOpenAction: {
 		dependencies: ['ui:actions@setDrawerOpen'],
 		value: (setDrawerOpen: (value: boolean) => void) => Promise.resolve(setDrawerOpen),
 	},
 });
-
-type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & WithStyles<typeof styles>;
 
 class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, IFullscreenLayoutState> {
 	constructor(props) {

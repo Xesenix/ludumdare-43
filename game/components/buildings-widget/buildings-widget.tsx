@@ -45,8 +45,7 @@ interface IBuildingsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-/** Internal component state. */
-interface IBuildingsWidgetState {}
+type IBuildingsWidgetProps = IBuildingsWidgetExternalProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>;
 
 const diDecorator = connectToInjector<IBuildingsWidgetExternalProps, IBuildingsWidgetInternalProps>({
 	__: {
@@ -57,98 +56,85 @@ const diDecorator = connectToInjector<IBuildingsWidgetExternalProps, IBuildingsW
 	},
 });
 
-type IBuildingsWidgetProps = IBuildingsWidgetExternalProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>;
+function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
+	const {
+		// prettier-ignore
+		__,
+		classes,
+		compact,
+		disabled,
+		game,
+	} = props;
 
-class BuildingsWidgetComponent extends React.Component<IBuildingsWidgetProps, IBuildingsWidgetState> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	public render(): any {
-		const {} = this.state;
-		const {
-			// prettier-ignore
-			__,
-			classes,
-			compact,
-			disabled,
-			game,
-		} = this.props;
-		const currentState = game.getState();
-		const cottagesBuildCost = getCottagesBuildCost(currentState)(1);
-		const cottagesLevel = getCottagesLevel(currentState);
-		const wallLevel = getWallsLevel(currentState);
-		const wallsBuildCost = getWallsBuildCost(currentState)(1);
-		const wallsReduction = getWallsReduction(currentState);
-
-		return (
-			<Grid className={classes.root} container spacing={8}>
-				<Grid item xs={12}>
-					<Typography variant="h4" component="h3">
-						{__(`Buildings`)}:
-					</Typography>
-				</Grid>
-				<Grid item xs={12}>
-					<Typography variant="h6" component="h4">
-						{__(`Wall lvl %{wallLevel}`, { wallLevel })}
-					</Typography>
-					{compact ? null : (
-						<Typography variant="caption" component="p">
-							{__(`Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)`, {
-								wallsReduction,
-								wallsBuildCost,
-							})}
-						</Typography>
-					)}
-					<Button
-						// prettier-ignore
-						color="secondary"
-						variant="contained"
-						disabled={disabled || !canBuildWalls(currentState)(1)}
-						onClick={this.buildWall}
-					>
-						{__(`Build wall %{wallsBuildCost} resources`, { wallsBuildCost })}
-					</Button>
-				</Grid>
-
-				<Grid item xs={12}>
-					<Typography variant="h6" component="h4">
-						{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
-					</Typography>
-					{compact ? null : (
-						<Typography variant="caption" component="p">
-							{__(`Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)`, {
-								cottagesLevel,
-								cottagesBuildCost,
-							})}
-						</Typography>
-					)}
-					<Button
-						// prettier-ignore
-						color="secondary"
-						variant="contained"
-						disabled={disabled || !canBuildCottages(currentState)(1)}
-						onClick={this.buildCottage}
-					>
-						{__(`Build cottage %{cottagesBuildCost} resources`, { cottagesBuildCost })}
-					</Button>
-				</Grid>
-			</Grid>
-		);
-	}
-
-	private buildWall = () => {
-		const { game } = this.props;
-
+	const buildWall = React.useCallback(() => {
 		game.buildWalls(1);
-	}
+	}, [game]);
 
-	private buildCottage = () => {
-		const { game } = this.props;
-
+	const buildCottage = React.useCallback(() => {
 		game.buildCottages(1);
-	}
+	}, [game]);
+
+	const currentState = game.getState();
+	const cottagesBuildCost = getCottagesBuildCost(currentState)(1);
+	const cottagesLevel = getCottagesLevel(currentState);
+	const wallLevel = getWallsLevel(currentState);
+	const wallsBuildCost = getWallsBuildCost(currentState)(1);
+	const wallsReduction = getWallsReduction(currentState);
+
+	return (
+		<Grid className={classes.root} container spacing={8}>
+			<Grid item xs={12}>
+				<Typography variant="h4" component="h3">
+					{__(`Buildings`)}:
+				</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<Typography variant="h6" component="h4">
+					{__(`Wall lvl %{wallLevel}`, { wallLevel })}
+				</Typography>
+				{compact ? null : (
+					<Typography variant="caption" component="p">
+						{__(`Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)`, {
+							wallsReduction,
+							wallsBuildCost,
+						})}
+					</Typography>
+				)}
+				<Button
+					// prettier-ignore
+					color="secondary"
+					variant="contained"
+					disabled={disabled || !canBuildWalls(currentState)(1)}
+					onClick={buildWall}
+				>
+					{__(`Build wall %{wallsBuildCost} resources`, { wallsBuildCost })}
+				</Button>
+			</Grid>
+
+			<Grid item xs={12}>
+				<Typography variant="h6" component="h4">
+					{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
+				</Typography>
+				{compact ? null : (
+					<Typography variant="caption" component="p">
+						{__(`Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)`, {
+							cottagesLevel,
+							cottagesBuildCost,
+						})}
+					</Typography>
+				)}
+				<Button
+					// prettier-ignore
+					color="secondary"
+					variant="contained"
+					disabled={disabled || !canBuildCottages(currentState)(1)}
+					onClick={buildCottage}
+				>
+					{__(`Build cottage %{cottagesBuildCost} resources`, { cottagesBuildCost })}
+				</Button>
+			</Grid>
+		</Grid>
+	);
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(BuildingsWidgetComponent)));

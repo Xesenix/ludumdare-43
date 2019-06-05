@@ -21,6 +21,7 @@ export interface IUnitsWidgetExternalProps {
 	disabled: boolean;
 	label: string;
 	trained?: number;
+	children: React.ReactElement;
 }
 
 /** Internal component properties include properties injected via dependency injection. */
@@ -30,80 +31,70 @@ interface IUnitsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-/** Internal component state. */
-interface IUnitsWidgetState {}
+type IUnitsWidgetProps = IUnitsWidgetExternalProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IUnitsWidgetExternalProps, IUnitsWidgetInternalProps>({
+const diDecorator = connectToInjector<IUnitsWidgetProps, IUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-type IUnitsWidgetProps = IUnitsWidgetExternalProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>;
+function UnitsWidgetComponent(props: IUnitsWidgetProps): any {
+	const {
+		// prettier-ignore
+		amount,
+		change,
+		children,
+		classes,
+		compact,
+		label,
+	} = props;
 
-class UnitsWidgetComponent extends React.PureComponent<IUnitsWidgetProps, IUnitsWidgetState> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	public render(): any {
-		const {
+	return (
+		<Paper
 			// prettier-ignore
-			amount,
-			change,
-			children,
-			classes,
-			compact,
-			label,
-		} = this.props;
-
-		return (
-			<Paper
+			className={classes.root}
+			elevation={0}
+		>
+			<Typography
 				// prettier-ignore
-				className={classes.root}
-				elevation={0}
+				className={classes.unitNameLabel}
+				variant="h5"
+				align="center"
 			>
-				<Typography
-					// prettier-ignore
-					className={classes.unitNameLabel}
-					variant="h5"
-					align="center"
-				>
-					{label}
-				</Typography>
-				<Typography
-					// prettier-ignore
-					className={classes.unitAmountLabel}
-					variant="h3"
-					align="center"
-				>
-					{amount}
-					{change === 0 ? null : (
-						<Typography
-							// prettier-ignore
-							className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
-							variant="h4"
-							component="span"
-						>
-							({change > 0 ? '+' : ''}
-							{change})
-						</Typography>
-					)}
-				</Typography>
-				{compact ? null : (
+				{label}
+			</Typography>
+			<Typography
+				// prettier-ignore
+				className={classes.unitAmountLabel}
+				variant="h3"
+				align="center"
+			>
+				{amount}
+				{change === 0 ? null : (
 					<Typography
 						// prettier-ignore
-						className={classes.description}
-						variant="caption"
-						align="center"
+						className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
+						variant="h4"
+						component="span"
 					>
-						{children}
+						({change > 0 ? '+' : ''}
+						{change})
 					</Typography>
 				)}
-			</Paper>
-		);
-	}
+			</Typography>
+			{compact ? null : (
+				<Typography
+					// prettier-ignore
+					className={classes.description}
+					variant="caption"
+					align="center"
+				>
+					{children}
+				</Typography>
+			)}
+		</Paper>
+	);
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(UnitsWidgetComponent)));

@@ -30,10 +30,9 @@ interface IStatusWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-/** Internal component state. */
-interface IStatusWidgetState {}
+type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IStatusWidgetExternalProps, IStatusWidgetInternalProps>({
+const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -42,69 +41,59 @@ const diDecorator = connectToInjector<IStatusWidgetExternalProps, IStatusWidgetI
 	},
 });
 
-type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps & WithStyles<typeof styles>;
+function StatusWidgetComponent(props: IStatusWidgetProps) {
+	const {
+		// prettier-ignore
+		__,
+		_$,
+		classes,
+		compact,
+		population,
+		resources,
+		turn,
+	} = props;
 
-class StatusWidgetComponent extends React.PureComponent<IStatusWidgetProps, IStatusWidgetState> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	public render(): any {
-		const {} = this.state;
-		const {
-			// prettier-ignore
-			__,
-			_$,
-			classes,
-			compact,
-			population,
-			resources,
-			turn,
-		} = this.props;
-
-		return (
-			<Paper className={classes.root} elevation={0}>
-				<Grid container>
-					<Grid className={classes.resources} item xs={6} sm={4}>
-						<Typography variant="h5">{__(`Resources`)}</Typography>
-						<Typography className={classes.resourcesAmountLabel} variant="h4">
-							{resources.current}
-							<Typography
-								// prettier-ignore
-								className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-								variant="h5"
-								component="span"
-							>
-								({resources.income > 0 ? '+' : ''}
-								{resources.income})
-							</Typography>
+	return (
+		<Paper className={classes.root} elevation={0}>
+			<Grid container>
+				<Grid className={classes.resources} item xs={6} sm={4}>
+					<Typography variant="h5">{__(`Resources`)}</Typography>
+					<Typography className={classes.resourcesAmountLabel} variant="h4">
+						{resources.current}
+						<Typography
+							// prettier-ignore
+							className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
+							variant="h5"
+							component="span"
+						>
+							({resources.income > 0 ? '+' : ''}
+							{resources.income})
 						</Typography>
-						{compact ? null : <Typography variant="caption">{__(`Hire more workers to collect more resources.`)}</Typography>}
-					</Grid>
-					<Grid className={classes.year} item xs={12} sm={4}>
-						<Typography variant="h4">{_$(turn + 1, `Year one`, `Year %{turn}`, { turn: turn + 1 })}</Typography>
-					</Grid>
-					<Grid className={classes.population} item xs={6} sm={4}>
-						<Typography variant="h5">{__(`Population`)}</Typography>
-						<Typography className={classes.populationAmountLabel} variant="h4">
-							{population.current}
-							<Typography
-								// prettier-ignore
-								className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-								variant="h5"
-								component="span"
-							>
-								{population.change ? `(${population.change > 0 ? '+' : ''}${population.change})` : null}
-							</Typography>
-							/{population.max}
-						</Typography>
-						{compact ? null : <Typography variant="caption">{__(`Build more cottages to increase max population.`)}</Typography>}
-					</Grid>
+					</Typography>
+					{compact ? null : <Typography variant="caption">{__(`Hire more workers to collect more resources.`)}</Typography>}
 				</Grid>
-			</Paper>
-		);
-	}
+				<Grid className={classes.year} item xs={12} sm={4}>
+					<Typography variant="h4">{_$(turn + 1, `Year one`, `Year %{turn}`, { turn: turn + 1 })}</Typography>
+				</Grid>
+				<Grid className={classes.population} item xs={6} sm={4}>
+					<Typography variant="h5">{__(`Population`)}</Typography>
+					<Typography className={classes.populationAmountLabel} variant="h4">
+						{population.current}
+						<Typography
+							// prettier-ignore
+							className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
+							variant="h5"
+							component="span"
+						>
+							{population.change ? `(${population.change > 0 ? '+' : ''}${population.change})` : null}
+						</Typography>
+						/{population.max}
+					</Typography>
+					{compact ? null : <Typography variant="caption">{__(`Build more cottages to increase max population.`)}</Typography>}
+				</Grid>
+			</Grid>
+		</Paper>
+	);
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(StatusWidgetComponent)));

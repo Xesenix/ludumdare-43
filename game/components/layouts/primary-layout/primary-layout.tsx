@@ -45,15 +45,15 @@ interface IPrimaryLayoutState {
 	drawerOpen: boolean;
 }
 
-const diDecorator = connectToInjector<IPrimaryLayoutExternalProps, IPrimaryLayoutInternalProps>({
+type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>;
+
+const diDecorator = connectToInjector<IPrimaryLayoutProps, IPrimaryLayoutInternalProps>({
 	...diStoreComponentDependencies,
 	dispatchSetDrawerOpenAction: {
 		dependencies: ['ui:actions@setDrawerOpen'],
 		value: (setDrawerOpen: (value: boolean) => void) => Promise.resolve(setDrawerOpen),
 	},
 });
-
-type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>;
 
 class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimaryLayoutState> {
 	constructor(props) {

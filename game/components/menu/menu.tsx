@@ -55,7 +55,9 @@ interface IMenuState {
 	languages: any;
 }
 
-const diDecorator = connectToInjector<IMenuExternalProps & RouteComponentProps, IMenuInternalProps>({
+type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
+
+const diDecorator = connectToInjector<IMenuProps, IMenuInternalProps>({
 	...diStoreComponentDependencies,
 	__: {
 		dependencies: ['i18n:translate'],
@@ -76,8 +78,6 @@ const diDecorator = connectToInjector<IMenuExternalProps & RouteComponentProps, 
 		dependencies: ['theme:get-theme()'],
 	},
 });
-
-type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
 
 class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 	constructor(props) {
@@ -185,4 +185,4 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 	}
 }
 
-export default hot(module)(withRouter<IMenuExternalProps>(diDecorator<IMenuExternalProps>(MenuComponent)));
+export default hot(module)(withRouter(diDecorator(MenuComponent)));

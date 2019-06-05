@@ -27,124 +27,117 @@ interface ITurnDetailsInternalProps {
 	store?: Store<any, any>;
 }
 
-/** Internal component state. */
-interface ITurnDetailsState {}
+type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<ITurnDetailsExternalProps, ITurnDetailsInternalProps>({
+const diDecorator = connectToInjector<ITurnDetailsProps, ITurnDetailsInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
 });
 
-type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
+function TurnDetailsComponent(props: ITurnDetailsProps): any {
+	const {
+		__,
+		classes,
+		consequences,
+	} = props;
 
-class TurnDetailsComponent extends React.Component<ITurnDetailsProps, ITurnDetailsState> {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	public render(): any {
-		const {} = this.state;
-		const { classes, consequences } = this.props;
-
-		return (
-			<Paper className={classes.root} elevation={1}>
-				<Typography variant="h5" component="h2">
-					Next turn result details
-				</Typography>
-				<Grid container spacing={8}>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Villagers {consequences.population}
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(totall killed: {consequences.totallKilled})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(resources stolen: {consequences.resourcesStolen})
-						</Typography>
-					</Grid>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Workers {consequences.workers}
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(trained: {consequences.trainedWorkers})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(sacrificed: {consequences.sacrificedWorkers})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(killed: {consequences.workersKilled})
-						</Typography>
-					</Grid>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Guards {consequences.guards}
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(trained: {consequences.trainedGuards})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(sacrificed: {consequences.sacrificedGuards})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(killed: {consequences.guardsKilled})
-						</Typography>
-					</Grid>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Idle {consequences.idle}
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(new adults: {consequences.newAdults})
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(retrained: {consequences.trainedWorkers + consequences.trainedGuards})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(sacrificed: {consequences.sacrificedIdle})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(killed: {consequences.idleKilled})
-						</Typography>
-					</Grid>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Children {consequences.babies}
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(born: {consequences.newChildren})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(sacrificed: {consequences.sacrificedChildren})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(killed: {consequences.babiesKilled})
-						</Typography>
-					</Grid>
-					<Grid className={classes.item} item xs={3}>
-						<Typography variant="subtitle1" component="h3">
-							Resources {consequences.resources}
-						</Typography>
-						<Typography className={classes.positive} variant="caption" component="p">
-							(gathered: {consequences.resourceGathered})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(guard salary: {consequences.guardsPaid})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(sacrificed: {consequences.sacrificedResources})
-						</Typography>
-						<Typography className={classes.negative} variant="caption" component="p">
-							(stolen: {consequences.resourcesStolen})
-						</Typography>
-					</Grid>
+	return (
+		<Paper className={classes.root} elevation={1}>
+			<Typography variant="h5" component="h2">
+				{__(`Next turn result details`)}
+			</Typography>
+			<Grid container spacing={8}>
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Villagers`)} {consequences.population}
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`totall killed`)}: {consequences.totallKilled})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`resources stolen`)}: {consequences.resourcesStolen})
+					</Typography>
 				</Grid>
-			</Paper>
-		);
-	}
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Workers`)} {consequences.workers}
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`trained`)}: {consequences.trainedWorkers})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`sacrificed`)}: {consequences.sacrificedWorkers})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`killed`)}: {consequences.workersKilled})
+					</Typography>
+				</Grid>
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Guards`)} {consequences.guards}
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`trained`)}: {consequences.trainedGuards})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`sacrificed`)}: {consequences.sacrificedGuards})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`killed`)}: {consequences.guardsKilled})
+					</Typography>
+				</Grid>
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Idle`)} {consequences.idle}
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`new adults`)}: {consequences.newAdults})
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`retrained`)}: {consequences.trainedWorkers + consequences.trainedGuards})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`sacrificed`)}: {consequences.sacrificedIdle})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`killed`)}: {consequences.idleKilled})
+					</Typography>
+				</Grid>
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Children`)} {consequences.babies}
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`born`)}: {consequences.newChildren})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`sacrificed`)}: {consequences.sacrificedChildren})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`killed`)}: {consequences.babiesKilled})
+					</Typography>
+				</Grid>
+				<Grid className={classes.item} item xs={3}>
+					<Typography variant="subtitle1" component="h3">
+						{__(`Resources`)} {consequences.resources}
+					</Typography>
+					<Typography className={classes.positive} variant="caption" component="p">
+						({__(`gathered`)}: {consequences.resourceGathered})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`guard salary`)}: {consequences.guardsPaid})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`sacrificed`)}: {consequences.sacrificedResources})
+					</Typography>
+					<Typography className={classes.negative} variant="caption" component="p">
+						({__(`stolen`)}: {consequences.resourcesStolen})
+					</Typography>
+				</Grid>
+			</Grid>
+		</Paper>
+	);
 }
 
 export default hot(module)(withStyles(styles)(diDecorator(TurnDetailsComponent)));
