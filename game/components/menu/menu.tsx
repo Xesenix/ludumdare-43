@@ -26,7 +26,7 @@ export interface IMenuItemExternalProps {
 	component?: React.ReactType;
 	ActiveIcon?: React.ComponentType;
 	Icon?: React.ComponentType;
-	label: React.ReactNode;
+	label?: React.ReactNode;
 	onClick?: () => void;
 }
 

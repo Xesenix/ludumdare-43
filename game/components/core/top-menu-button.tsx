@@ -43,7 +43,7 @@ const TopMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styles>
 			variant="extended"
 		>
 			{Icon ? <Icon/> : null}
-			{props.label}
+			{props.label || ''}
 		</Fab>
 	);
 };

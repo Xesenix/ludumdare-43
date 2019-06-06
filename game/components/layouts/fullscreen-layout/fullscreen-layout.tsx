@@ -29,7 +29,7 @@ import { IMenuExternalProps } from 'components/menu/menu';
 import { styles } from './fullscreen-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IFullscreenLayoutExternalProps extends RouteComponentProps {
+export interface IFullscreenLayoutExternalProps {
 	content: any;
 	Menu: React.ComponentType<IMenuExternalProps>;
 	loading?: boolean;
@@ -45,7 +45,7 @@ interface IFullscreenLayoutState {
 	drawerOpen: boolean;
 }
 
-type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & WithStyles<typeof styles>;
+type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const diDecorator = connectToInjector<IFullscreenLayoutProps, IFullscreenLayoutInternalProps>({
 	...diStoreComponentDependencies,
@@ -87,7 +87,6 @@ class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, I
 							<TopMenuButton
 								color="primary"
 								onClick={this.toggleDrawer}
-								variant="extended"
 								Icon={MenuIcon}
 							/>
 						</Hidden>
@@ -130,4 +129,4 @@ class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, I
 	}
 }
 
-export default hot(module)(withStyles(styles)(withRouter(diDecorator(FullscreenLayoutComponent))));
+export default hot(module)(withStyles(styles)(withRouter(diDecorator(FullscreenLayoutComponent)))) as any as React.ComponentType<IFullscreenLayoutExternalProps>;

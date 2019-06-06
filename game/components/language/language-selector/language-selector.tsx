@@ -28,4 +28,4 @@ function LanguageSelectorComponent(props: ILanguageSelectorViewProps) {
 	);
 }
 
-export default hot(module)(languageDIDecorator(LanguageSelectorComponent));
+export default hot(module)(languageDIDecorator<{}>(LanguageSelectorComponent));

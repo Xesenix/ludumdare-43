@@ -32,4 +32,4 @@ function ThemeSelectorComponent(props: IThemeSelectorViewProps) {
 	);
 }
 
-export default hot(module)(themeDIDecorator(ThemeSelectorComponent));
+export default hot(module)(themeDIDecorator<{}>(ThemeSelectorComponent));

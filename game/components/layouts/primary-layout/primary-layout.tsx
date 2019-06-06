@@ -29,7 +29,7 @@ import { IMenuExternalProps } from 'components/menu/menu';
 import { styles } from './primary-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
-export interface IPrimaryLayoutExternalProps extends RouteComponentProps {
+export interface IPrimaryLayoutExternalProps {
 	content: any;
 	Menu: React.ComponentType<IMenuExternalProps>;
 	loading?: boolean;
@@ -45,7 +45,7 @@ interface IPrimaryLayoutState {
 	drawerOpen: boolean;
 }
 
-type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & WithStyles<typeof styles>;
+type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & RouteComponentProps & WithStyles<typeof styles>;
 
 const diDecorator = connectToInjector<IPrimaryLayoutProps, IPrimaryLayoutInternalProps>({
 	...diStoreComponentDependencies,
@@ -87,7 +87,6 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 							<TopMenuButton
 								color="primary"
 								onClick={this.toggleDrawer}
-								variant="extended"
 								Icon={MenuIcon}
 							/>
 						</Hidden>
@@ -129,4 +128,4 @@ class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimar
 	}
 }
 
-export default hot(module)(withStyles(styles)(withRouter(diDecorator(PrimaryLayoutComponent))));
+export default hot(module)(withStyles(styles)(withRouter(diDecorator(PrimaryLayoutComponent)))) as any as React.ComponentType<IPrimaryLayoutExternalProps>;
