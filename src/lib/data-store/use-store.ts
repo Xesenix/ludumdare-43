@@ -5,7 +5,6 @@ import { Action, Store } from 'redux';
 export const filterByKeys = <T extends object>(keys: (keyof T)[]) => (data: T): T => pickBy(data, (_, key: any) => keys.indexOf(key) >= 0) as T;
 
 export function useStore<S extends object, A extends Action = Action>(store: Store<S, A>, filters: (keyof S)[]) {
-	// console.log('useStore:EFFECT START');
 	let unsubscribeDataStore: any = null;
 	const filter: (data: S) => S = filterByKeys<S>(filters);
 
@@ -13,7 +12,6 @@ export function useStore<S extends object, A extends Action = Action>(store: Sto
 
 	React.useEffect(() => {
 		if (!unsubscribeDataStore && !!store) {
-			console.log('useStore:EFFECT BIND');
 			unsubscribeDataStore = store.subscribe(() => {
 				if (!!store) {
 					setState(filter(store.getState()));
@@ -23,7 +21,6 @@ export function useStore<S extends object, A extends Action = Action>(store: Sto
 		}
 		return () => {
 			unsubscribeDataStore();
-			console.log('useStore:EFFECT END');
 		};
 	}, [store]);
 

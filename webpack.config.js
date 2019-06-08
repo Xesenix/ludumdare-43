@@ -1,27 +1,46 @@
 const chalk = require('chalk');
 const fs = require('fs');
-const path = require('path');
 
 const CompressionPlugin = require('compression-webpack-plugin');
-const DotenvWebpackPlugin = require('dotenv-webpack');
 const NgrockWebpackPlugin = require('ngrock-webpack-plugin');
 const webpackBase = require('webpack');
-const WebpackPwaManifestPlugin = require('webpack-pwa-manifest')
-const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const { application, webpack } = require('xes-webpack-core');
 
 const app = application.getEnvApp();
 const appWebpack = `./webpack.${app}.config.js`;
 
+// TODO: move to xes-webpack-core
+const getEnv = (envName, appName) =>
+	[
+		// prettier-ignore
+		'.env.default',
+		'.env',
+		`.env.${envName}`,
+		`.env.${appName}`,
+		`.env.${appName}.${envName}`,
+	].reduce((result, filePath) => {
+		if (fs.existsSync(filePath)) {
+			console.log(chalk.bold.yellow('Adding env config from: '), filePath);
+			result = { ...result, ...require('dotenv').config({ path: filePath }).parsed };
+		}
+		return result;
+	}, {});
+
 const factoryConfig = {
+	config: (() => {
+		const config = application.extractAppConfig();
+
+		console.log(chalk.bold.yellow('Extending template env config...'));
+		config.templateData.env = getEnv(process.env.ENV, app);
+
+		return config;
+	})(),
 	useBabelrc: true,
 };
 
 const configureWebpack = (config) => {
 	console.log(chalk.bold.yellow('Base WEBPACK setup'), process.env.ENV);
-	const packageConfig = application.getPackageConfig();
-	const appConfig = application.extractAppConfig();
 
 	// config.entry.sw = path.resolve('./game/sw.js');
 
@@ -32,35 +51,18 @@ const configureWebpack = (config) => {
 	// config.output.publicPath = '/';
 	config.devServer.historyApiFallback = true;
 
+	// TODO: move to xes-webpack-core
 	config.plugins.push(new webpackBase.ProgressPlugin());
 
-	config.plugins = [
-		new DotenvWebpackPlugin({ path: `.env.${process.env.ENV}`, silent: true }),
-		...config.plugins,
-		/**
-		 * @see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
-		 */
-		new WorkboxPlugin.GenerateSW(),
-		new WebpackPwaManifestPlugin({
-			background_color: appConfig.templateData.themeColor,
-			description: packageConfig.description,
+	const env = Object.entries(getEnv(process.env.ENV, app)).reduce((result, [key, value]) => {
+		result[`process.env.${key}`] = JSON.stringify(value);
 
-			icons: [
-				{
-					sizes: [32],
-					src: path.resolve('./game/assets/icons/favicon-32x32.png'),
-				},
-				{
-					sizes: [256, 512, 1024],
-					src: path.resolve('./game/assets/thumb.png'),
-				},
-			],
-			name: packageConfig.name,
-			short_name: packageConfig.name,
-			theme_color: appConfig.templateData.themeColor,
-		}),
-	];
+		return result;
+	}, {});
 
+	config.plugins = [new webpackBase.DefinePlugin(env), ...config.plugins];
+
+	// TODO: move to xes-webpack-core
 	if (process.env.ENV !== 'test') {
 		// this option doesn't work well with tests
 		// for some reason it mismatches files so karma doesn't see spec files
@@ -69,6 +71,7 @@ const configureWebpack = (config) => {
 		};
 	}
 
+	// TODO: move to xes-webpack-core
 	if (process.env.CHECK_TYPESCRIPT) {
 		config.module.rules[3] = {
 			test: /\.tsx?$/,
