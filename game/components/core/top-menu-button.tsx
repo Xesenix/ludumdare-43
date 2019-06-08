@@ -19,15 +19,9 @@ export const styles = (theme: Theme) => {
 			display: 'flex',
 			justifyContent: 'stretch',
 		},
-		primary: {
-
-		},
-		secondary: {
-
-		},
-		focusVisible: {
-
-		},
+		primary: {},
+		secondary: {},
+		focusVisible: {},
 	});
 };
 
@@ -42,7 +36,7 @@ const TopMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styles>
 			onClick={props.onClick}
 			variant="extended"
 		>
-			{Icon ? <Icon/> : null}
+			{Icon ? <Icon /> : null}
 			{props.label || ''}
 		</Fab>
 	);

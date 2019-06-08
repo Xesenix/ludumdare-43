@@ -7,7 +7,6 @@ import { createSetCompactModeAction, createSetDrawerOpenAction } from './actions
 import { reducer } from './reducers';
 import { UIBootProvider } from './ui-boot.provider';
 
-
 /**
  * Connect application fullscreen state with datastore.
  */

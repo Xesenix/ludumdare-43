@@ -54,7 +54,7 @@ export function DataStoreProvider<T, A extends Action>({ container }: interfaces
 				composeEnhancers(debugRedux ? applyMiddleware(logger, thunk, persist) : applyMiddleware(thunk, persist)),
 			);
 
-			store.dispatch({ type: INITIALIZE } as Action);
+			store.dispatch({ type: INITIALIZE } as A);
 
 			container.bind<Store<T, A>>('data-store').toConstantValue(store);
 

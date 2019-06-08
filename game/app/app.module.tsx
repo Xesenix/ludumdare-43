@@ -110,29 +110,30 @@ export class AppModule extends Container implements IApplication {
 		const providers = this.getAll('boot');
 		let progress = 0;
 
-		return Promise.all(providers.map((provider: any) => provider().then(() => console.debug(`AppModule:boot:progress ${++progress}/${providers.length}`))))
-			.then(
-				() => {
-					this.banner();
-					this.get<IEventEmitter>('event-manager').emit('app:boot');
+		return Promise.all(
+			providers.map((provider: any) => provider().then(() => console.debug(`AppModule:boot:progress ${++progress}/${providers.length}`))),
+		).then(
+			() => {
+				this.banner();
+				this.get<IEventEmitter>('event-manager').emit('app:boot');
 
-					const container = this.get<HTMLElement>('ui:root');
+				const container = this.get<HTMLElement>('ui:root');
 
-					ReactDOM.render((
-							<DIContext.Provider value={this}>
-								<App />
-							</DIContext.Provider>
-						),
-						container,
-					);
+				ReactDOM.render((
+						<DIContext.Provider value={this}>
+							<App />
+						</DIContext.Provider>
+					),
+					container,
+				);
 
-					return this;
-				},
-				(error) => {
-					console.error(error);
+				return this;
+			},
+			(error) => {
+				console.error(error);
 
-					return this;
-				},
-			);
+				return this;
+			},
+		);
 	}
 }

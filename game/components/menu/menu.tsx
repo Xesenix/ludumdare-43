@@ -161,7 +161,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 					label={__('Compact')}
 				/>
 
-				<LanguageSelectorComponent MenuItem={MenuItem}/>
+				<LanguageSelectorComponent MenuItem={MenuItem} />
 			</>
 		);
 	}

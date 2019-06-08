@@ -83,7 +83,6 @@ export type ThemesNames = 'default' | 'light' | 'dark' | string;
 
 export type IThemeProvider = () => Promise<IAppTheme>;
 
-
 export interface IAppThemesProviders {
 	[key: string]: IThemeProvider;
 }

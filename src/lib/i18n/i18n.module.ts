@@ -24,7 +24,6 @@ import { reducer } from './reducers/index';
 
 export class I18nModule {
 	public static register(app: IApplication) {
-
 		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(I18nBootProvider);
 

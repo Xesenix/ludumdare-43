@@ -22,7 +22,7 @@ export function connectToInjector<T, I = any>(
 	Preloader: React.FunctionComponent = () => <>loading...</>,
 ) {
 	return <E extends T>(Consumer: React.ComponentType<E & I>) => {
-		const [ , decoratedComponentNameMatch = '' ] = componentNameRegexp.exec(Consumer.toString()) || [];
+		const [, decoratedComponentNameMatch = ''] = componentNameRegexp.exec(Consumer.toString()) || [];
 		const className = `DI.Injector(${decoratedComponentNameMatch})`;
 
 		function DIInjector(props: E) {

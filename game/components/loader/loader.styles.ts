@@ -16,14 +16,8 @@ export const styles = (theme: Theme) => {
 			gridGap: '24px',
 			padding: '24px',
 		},
-		title: {
-
-		},
-		description: {
-
-		},
-		cta: {
-
-		},
+		title: {},
+		description: {},
+		cta: {},
 	});
 };

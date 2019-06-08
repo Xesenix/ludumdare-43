@@ -8,7 +8,7 @@ import { useStore } from './use-store';
 
 // prettier-ignore
 export class DataStoreModule {
-	public static register<T, A extends Action>(
+	public static register<T extends object, A extends Action>(
 		// prettier-ignore
 		app: IApplication,
 		initialValue: DeepPartial<T> = {},
@@ -24,9 +24,9 @@ export class DataStoreModule {
 		});
 		app.bind<IDataStoreProvider<T, A>>('data-store:provider').toProvider(DataStoreProvider);
 
-		app.bind('data-store:bind').toProvider(async ({ container }: interfaces.Context) => {
-			const store = await container.get('data-store:provider')();
-			return (keys) => useStore(store, keys);
+		app.bind<Promise<(keys: (keyof T)[]) => T>>('data-store:bind').toDynamicValue(async ({ container }: interfaces.Context) => {
+			const store = await container.get<IDataStoreProvider<T, A>>('data-store:provider')();
+			return (keys: (keyof T)[]) => useStore<T, A>(store, keys);
 		});
 	}
 }

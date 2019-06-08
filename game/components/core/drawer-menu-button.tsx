@@ -24,7 +24,7 @@ const DrawerMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styl
 			onClick={props.onClick}
 			variant="extended"
 		>
-			{Icon ? <Icon/> : null}
+			{Icon ? <Icon /> : null}
 			{props.label}
 		</Fab>
 	);

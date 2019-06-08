@@ -7,8 +7,8 @@ import { DIContext } from './context';
  * @template I interface for properties injected via dependency injection
  * @param select map dependencies from container to properties names injected into decorated component properties
  */
-export function useInjector<I>(select: { [K in keyof I]: { dependencies: string[], value?: (...dependencies: any[]) => Promise<I[K]> } }) {
-	const [injectedState, setState] = React.useState<I>({});
+export function useInjector<I>(select: { [K in keyof I]: { dependencies: string[]; value?: (...dependencies: any[]) => Promise<I[K]> } }) {
+	const [injectedState, setState] = React.useState<I>({} as I);
 	const keys = Object.keys(select);
 	const di: Container | null = React.useContext(DIContext);
 

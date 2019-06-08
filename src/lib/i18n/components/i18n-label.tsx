@@ -1,11 +1,8 @@
-import { isEqual } from 'lodash';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 import { connectToInjector } from 'lib/di';
 import { LanguageType } from 'lib/interfaces';
-import { filterByKeys } from 'lib/utils/filter-keys';
 
 import { II18nLanguagesState, II18nTranslation } from '../i18n.interfaces';
 
@@ -53,7 +50,7 @@ function I18nLabel(props: II18nLabelProps) {
 		'languages',
 	]);
 
-	return render(__);
+	return <>{render(__)}</>;
 }
 
 export default hot(module)(diDecorator(I18nLabel));

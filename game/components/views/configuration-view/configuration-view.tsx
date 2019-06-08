@@ -167,7 +167,11 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 				</Grid>
 				<Grid item xs={12} container>
 					<Grid item xs={12} md={3}>
-						<FormControlLabel className={classes.margin} label={__('master volume')} control={<span className={classes.icon}>{mute ? muteOnIcon : muteOffIcon}</span>} />
+						<FormControlLabel
+							className={classes.margin}
+							label={__('master volume')}
+							control={<span className={classes.icon}>{mute ? muteOnIcon : muteOffIcon}</span>}
+						/>
 					</Grid>
 					<Grid item xs={12} md={9} className={classes.slider}>
 						<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction} />
@@ -204,11 +208,11 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 			<Grid item xs={12} container component="section" className={classes.section}>
 				<FormControl className={classes.formControl}>
 					<InputLabel>{__('language')}</InputLabel>
-					<LanguageSelectorComponent/>
+					<LanguageSelectorComponent />
 				</FormControl>
 				<FormControl className={classes.formControl}>
 					<InputLabel>{__('theme')}</InputLabel>
-					<ThemeSelectorComponent/>
+					<ThemeSelectorComponent />
 				</FormControl>
 			</Grid>
 		</form>
