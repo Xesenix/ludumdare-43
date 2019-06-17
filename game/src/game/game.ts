@@ -1,51 +1,46 @@
 import produce, { createDraft, finishDraft } from 'immer';
 
+import { IGameState } from 'game';
+import { setResourcesReserved } from './models/resources/resources';
+import {
+	// prettier-ignore
+	setResourcesStolenInLastTurn,
+	setResourcesUsedInLastTurn,
+} from './models/resources/resources';
+import {
+	// prettier-ignore
+	setSacrificedPopulationInLastTurn,
+	setSacrificedResourcesInLastTurn,
+} from './models/skills/sacrifice';
+import { setChildrenKilledInLastTurn } from './models/units/children';
+import { getCurrentGuards, setGuardsKilledInLastTurn } from './models/units/guards';
+import { setIdlesKilledInLastTurn } from './models/units/idles';
+import { getCurrentPopulation } from './models/units/population';
+import { setWorkersKilledInLastTurn } from './models/units/workers';
+import { eventRule } from './rules/turn/event.rule';
+import { gatherResourcesRule } from './rules/turn/gather-resources';
+import { guardsUpkeepRule } from './rules/turn/guards-upkeep';
+import { populationIncreaseRule } from './rules/turn/population-increase';
+import { populationLimitRule } from './rules/turn/population-limit';
+import { DataStore } from './store';
 import {
 	// prettier-ignore
 	buildCottages,
 	buildWalls,
-} from './actions/build';
+} from './systems/build';
 import {
 	// prettier-ignore
 	makeUltimateSacrifice,
 	sacrificeIdlesForEnemiesWeakness,
 	sacrificeResourcesForImmunity,
-} from './actions/sacrifice';
+} from './systems/sacrifice';
+import { trainWorkersRule } from './systems/training';
 import {
 	// prettier-ignore
 	scheduleTrainingGuards,
 	scheduleTrainingWorkers,
 	trainGuardsRule,
-} from './actions/training';
-import {
-	// prettier-ignore
-	setResourcesStolenInLastTurn,
-	setResourcesUsedInLastTurn,
-} from './features/resources/resources';
-import {
-	// prettier-ignore
-	setSacrificedPopulationInLastTurn,
-	setSacrificedResourcesInLastTurn,
-} from './features/skills/sacrifice';
-import { setChildrenKilledInLastTurn } from './features/units/children';
-import { setGuardsKilledInLastTurn } from './features/units/guards';
-import { setIdlesKilledInLastTurn } from './features/units/idles';
-import { getCurrentPopulation } from './features/units/population';
-import { setWorkersKilledInLastTurn } from './features/units/workers';
-import {
-	// prettier-ignore
-	reduceGatherResources,
-	reduceHandleEvent,
-	reduceMakeNewPeople,
-	reducePayGuards,
-	reducePopulationLimit,
-	reduceTrainUnits,
-} from './reducers';
-import {
-	// prettier-ignore
-	DataStore,
-	IGameState,
-} from './store';
+} from './systems/training';
 
 // prepare constant modifiers instead of recreating them with each method call
 
@@ -103,13 +98,13 @@ export class Game {
 	}
 
 	private progress(state: IGameState): IGameState {
-		reduceGatherResources(state);
-		reducePayGuards(state);
-		reduceMakeNewPeople(state);
-		reduceTrainUnits(state);
+		guardsUpkeepRule(state);
+		populationIncreaseRule(state);
 		trainGuardsRule(state);
-		reducePopulationLimit(state);
-		reduceHandleEvent(state);
+		trainWorkersRule(state);
+		populationLimitRule(state);
+		eventRule(state);
+		gatherResourcesRule(state);
 		state.turn ++;
 		state.lose = getCurrentPopulation(state) === 0;
 		return state;
@@ -131,6 +126,8 @@ export class Game {
 		setWorkersKilledInLastTurn(0)(draft);
 		setSacrificedPopulationInLastTurn(0)(draft);
 		setSacrificedResourcesInLastTurn(0)(draft);
+		// reserve resources for guards upkeep
+		setResourcesReserved(getCurrentGuards(draft))(draft);
 
 		return finishDraft(draft);
 	}

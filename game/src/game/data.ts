@@ -4,7 +4,8 @@ import {
 	get as lodashGet,
 	set as lodashSet,
 } from 'lodash';
-import { IGameState } from './store';
+
+import { IGameState } from './game.interfaces';
 
 // === BASE
 

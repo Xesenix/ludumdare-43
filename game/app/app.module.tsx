@@ -3,8 +3,7 @@ import { Container } from 'inversify';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { Game } from 'game/game';
-import { DataStore, IGameState } from 'game/store';
+import { GameModule } from 'game/game.module';
 import { DataStoreModule } from 'lib/data-store';
 import { DebugModule } from 'lib/debug';
 import { DIContext } from 'lib/di';
@@ -21,7 +20,6 @@ import { ModernThemeModule } from 'themes/modern/modern-theme.module';
 import { SharpThemeModule } from 'themes/sharp/sharp-theme.module';
 import { IUIState, UIModule } from 'ui';
 
-import { initialGameState } from '../data/initial-state';
 import App from './app';
 
 declare const process: any;
@@ -84,10 +82,7 @@ export class AppModule extends Container implements IApplication {
 		UIModule.register(this);
 
 		// game
-		const dataStore = new DataStore<IGameState>({} as any, this.eventManager);
-		const game = new Game(initialGameState, dataStore);
-
-		this.bind<Game>('game').toConstantValue(game);
+		GameModule.register(this);
 	}
 
 	public banner() {

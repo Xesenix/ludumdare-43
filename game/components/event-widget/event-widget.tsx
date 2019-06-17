@@ -9,23 +9,23 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import { getResourcesStolenInLastTurn } from 'game/features/resources/resources';
+import { IGameState } from 'game';
+import { getResourcesStolenInLastTurn } from 'game/models/resources/resources';
 import {
 	// prettier-ignore
 	getAttackPower,
 	getBaseAttackPower,
-} from 'game/features/skills/attack';
+} from 'game/models/skills/attack';
 import {
 	// prettier-ignore
 	getWeaknessDamageReduction,
 	getWeaknessLevel,
-} from 'game/features/skills/weakness';
-import { getPopulationKilledInLastTurn } from 'game/features/units/population';
-import { IGameState } from 'game/store';
+} from 'game/models/skills/weakness';
+import { getPopulationKilledInLastTurn } from 'game/models/units/population';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { getWallsLevel, getWallsReduction } from 'game/features/buildings/walls';
+import { getWallsLevel, getWallsReduction } from 'game/models/buildings/walls';
 import { styles } from './event-widget.styles';
 
 /** Component public properties required to be provided by parent component. */

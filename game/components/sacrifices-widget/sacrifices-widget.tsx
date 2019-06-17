@@ -10,25 +10,25 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import {
-	// prettier-ignore
-	canSacraficeForEnemiesWeakness,
-	canSacraficeForImmunity,
-} from 'game/actions/sacrifice';
+import { Game } from 'game/game';
 import {
 	// prettier-ignore
 	getSacrificeCount,
 	getSacrificePopulationCost,
 	getSacrificeResourcesCost,
-} from 'game/features/skills/sacrifice';
+} from 'game/models/skills/sacrifice';
 import {
 	// prettier-ignore
 	changeAmountOfWeaknessLevel,
 	getWeaknessDamageReduction,
 	getWeaknessLevel,
 	getWeaknessPerLevelReduction,
-} from 'game/features/skills/weakness';
-import { Game } from 'game/game';
+} from 'game/models/skills/weakness';
+import {
+	// prettier-ignore
+	canSacraficeForEnemiesWeakness,
+	canSacraficeForImmunity,
+} from 'game/systems/sacrifice';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 

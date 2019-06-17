@@ -9,23 +9,23 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import {
-	// prettier-ignore
-	canBuildCottages,
-	canBuildWalls,
-} from 'game/actions/build';
+import { Game } from 'game';
 import {
 	// prettier-ignore
 	getCottagesBuildCost,
 	getCottagesLevel,
-} from 'game/features/buildings/cottages';
+} from 'game/models/buildings/cottages';
 import {
 	// prettier-ignore
 	getWallsBuildCost,
 	getWallsLevel,
 	getWallsReduction,
-} from 'game/features/buildings/walls';
-import { Game } from 'game/game';
+} from 'game/models/buildings/walls';
+import {
+	// prettier-ignore
+	canBuildCottages,
+	canBuildWalls,
+} from 'game/systems/build';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 

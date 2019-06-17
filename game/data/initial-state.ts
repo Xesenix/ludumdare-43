@@ -1,4 +1,4 @@
-import { IGameState } from 'game/store';
+import { IGameState } from 'game';
 
 export const initialGameState: IGameState = {
 	population: {

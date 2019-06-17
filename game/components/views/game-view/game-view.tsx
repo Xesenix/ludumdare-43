@@ -4,40 +4,39 @@ import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import { Game } from 'game/game';
-import { IGameState } from 'game/store';
+import { Game, IGameState } from 'game';
 import { connectToInjector } from 'lib/di';
 
-import { canMakeUltimateSacrifice } from 'game/actions/sacrifice';
-import {
-	// prettier-ignore
-	canTrainGuards,
-	canTrainWorkers,
-} from 'game/actions/training';
-import { getResourcesAmount } from 'game/features/resources/resources';
+import { getResourcesAmount } from 'game/models/resources/resources';
 import {
 	// prettier-ignore
 	getSacrificeCount,
 	getSacrificedPopulationInTotal,
 	getSacrificedResourcesInTotal,
-} from 'game/features/skills/sacrifice';
-import { getCurrentChildren } from 'game/features/units/children';
+} from 'game/models/skills/sacrifice';
+import { getCurrentChildren } from 'game/models/units/children';
 import {
 	// prettier-ignore
 	getCurrentGuards,
 	getTrainedGuards,
-} from 'game/features/units/guards';
-import { getCurrentIdles } from 'game/features/units/idles';
+} from 'game/models/units/guards';
+import { getCurrentIdles } from 'game/models/units/idles';
 import {
 	// prettier-ignore
 	getCurrentPopulation,
 	getMaxPopulation,
-} from 'game/features/units/population';
+} from 'game/models/units/population';
 import {
 	// prettier-ignore
 	getCurrentWorkers,
 	getTrainedWorkers,
-} from 'game/features/units/workers';
+} from 'game/models/units/workers';
+import { canMakeUltimateSacrifice } from 'game/systems/sacrifice';
+import {
+	// prettier-ignore
+	canTrainGuards,
+	canTrainWorkers,
+} from 'game/systems/training';
 import {
 	// prettier-ignore
 	II18nLanguagesState,
