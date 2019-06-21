@@ -2,9 +2,7 @@ import { Container } from 'inversify';
 import { Action } from 'redux';
 
 export interface IApplication extends Container {
-	eventManager: IEventEmitter;
-
-	boot: () => Promise<IApplication>;
+	boot(): Promise<IApplication>;
 }
 
 export interface IValueAction<T> extends Action {

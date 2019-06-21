@@ -1,9 +1,9 @@
-import { EventEmitter } from 'eventemitter3';
 import { Container } from 'inversify';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { GameModule } from 'game/game.module';
+import { EventManagerModule } from 'lib/core/event-manager.module';
 import { DataStoreModule } from 'lib/data-store';
 import { DebugModule } from 'lib/debug';
 import { DIContext } from 'lib/di';
@@ -34,8 +34,6 @@ type AppAction = IValueAction<any>;
  * @extends {Container}
  */
 export class AppModule extends Container implements IApplication {
-	public eventManager: IEventEmitter = new EventEmitter();
-
 	constructor() {
 		super();
 
@@ -46,9 +44,7 @@ export class AppModule extends Container implements IApplication {
 		ServiceWorkerModule.register();
 
 		DebugModule.register(this);
-
-		// event manager
-		this.bind<IEventEmitter>('event-manager').toConstantValue(this.eventManager);
+		EventManagerModule.register(this);
 
 		// load modules
 
