@@ -96,15 +96,23 @@ export class AppModule extends Container implements IApplication {
 		);
 	}
 
-	public boot(): Promise<AppModule> {
-		// start all required modules
+	public boot(): Promise<void[]> {
 		const console = this.get<Console>('debug:console');
-		const providers = this.getAll('boot');
+		const providers = this.getAll<() => Promise<void>>('boot');
 		let progress = 0;
 
 		return Promise.all(
-			providers.map((provider: any) => provider().then(() => console.debug(`AppModule:boot:progress ${++progress}/${providers.length}`))),
-		).then(
+			providers.map((provider: any) => provider().then(() => {
+				console.debug(`AppModule:boot:progress ${++progress}/${providers.length}`);
+			})),
+		);
+	}
+
+	public start(): Promise<AppModule> {
+		// start all required modules
+		const console = this.get<Console>('debug:console');
+
+		return this.boot().then(
 			() => {
 				this.banner();
 				this.get<IEventEmitter>('event-manager').emit('app:boot');

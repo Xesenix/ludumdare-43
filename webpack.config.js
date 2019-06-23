@@ -34,6 +34,11 @@ const factoryConfig = {
 		console.log(chalk.bold.yellow('Extending template env config...'));
 		config.templateData.env = getEnv(process.env.ENV, app);
 
+		if (process.env.DI === 'true') {
+			console.log(chalk.bold.yellow('Generating dependency injection report...'));
+			config.main = ['di.ts'];
+		}
+
 		return config;
 	})(),
 	useBabelrc: true,
@@ -41,8 +46,6 @@ const factoryConfig = {
 
 const configureWebpack = (config) => {
 	console.log(chalk.bold.yellow('Base WEBPACK setup'), process.env.ENV);
-
-	// config.entry.sw = path.resolve('./game/sw.js');
 
 	config.output.filename = '[name].js';
 	config.output.chunkFilename = '[name].js';

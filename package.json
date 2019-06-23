@@ -19,6 +19,7 @@
     "lint:fix": "npm run prettier && tslint -p ./ --fix",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "pre-commit": "lint:fix",
+    "game:di": "cross-env APP=game DI=true npm run serve",
     "game:analyze": "cross-env APP=game npm run analyze",
     "game:check": "npm run lint && cross-env CHECK_TYPESCRIPT=true npm run game:test",
     "game:tdd": "cross-env APP=game npm run tdd",

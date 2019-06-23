@@ -2,7 +2,8 @@ import { Container } from 'inversify';
 import { Action } from 'redux';
 
 export interface IApplication extends Container {
-	boot(): Promise<IApplication>;
+	boot(): Promise<void[]>;
+	start(): Promise<IApplication>;
 }
 
 export interface IValueAction<T> extends Action {
