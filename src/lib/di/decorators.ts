@@ -18,6 +18,8 @@ export function inject(dependencies?: DependencyType[]): any {
 			console.debug('annotation:inject', target.name, dependencies);
 		}
 		helpers.annotate(target, dependencies);
+
+		return target;
 	};
 }
 
@@ -29,7 +31,9 @@ export function injectable(): any {
 		if (process.env.DEBUG_DI === 'true') {
 			console.debug('annotation:injectable', target.name);
 		}
-		return inversify.decorate(inversify.injectable(), target);
+		inversify.decorate(inversify.injectable(), target);
+
+		return target;
 	};
 }
 

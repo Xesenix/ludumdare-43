@@ -16,11 +16,11 @@ export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loa
 	// prettier-ignore
 	Phaser,
 	console: Console,
-) => @inject([
+) => inject([
 	// prettier-ignore
 	'audio-repository',
 	'audio-context:factory',
-]) class PhaserAudioLoaderService implements IAudioFileLoader {
+])(class PhaserAudioLoaderService implements IAudioFileLoader {
 	public loader?: Phaser.Loader.LoaderPlugin;
 	private loadQueue: boolean[] = [];
 
@@ -84,4 +84,4 @@ export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loa
 			}
 		});
 	}
-});
+}));
