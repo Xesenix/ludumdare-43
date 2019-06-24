@@ -45,6 +45,9 @@ export interface IAppThemeOptions extends ThemeOptions {
 	};
 }
 
+/**
+ * Set of configurations used for styling application.
+ */
 export interface IAppTheme extends Theme {
 	layout: {
 		primary: {
@@ -79,28 +82,57 @@ export interface IAppTheme extends Theme {
 	};
 }
 
-export type ThemesNames = 'default-theme-light' | 'default-theme-dark' | string;
+/**
+ * Key used to identify theme.
+ * @see IAppThemesProviders
+ * @see IAppThemesDescriptors
+ */
+export type ThemesNames = 'default-theme-light' | 'default-theme-dark' | keyof(IAppThemesProviders);
 
+/**
+ * Asynchronously loads configuration for theme and assets required for particular theme.
+ */
 export type IThemeProvider = () => Promise<IAppTheme>;
 
+/**
+ * Set of all available application themes descriptors providers.
+ */
 export interface IAppThemesProviders {
 	[key: string]: IThemeProvider;
 }
 
-export type IAppThemesProvider = () => Promise<IAppThemesProviders>;
-
+/**
+ * Datastore state describing currently used theme.
+ */
 export interface IThemeState {
+	/** Name of theme currently used by application. */
 	theme: ThemesNames;
 }
 
+/**
+ * Function returning theme configuration.
+ */
 export type IThemeBuilder = (style: IAppThemeOptions) => IAppTheme;
 
+/**
+ * Interface describing application theme.
+ */
 export interface IAppThemeDescriptor {
+	/** Theme name. */
 	name: ThemesNames;
+	/**
+	 * Function injected with translation function that can be used
+	 * to translate theme name to version readable to end users use
+	 * `__` for translation argument name so it can be extracted.
+	 */
 	localizedLabel: (__: II18nTranslation) => string;
+	/** Provider used for loading theme. */
 	themeProvider: IThemeProvider;
 }
 
+/**
+ * Set of all available application themes descriptors.
+ */
 export interface IAppThemesDescriptors {
 	[key: string]: IAppThemeDescriptor;
 }

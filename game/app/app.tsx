@@ -21,13 +21,16 @@ const IntroView = Loadable({ loading: Loader, loader: () => import(/* webpackChu
 const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game" */ 'components/views/game-view/game-view') });
 const ConfigurationView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "config" */ 'components/views/configuration-view/configuration-view') });
 
-interface IAppProps {}
+/** Component public properties required to be provided by parent component. */
+interface IAppExternalProps {}
 
+/** Internal component properties include properties injected via dependency injection. */
 interface IAppInternalProps {
 	bindToStore: (keys: (keyof IAppState)[]) => IAppState;
 	getTheme: () => IAppTheme;
 }
 
+/** Internal component state. */
 interface IAppState {
 	/** required for interface updates after changing fullscreen state */
 	fullscreen: boolean;
@@ -39,7 +42,9 @@ interface IAppState {
 	theme: ThemesNames;
 }
 
-const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
+type IAppProps = IAppExternalProps & IAppInternalProps;
+
+const diDecorator = connectToInjector<IAppExternalProps, IAppInternalProps>({
 	bindToStore: {
 		dependencies: ['data-store:bind'],
 	},
@@ -48,9 +53,7 @@ const diDecorator = connectToInjector<IAppProps, IAppInternalProps>({
 	},
 });
 
-type AppProps = IAppProps & IAppInternalProps;
-
-function App(props: AppProps) {
+function App(props: IAppProps) {
 	const { getTheme, bindToStore } = props;
 	const { fullscreen = false } = bindToStore([
 		// prettier-ignore

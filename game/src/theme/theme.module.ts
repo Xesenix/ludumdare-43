@@ -72,6 +72,18 @@ export class ThemeModule {
 		app.bind<Reducer<any, any>>('data-store:reducers').toConstantValue(reducer);
 	}
 
+	/**
+	 * Used to streamline adding new application styling themes.
+	 *
+	 * @param app application container on which dependencies will be defined
+	 * @param name name used for identify theme should be unique
+	 * @param localizedLabel function returning label used to identify theme to user
+	 * injected with translation method that can be used for extracting label for
+	 * translation needs to be named `__`
+	 * @param themeProviderFactory factory function injected with createTheme used
+	 * as base for creating theme configuration returning theme provider can also be used
+	 * to split themes as separate modules and load additional assets only if theme is used
+	 */
 	public static registerTheme(
 		// prettier-ignore
 		app: IApplication,

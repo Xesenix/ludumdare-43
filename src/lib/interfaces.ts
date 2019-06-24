@@ -1,8 +1,13 @@
 import { Container } from 'inversify';
 import { Action } from 'redux';
 
+/**
+ * Application dependency container augmented with booting and application starting logic.
+ */
 export interface IApplication extends Container {
+	/** Run all dependencies defined on container `boot:provider` key. */
 	boot(): Promise<void[]>;
+	/** Initialize application view after booting all dependencies. */
 	start(): Promise<IApplication>;
 }
 
