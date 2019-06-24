@@ -8,7 +8,6 @@ import {
 	// prettier-ignore
 	diStoreComponentDependencies,
 	IStoreComponentInternalProps,
-	StoreComponent,
 } from 'lib/utils/store.component';
 
 // elements
@@ -47,7 +46,7 @@ interface IPrimaryLayoutState {
 
 type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & RouteComponentProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IPrimaryLayoutProps, IPrimaryLayoutInternalProps>({
+const diDecorator = connectToInjector<IPrimaryLayoutExternalProps, IPrimaryLayoutInternalProps>({
 	...diStoreComponentDependencies,
 	dispatchSetDrawerOpenAction: {
 		dependencies: ['ui:actions@setDrawerOpen'],
@@ -55,77 +54,73 @@ const diDecorator = connectToInjector<IPrimaryLayoutProps, IPrimaryLayoutInterna
 	},
 });
 
-class PrimaryLayoutComponent extends StoreComponent<IPrimaryLayoutProps, IPrimaryLayoutState> {
-	constructor(props) {
-		super(props, [
-			// prettier-ignore
-			'drawerOpen',
-		]);
-	}
+function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
+	const {
+		// prettier-ignore
+		bindToStore,
+		classes,
+		content = null,
+		dispatchSetDrawerOpenAction,
+		loading = false,
+		location,
+		Menu,
+	} = props;
 
-	public render(): any {
-		const {
-			// prettier-ignore
-			classes,
-			content = null,
-			loading = false,
-			Menu,
-			location,
-		} = this.props;
+	const { drawerOpen } = bindToStore([
+		// prettier-ignore
+		'drawerOpen',
+	]);
 
-		return (
-			<>
-				<AppBar position="fixed">
-					<Toolbar>
-						<Hidden smDown>
-							<Menu
-								key="menu"
-								MenuItem={TopMenuButton}
-							/>
-						</Hidden>
-						<Hidden mdUp>
-							<TopMenuButton
-								color="primary"
-								onClick={this.toggleDrawer}
-								Icon={MenuIcon}
-							/>
-						</Hidden>
-					</Toolbar>
-					{loading ? <LinearProgress/> : null}
-				</AppBar>
-
-				<Hidden mdUp>
-					<Drawer
-						onClose={this.toggleDrawer}
-						open={this.state.drawerOpen}
-					>
-						<Menu
-							key="drawer-menu"
-							MenuItem={DrawerMenuButton}
-						/>
-					</Drawer>
-				</Hidden>
-				<Paper
-					className={classes.root}
-					elevation={0}
-				>
-					<Slide
-						key={location.key}
-						in={true}
-						direction="left"
-					>
-						<div className={classes.container}>{content}</div>
-					</Slide>
-				</Paper>
-			</>
-		);
-	}
-
-	private toggleDrawer = (): void => {
-		const { dispatchSetDrawerOpenAction } = this.props;
-		const { drawerOpen } = this.state;
+	const toggleDrawer = React.useCallback((): void => {
 		dispatchSetDrawerOpenAction(!drawerOpen);
-	}
+	}, [dispatchSetDrawerOpenAction, drawerOpen]);
+
+	return (
+		<>
+			<AppBar position="fixed">
+				<Toolbar>
+					<Hidden smDown>
+						<Menu
+							key="menu"
+							MenuItem={TopMenuButton}
+						/>
+					</Hidden>
+					<Hidden mdUp>
+						<TopMenuButton
+							color="primary"
+							onClick={toggleDrawer}
+							Icon={MenuIcon}
+						/>
+					</Hidden>
+				</Toolbar>
+				{loading ? <LinearProgress/> : null}
+			</AppBar>
+
+			<Hidden mdUp>
+				<Drawer
+					onClose={toggleDrawer}
+					open={drawerOpen}
+				>
+					<Menu
+						key="drawer-menu"
+						MenuItem={DrawerMenuButton}
+					/>
+				</Drawer>
+			</Hidden>
+			<Paper
+				className={classes.root}
+				elevation={0}
+			>
+				<Slide
+					key={location.key}
+					in={true}
+					direction="left"
+				>
+					<div className={classes.container}>{content}</div>
+				</Slide>
+			</Paper>
+		</>
+	);
 }
 
 export default hot(module)(withStyles(styles)(withRouter(diDecorator(PrimaryLayoutComponent)))) as any as React.ComponentType<IPrimaryLayoutExternalProps>;

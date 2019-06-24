@@ -1,9 +1,7 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import produce from 'immer';
-import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 // elements
 import Button from '@material-ui/core/Button';
@@ -43,14 +41,12 @@ export interface ISacrificesWidgetExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface ISacrificesWidgetInternalProps {
 	__: II18nTranslation;
-	di?: Container;
 	game: Game;
-	store?: Store<any, any>;
 }
 
 type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<ISacrificesWidgetProps, ISacrificesWidgetInternalProps>({
+const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrificesWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},

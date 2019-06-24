@@ -55,7 +55,7 @@ interface IConfigurationViewState {
 
 type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IConfigurationViewProps, IConfigurationViewInternalProps>({
+const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},

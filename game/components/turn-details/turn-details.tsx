@@ -29,7 +29,7 @@ interface ITurnDetailsInternalProps {
 
 type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<ITurnDetailsProps, ITurnDetailsInternalProps>({
+const diDecorator = connectToInjector<ITurnDetailsExternalProps, ITurnDetailsInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -37,6 +37,7 @@ const diDecorator = connectToInjector<ITurnDetailsProps, ITurnDetailsInternalPro
 
 function TurnDetailsComponent(props: ITurnDetailsProps): any {
 	const {
+		// prettier-ignore
 		__,
 		classes,
 		consequences,

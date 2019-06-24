@@ -61,7 +61,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 			const backgroundColor: any = 0x000000;
 
 			/** @see https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js */
-			const fps: FPSConfig = {
+			const fps: Phaser.Types.Core.FPSConfig = {
 				min: 10,
 				target: 30,
 				forceSetTimeOut: false,
@@ -69,27 +69,27 @@ export function PhaserGameProvider(context: interfaces.Context) {
 				panicMax: 120,
 			};
 
-			const loader: LoaderConfig = {};
+			const loader: Phaser.Types.Core.LoaderConfig = {};
 
-			const render: RendererConfig = {
-				resolution: 1,
+			const render: Phaser.Types.Core.RenderConfig = {
+				// resolution: 1,
 				antialias: false,
-				autoResize: true,
-				backgroundColor,
+				// autoResize: true,
+				// backgroundColor,
 				pixelArt: true, // => antialias: false, roundPixels: true
 				roundPixels: true,
 				transparent: false,
 				clearBeforeRender: false,
 				premultipliedAlpha: true,
-				preserveDrawingBuffer: false,
+				// preserveDrawingBuffer: false,
 				failIfMajorPerformanceCaveat: false,
 				powerPreference: 'default', // 'high-performance', 'low-power' or 'default'
 			};
 
-			const config: GameConfig = {
+			const config: Phaser.Types.Core.GameConfig = {
 				audio: {
 					noAudio: true,
-				},
+				} as Phaser.Types.Core.AudioConfig,
 				width: 768,
 				height: 300,
 				type: Phaser.CANVAS, // AUTO, CANVAS, WEBGL, HEADLESS

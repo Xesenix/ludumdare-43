@@ -10,8 +10,8 @@ import { ILanguageSelectorViewProps, languageDIDecorator } from '../decorator';
 
 function LanguageSelectorComponent(props: ILanguageSelectorViewProps) {
 	const {
+		// prettier-ignore
 		__,
-		// items,
 		bindToStore,
 		update,
 	} = props;

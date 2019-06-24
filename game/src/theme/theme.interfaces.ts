@@ -79,7 +79,7 @@ export interface IAppTheme extends Theme {
 	};
 }
 
-export type ThemesNames = 'default' | 'light' | 'dark' | string;
+export type ThemesNames = 'default-theme-light' | 'default-theme-dark' | string;
 
 export type IThemeProvider = () => Promise<IAppTheme>;
 

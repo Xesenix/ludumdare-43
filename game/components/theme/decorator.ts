@@ -1,5 +1,3 @@
-import { Store } from 'redux';
-
 import { connectToInjector } from 'lib/di';
 import { IAppThemesDescriptors } from 'theme';
 

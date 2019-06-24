@@ -11,6 +11,7 @@ import { IThemeSelectorViewProps, themeDIDecorator } from '../decorator';
 
 function ThemeSelectorComponent(props: IThemeSelectorViewProps) {
 	const {
+		// prettier-ignore
 		items,
 		bindToStore,
 		update,

@@ -265,7 +265,6 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 							// prettier-ignore
 							consequences={consequences}
 							currentState={currentState}
-							game={game}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12}>
@@ -287,13 +286,10 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
 							label={__('Idlers')}
 							amount={getCurrentIdles(currentState)}
-							hideActionBar={true}
 							change={getCurrentIdles(consequences) - getCurrentIdles(currentState)}
-							height={180}
 						>
 							{__(`Population without occupation will produce children in rate 1 child per every 2 idle persons.`)}
 						</UnitsWidgetComponent>
@@ -301,13 +297,10 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
 							label={__('Children')}
 							amount={getCurrentChildren(currentState)}
-							hideActionBar={true}
 							change={getCurrentChildren(consequences) - getCurrentChildren(currentState)}
-							height={180}
 						>
 							{__(`Those young villagers will become idle population in next year (if they survive next year attack).
 They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.`)}
@@ -316,13 +309,11 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
 							label={__('Workers')}
 							amount={getCurrentWorkers(currentState)}
 							trained={getTrainedWorkers(currentState)}
 							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
-							height={180}
 						>
 							{__(`Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year.`)}
 						</UnitsWidgetComponent>
@@ -330,13 +321,11 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
 							label={__('Guards')}
 							amount={getCurrentGuards(currentState)}
 							trained={getTrainedGuards(currentState)}
 							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
-							height={180}
 						>
 							{__(`They will protect other units from being attacked and resources from being stolen.
 Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.`)}
@@ -379,7 +368,6 @@ Each one requires 1 resource per year to be operational if there are no enough r
 						<SacrificesWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							game={game}
 							compact={compactMode}
 						/>
 					</Grid>
@@ -387,7 +375,6 @@ Each one requires 1 resource per year to be operational if there are no enough r
 						<BuildingsWidgetComponent
 							// prettier-ignore
 							disabled={blockNextTurn}
-							game={game}
 							compact={compactMode}
 						/>
 					</Grid>

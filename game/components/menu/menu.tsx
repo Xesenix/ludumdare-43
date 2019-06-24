@@ -57,7 +57,7 @@ interface IMenuState {
 
 type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
 
-const diDecorator = connectToInjector<IMenuProps, IMenuInternalProps>({
+const diDecorator = connectToInjector<IMenuExternalProps, IMenuInternalProps>({
 	...diStoreComponentDependencies,
 	__: {
 		dependencies: ['i18n:translate'],

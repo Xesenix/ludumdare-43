@@ -25,7 +25,7 @@ export const styles = (theme: Theme) => {
 	});
 };
 
-const TopMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styles>) => {
+function TopMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styles>) {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	return (

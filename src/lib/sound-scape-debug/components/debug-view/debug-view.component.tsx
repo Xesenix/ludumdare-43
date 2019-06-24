@@ -138,7 +138,7 @@ class SoundScapeDebugViewComponent extends React.PureComponent<ISoundScapeDebugV
 				import('vis/lib/timeline/Timeline'),
 				import('vis/lib/DataSet'),
 				import('moment'),
-				import('vis/dist/vis.min.css'),
+				// import('vis/dist/vis.min.css'),
 			]).then(
 				([
 					// prettier-ignore

@@ -1,8 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 // elements
 import Grid from '@material-ui/core/Grid';
@@ -26,13 +24,11 @@ export interface IStatusWidgetExternalProps {
 interface IStatusWidgetInternalProps {
 	__: II18nTranslation;
 	_$: II18nPluralTranslation;
-	di?: Container;
-	store?: Store<any, any>;
 }
 
 type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalProps>({
+const diDecorator = connectToInjector<IStatusWidgetExternalProps, IStatusWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -41,7 +37,7 @@ const diDecorator = connectToInjector<IStatusWidgetProps, IStatusWidgetInternalP
 	},
 });
 
-function StatusWidgetComponent(props: IStatusWidgetProps) {
+function StatusWidgetComponent(props: IStatusWidgetProps): any {
 	const {
 		// prettier-ignore
 		__,

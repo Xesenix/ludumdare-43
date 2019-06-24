@@ -8,7 +8,6 @@ import {
 	// prettier-ignore
 	diStoreComponentDependencies,
 	IStoreComponentInternalProps,
-	StoreComponent,
 } from 'lib/utils/store.component';
 
 // elements
@@ -47,7 +46,7 @@ interface IFullscreenLayoutState {
 
 type IFullscreenLayoutProps = IFullscreenLayoutExternalProps & IFullscreenLayoutInternalProps & RouteComponentProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IFullscreenLayoutProps, IFullscreenLayoutInternalProps>({
+const diDecorator = connectToInjector<IFullscreenLayoutExternalProps, IFullscreenLayoutInternalProps>({
 	...diStoreComponentDependencies,
 	dispatchSetDrawerOpenAction: {
 		dependencies: ['ui:actions@setDrawerOpen'],
@@ -55,78 +54,74 @@ const diDecorator = connectToInjector<IFullscreenLayoutProps, IFullscreenLayoutI
 	},
 });
 
-class FullscreenLayoutComponent extends StoreComponent<IFullscreenLayoutProps, IFullscreenLayoutState> {
-	constructor(props) {
-		super(props, [
-			// prettier-ignore
-			'drawerOpen',
-		]);
-	}
+function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
+	const {
+		// prettier-ignore
+		bindToStore,
+		classes,
+		content = null,
+		dispatchSetDrawerOpenAction,
+		loading = false,
+		location,
+		Menu,
+	} = props;
 
-	public render(): any {
-		const {
-			// prettier-ignore
-			classes,
-			content = null,
-			loading = false,
-			location,
-			Menu,
-		} = this.props;
+	const { drawerOpen } = bindToStore([
+		// prettier-ignore
+		'drawerOpen',
+	]);
 
-		return (
-			<>
-				<AppBar position="fixed">
-					<Toolbar>
-						<Hidden smDown>
-							<Menu
-								key="fullscreen-menu"
-								MenuItem={TopMenuButton}
-							/>
-						</Hidden>
-						<Hidden mdUp>
-							<TopMenuButton
-								color="primary"
-								onClick={this.toggleDrawer}
-								Icon={MenuIcon}
-							/>
-						</Hidden>
-					</Toolbar>
-					{loading ? <LinearProgress/> : null}
-				</AppBar>
-
-				<Hidden mdUp>
-					<Drawer
-						anchor="left"
-						onClose={this.toggleDrawer}
-						open={this.state.drawerOpen}
-					>
-						<Menu
-							key="fullscreen-drawer-menu"
-							MenuItem={DrawerMenuButton}
-						/>
-					</Drawer>
-				</Hidden>
-				<Paper
-					className={classes.root}
-					elevation={0}
-				>
-					<Slide
-						key={location.key}
-						in={true}
-						direction="left"
-					>
-						<div className={classes.container}>{content}</div>
-					</Slide>
-				</Paper>
-			</>
-		);
-	}
-
-	private toggleDrawer = (): void => {
-		const { dispatchSetDrawerOpenAction } = this.props;
-		const { drawerOpen } = this.state;
+	const toggleDrawer = React.useCallback((): void => {
 		dispatchSetDrawerOpenAction(!drawerOpen);
-	}
+	}, [dispatchSetDrawerOpenAction, drawerOpen]);
+
+	return (
+		<>
+			<AppBar position="fixed">
+				<Toolbar>
+					<Hidden smDown>
+						<Menu
+							key="fullscreen-menu"
+							MenuItem={TopMenuButton}
+						/>
+					</Hidden>
+					<Hidden mdUp>
+						<TopMenuButton
+							color="primary"
+							onClick={toggleDrawer}
+							Icon={MenuIcon}
+						/>
+					</Hidden>
+				</Toolbar>
+				{loading ? <LinearProgress/> : null}
+			</AppBar>
+
+			<Hidden mdUp>
+				<Drawer
+					anchor="left"
+					onClose={toggleDrawer}
+					open={drawerOpen}
+				>
+					<Menu
+						key="fullscreen-drawer-menu"
+						MenuItem={DrawerMenuButton}
+					/>
+				</Drawer>
+			</Hidden>
+			<Paper
+				className={classes.root}
+				elevation={0}
+			>
+				<Slide
+					key={location.key}
+					in={true}
+					direction="left"
+				>
+					<div className={classes.container}>{content}</div>
+				</Slide>
+			</Paper>
+		</>
+	);
 }
 
 export default hot(module)(withStyles(styles)(withRouter(diDecorator(FullscreenLayoutComponent)))) as any as React.ComponentType<IFullscreenLayoutExternalProps>;

@@ -1,8 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 // elements
 import Paper from '@material-ui/core/Paper';
@@ -18,22 +16,19 @@ export interface IUnitsWidgetExternalProps {
 	amount: number;
 	change: number;
 	compact: boolean;
-	disabled: boolean;
 	label: string;
 	trained?: number;
-	children: React.ReactElement;
+	children: React.ReactElement | string;
 }
 
 /** Internal component properties include properties injected via dependency injection. */
 interface IUnitsWidgetInternalProps {
 	__: II18nTranslation;
-	di?: Container;
-	store?: Store<any, any>;
 }
 
 type IUnitsWidgetProps = IUnitsWidgetExternalProps & IUnitsWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<IUnitsWidgetProps, IUnitsWidgetInternalProps>({
+const diDecorator = connectToInjector<IUnitsWidgetExternalProps, IUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},

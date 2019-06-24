@@ -1,8 +1,6 @@
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 // elements
 import Fab from '@material-ui/core/Fab';
@@ -15,7 +13,6 @@ import { styles } from './train-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface ITrainUnitsWidgetExternalProps {
-	amount: number;
 	canTrain?: (amount: number) => boolean;
 	disabled: boolean;
 	label: string;
@@ -27,13 +24,11 @@ export interface ITrainUnitsWidgetExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface ITrainUnitsWidgetInternalProps {
 	__: II18nTranslation;
-	di?: Container;
-	store?: Store<any, any>;
 }
 
 type ITrainUnitsWidgetProps = ITrainUnitsWidgetExternalProps & ITrainUnitsWidgetInternalProps & WithStyles<typeof styles>;
 
-const diDecorator = connectToInjector<ITrainUnitsWidgetProps, ITrainUnitsWidgetInternalProps>({
+const diDecorator = connectToInjector<ITrainUnitsWidgetExternalProps, ITrainUnitsWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
 	},
@@ -43,6 +38,7 @@ function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
 	const [ step, setStep ] = React.useState(1);
 
 	const {
+		// prettier-ignore
 		__,
 		classes,
 		label,

@@ -12,8 +12,7 @@ type IMenuLanguageSelectorViewProps = IMenuLanguageSelectorExternalProps & ILang
 
 function LanguageSelectorComponent(props: IMenuLanguageSelectorViewProps) {
 	const {
-		__,
-		// items,
+		// prettier-ignore
 		bindToStore,
 		update,
 		MenuItem,

@@ -13,7 +13,7 @@ export const styles = (theme: Theme) => {
 	});
 };
 
-const DrawerMenuButton = (props: IMenuItemExternalProps & WithStyles<typeof styles>) => {
+function DrawerMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styles>) {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	return (

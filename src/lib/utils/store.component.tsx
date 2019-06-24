@@ -6,11 +6,15 @@ import { filterByKeys } from './filter-keys';
 
 export interface IStoreComponentInternalProps<S> {
 	store: Store<S>;
+	bindToStore: (keys: (keyof S)[]) => S;
 }
 
 export const diStoreComponentDependencies = {
 	store: {
 		dependencies: ['data-store'],
+	},
+	bindToStore: {
+		dependencies: ['data-store:bind'],
 	},
 };
 

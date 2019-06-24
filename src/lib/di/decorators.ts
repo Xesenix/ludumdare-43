@@ -99,7 +99,7 @@ export function createProvider<T = any>(
 	shouldResolve: boolean = true,
 	cache: boolean = true,
 ) {
-	const cacheResult = cache ? memoize : (cb) => cb;
+	const cacheResult: (cb: (ctx: ii.Context) => any) => any = cache ? memoize : (cb: (ctx: ii.Context) => any) => cb;
 	return cacheResult(({ container }: ii.Context) => async () => {
 		const console = container.get<Console>('debug:console:DEBUG_DI');
 		console.debug('annotation:injectDecorator', {
