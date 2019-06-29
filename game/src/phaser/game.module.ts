@@ -11,7 +11,7 @@ export type IPhaserProvider = () => Promise<any>;
 // prettier-ignore
 export const PhaserGameModule = (container: Container) => new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
 	bind<IPhaserProvider>('phaser:provider')
-		.toProvider(() => () => import(/* webpackChunkName: "phaser" */ 'phaser')
+		.toProvider(() => () => import(/* webpackChunkName: "phaser" */ './phaser')
 			.then(({ default: Phaser }) => Phaser),
 		);
 	bind<IPhaserGameProvider>('phaser:game-provider').toProvider(PhaserGameProvider);
