@@ -1,7 +1,8 @@
 import * as inversify from 'inversify';
 import { interfaces as ii } from 'inversify';
-import { helpers, interfaces as vi } from 'inversify-vanillajs-helpers';
 import memoize from 'lodash-es/memoize';
+
+import { helpers, interfaces as vi } from './helpers';
 
 type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.BasicInjection | vi.NamedInjection | vi.TaggedInjection;
 
@@ -56,6 +57,10 @@ export async function resolveDependencies<T = any>(
 				const callable = dep.indexOf('()') > -1;
 				if (multiple) {
 					const key = dep.replace('[]', '').replace('()', '');
+					if (!container.isBound(key)) {
+						console.error('error:', dep, key, 'key not bound');
+						return Promise.reject();
+					}
 					const results = container.getAll<any>(key);
 					if (callable) {
 						try {
@@ -68,6 +73,10 @@ export async function resolveDependencies<T = any>(
 					return Promise.all(results);
 				} else {
 					const key = dep.replace('()', '');
+					if (!container.isBound(key)) {
+						console.error('error:', dep, key, 'key not bound');
+						return Promise.reject();
+					}
 					const result = container.get<any>(key);
 					if (callable) {
 						try {

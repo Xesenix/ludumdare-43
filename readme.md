@@ -87,6 +87,11 @@ Links:
 * article about [service worker](https://css-tricks.com/serviceworker-for-offline/) on CSS Tricks
 * for generating ssl certificates research [mkcert](https://github.com/FiloSottile/mkcert)
 
+### Usefull links
+
+* [react typescript cheetsheet](https://www.saltycrane.com/typescript-react-cheat-sheet/latest/)
+
+* [analyze module code duplication](https://formidable.com/blog/2018/finding-webpack-duplicates-with-inspectpack-plugin/)
 
 ### Game development
 
@@ -105,3 +110,6 @@ Links:
 * work on phaser states
 * analytics with [gtag](https://developers.google.com/analytics/devguides/collection/gtagjs/migration) vs [google tag manager](https://support.google.com/tagmanager/answer/6107124)
 * research [open id](https://openid.net/connect/)
+
+# Material-ui
+Cant update to v4.2.0 it is breaking after clicking some buttons or switching theme

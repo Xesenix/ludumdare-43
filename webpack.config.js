@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const fs = require('fs');
 
+const { DuplicatesPlugin } = require('inspectpack/plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const NgrockWebpackPlugin = require('ngrock-webpack-plugin');
 const webpackBase = require('webpack');
@@ -63,7 +64,11 @@ const configureWebpack = (config) => {
 		return result;
 	}, {});
 
-	config.plugins = [new webpackBase.DefinePlugin(env), ...config.plugins];
+	config.plugins = [
+		new webpackBase.DefinePlugin(env),
+		...config.plugins,
+		new DuplicatesPlugin(),
+	];
 
 	// TODO: move to xes-webpack-core
 	if (process.env.ENV !== 'test') {
