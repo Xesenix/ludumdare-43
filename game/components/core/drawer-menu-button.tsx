@@ -20,7 +20,7 @@ function DrawerMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styl
 		<Fab
 			classes={props.classes}
 			color={props.active && props.activeColor ? props.activeColor : props.color}
-			component={props.component as any}
+			component={props.component as React.ComponentClass}
 			onClick={props.onClick}
 			variant="extended"
 		>
@@ -28,6 +28,6 @@ function DrawerMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styl
 			{props.label}
 		</Fab>
 	);
-};
+}
 
 export default hot(module)(withStyles(styles, { name: 'DrawerMenuButton' })(DrawerMenuButton));

@@ -1,5 +1,5 @@
 import { IGameState } from 'game';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
 import {
 	// prettier-ignore
 	changeAmountOfCurrentGuards,

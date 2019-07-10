@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { merge } from 'lodash';
+import merge from 'lodash-es/merge';
 
 // icons
 import ConfigIcon from '@material-ui/icons/Build';

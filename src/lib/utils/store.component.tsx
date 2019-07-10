@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash-es/isEqual';
 import * as React from 'react';
 import { Store } from 'redux';
 

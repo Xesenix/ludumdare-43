@@ -40,6 +40,6 @@ function TopMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styles>
 			{props.label || ''}
 		</Fab>
 	);
-};
+}
 
 export default hot(module)(withStyles(styles, { name: 'TopMenuButton' })(TopMenuButton));

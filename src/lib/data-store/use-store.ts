@@ -1,4 +1,4 @@
-import { pickBy } from 'lodash';
+import pickBy from 'lodash-es/pickBy';
 import * as React from 'react';
 import { Action, Store } from 'redux';
 

@@ -1,9 +1,7 @@
 import produce, { createDraft, finishDraft, setAutoFreeze } from 'immer';
-import {
-	cloneDeep,
-	get as lodashGet,
-	set as lodashSet,
-} from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
+import lodashGet from 'lodash-es/get';
+import lodashSet from 'lodash-es/set';
 import pipeline from 'pipeline-operator';
 
 import { BenchmarkSuite } from 'src/benchmark/benchmark-suite';

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'eventemitter3';
-import { memoize } from 'lodash';
+import memoize from 'lodash-es/memoize';
 
 import { IApplication, IEventEmitter } from 'lib/interfaces';
 

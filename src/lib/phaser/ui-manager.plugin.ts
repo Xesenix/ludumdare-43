@@ -1,4 +1,4 @@
-import { throttle } from 'lodash';
+import throttle from 'lodash-es/throttle';
 import { Store } from 'redux';
 
 import { createClassProvider } from 'lib/di';

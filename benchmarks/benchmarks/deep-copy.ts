@@ -1,6 +1,6 @@
 import { BenchmarkSuite } from 'benchmark/benchmark-suite';
 import { createDraft, finishDraft, setAutoFreeze } from 'immer';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 setAutoFreeze(false);
 

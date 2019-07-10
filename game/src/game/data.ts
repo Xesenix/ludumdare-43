@@ -1,9 +1,6 @@
-import {
-	// prettier-ignore
-	cloneDeep,
-	get as lodashGet,
-	set as lodashSet,
-} from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
+import lodashGet from 'lodash-es/get';
+import lodashSet from 'lodash-es/set';
 
 import { IGameState } from './game.interfaces';
 

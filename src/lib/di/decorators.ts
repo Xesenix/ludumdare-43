@@ -1,8 +1,7 @@
 import * as inversify from 'inversify';
 import { interfaces as ii } from 'inversify';
 import { helpers, interfaces as vi } from 'inversify-vanillajs-helpers';
-import { memoize } from 'lodash';
-import 'reflect-metadata';
+import memoize from 'lodash-es/memoize';
 
 type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.BasicInjection | vi.NamedInjection | vi.TaggedInjection;
 

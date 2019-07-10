@@ -1,4 +1,4 @@
-import { get as lodashGet } from 'lodash';
+import lodashGet from 'lodash-es/get';
 
 import { BenchmarkSuite } from 'src/benchmark/benchmark-suite';
 
