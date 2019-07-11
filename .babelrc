@@ -22,7 +22,12 @@
 			"legacy": true
 		}],
 		"@babel/plugin-proposal-class-properties",
-		"@babel/plugin-proposal-object-rest-spread"
+		"@babel/plugin-proposal-object-rest-spread",
+		["babel-plugin-import", {
+			"libraryName": "@material-ui/icons",
+			"libraryDirectory": "esm",
+			"camel2DashComponentName": false
+		}]
 	],
 	"env": {
 		"test": {
