@@ -77,7 +77,8 @@ class AppComponent extends React.Component<IAppProps, IAppState> {
 					},
 				});
 			});
-			benchmarks.on('error', () => {
+			benchmarks.on('error', (err) => {
+				console.log(err);
 				this.setState({ title: 'error' });
 			});
 		});
