@@ -15,6 +15,7 @@ export function useInjector<I>(select: { [K in keyof I]: { dependencies: string[
 	React.useEffect(() => {
 		let isMounted: boolean = true;
 
+		// one time initialization
 		if (Object.keys(injectedState).length === 0 && !!di) {
 			const configs = Object.values<{
 				dependencies: string[];
@@ -84,7 +85,7 @@ export function useInjector<I>(select: { [K in keyof I]: { dependencies: string[
 		return () => {
 			isMounted = false;
 		};
-	});
+	}, [di, injectedState]);
 
 	return injectedState;
 }
