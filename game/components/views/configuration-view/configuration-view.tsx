@@ -15,7 +15,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 
 import LanguageSelectorComponent from 'components/language/language-selector/language-selector';
 import ThemeSelectorComponent from 'components/theme/theme-selector/theme-selector';

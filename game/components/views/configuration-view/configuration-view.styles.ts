@@ -11,7 +11,7 @@ export const styles = (theme: Theme) => {
 			...appTheme.layout.container.wrapper,
 		},
 		margin: {
-			margin: appTheme.spacing.unit,
+			margin: appTheme.spacing(),
 		},
 		icon: {
 			alignItems: 'center',
@@ -32,7 +32,7 @@ export const styles = (theme: Theme) => {
 			},
 		},
 		formControl: {
-			margin: appTheme.spacing.unit,
+			margin: appTheme.spacing(),
 			minWidth: 120,
 		},
 		section: {

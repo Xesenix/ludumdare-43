@@ -258,7 +258,7 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 
 		const gameBlock = (
 			<Paper className={classes.root} elevation={0}>
-				<Grid container spacing={compactMode ? 8 : 24}>
+				<Grid container spacing={compactMode ? 1 : 3}>
 					<Grid item sm={12} xs={12} style={{ marginBottom: '12px' }}>
 						{compactMode ? null : <PhaserViewComponent keepInstanceOnRemove />}
 						<EventWidgetComponent
