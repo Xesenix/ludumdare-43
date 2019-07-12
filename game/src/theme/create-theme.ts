@@ -23,9 +23,6 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 	};
 
 	let baseTheme = createMuiTheme({
-		typography: {
-			useNextVariants: true,
-		},
 		...theme,
 	});
 

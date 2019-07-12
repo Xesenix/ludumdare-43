@@ -157,7 +157,6 @@ export default (
 	const styles: IAppThemeOptions = {
 		typography: {
 			htmlFontSize: 16,
-			useNextVariants: true,
 		},
 		icons: {
 			config: ConfigIcon,

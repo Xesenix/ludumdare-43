@@ -12,7 +12,6 @@ export default (
 			h1: {
 				fontWeight: 'bold',
 			},
-			useNextVariants: true,
 		},
 		palette: {
 			secondary: {
