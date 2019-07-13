@@ -16,10 +16,22 @@ import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/full
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
 import Loader from 'components/loader/loader';
 
-const MenuComponent = Loadable({ loading: (props) => <Loader size={32} {...props} />, loader: () => import(/* webpackChunkName: "menu" */ 'components/menu/menu') });
-const IntroView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view') });
-const GameView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "game" */ 'components/views/game-view/game-view') });
-const ConfigurationView = Loadable({ loading: Loader, loader: () => import(/* webpackChunkName: "config" */ 'components/views/configuration-view/configuration-view') });
+const MenuComponent = Loadable({
+	loading: (props) => <Loader size={32} {...props} />,
+	loader: () => import(/* webpackChunkName: "menu" */ 'components/menu/menu'),
+});
+const IntroView = Loadable({
+	loading: Loader,
+	loader: () => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view'),
+});
+const GameView = Loadable({
+	loading: Loader,
+	loader: () => import(/* webpackChunkName: "game" */ 'components/views/game-view/game-view'),
+});
+const ConfigurationView = Loadable({
+	loading: Loader,
+	loader: () => import(/* webpackChunkName: "config" */ 'components/views/configuration-view/configuration-view'),
+});
 
 /** Component public properties required to be provided by parent component. */
 interface IAppExternalProps {}

@@ -6,9 +6,10 @@ export type IPhaserProvider = () => Promise<any>;
 export const lazyPhaserAudioManagerPluginProvider = (
 	// prettier-ignore
 	context: interfaces.Context,
-) => (config = { key: 'audio-manager', start: true }) => import(/* webpackChunkName: "phaser" */ './phaser-audio-manager-plugin')
-	.then(async ({ AudioManagerPluginProvider }) => await AudioManagerPluginProvider(context)())
-	.then((AudioManagerPlugin) => ({
-		...config,
-		plugin: AudioManagerPlugin,
-	}));
+) => (config = { key: 'audio-manager', start: true }) =>
+	import(/* webpackChunkName: "phaser" */ './phaser-audio-manager-plugin')
+		.then(async ({ AudioManagerPluginProvider }) => await AudioManagerPluginProvider(context)())
+		.then((AudioManagerPlugin) => ({
+			...config,
+			plugin: AudioManagerPlugin,
+		}));

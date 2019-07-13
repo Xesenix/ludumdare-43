@@ -27,14 +27,15 @@ const syncLocaleWithStore = (store: Store<any, any>, setLanguageReady: SetLangua
 	}
 
 	// This needs to be know at build time to prepare bundles with translations.
-	return import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`).then(
-		(content) => {
-			i18n.addTranslations(language, 'messages', content);
-			i18n.setLocale(language);
-			setLanguageReady(language, true);
-		},
-		(err) => Promise.reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
-	);
+	return import(/* webpackChunkName: "locales-" */ `${process.env.LOCALES_DIR}/messages.${language}.po`)
+		.then(
+			(content) => {
+				i18n.addTranslations(language, 'messages', content);
+				i18n.setLocale(language);
+				setLanguageReady(language, true);
+			},
+			(err) => Promise.reject(`ERROR while loading locales path: '${localesPath}/messages.${language}.po'`),
+		);
 };
 
 export function I18nBootProvider({ container }: interfaces.Context) {

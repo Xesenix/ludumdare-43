@@ -24,7 +24,11 @@ export class ThemeModule {
 
 		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(ThemeBootProvider);
-		app.bind<IThemeBuilder>('theme:create-theme').toProvider(() => () => import(/* webpackChunkName: "theme" */ './create-theme').then(({ createAppTheme }) => createAppTheme));
+		app.bind<IThemeBuilder>('theme:create-theme')
+			.toProvider(() => () =>
+				import(/* webpackChunkName: "theme" */ './create-theme')
+					.then(({ createAppTheme }) => createAppTheme),
+			);
 
 		app.bind<Promise<IAppThemesDescriptors>>('theme:theme-descriptors:provider')
 			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemesDescriptors>(container, [
