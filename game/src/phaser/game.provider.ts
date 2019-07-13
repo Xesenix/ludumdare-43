@@ -23,28 +23,19 @@ export function PhaserGameProvider(context: interfaces.Context) {
 			'data-store:provider()',
 			'phaser:container',
 			'phaser:provider()',
-			'phaser:ui-manager-plugin:provider()',
 			'phaser:scene:intro:provider()',
-			'audio-manager-plugin:provider()',
-			'soundtrack-manager-plugin:provider()',
-		], (
+		], async (
 			// prettier-ignore
 			store: Store,
 			parent,
 			Phaser,
-			UIManagerPlugin: Phaser.Plugins.BasePlugin,
 			IntroScene,
-			AudioManagerPlugin: Phaser.Plugins.BasePlugin,
-			SoundtrackManagerPlugin: Phaser.Plugins.BasePlugin,
 		) => {
 			console.debug('PhaserGameProvider:injected', {
 				store,
 				parent,
 				Phaser,
-				UIManagerPlugin,
 				IntroScene,
-				AudioManagerPlugin,
-				SoundtrackManagerPlugin,
 			});
 
 			if (!forceNew && game !== null) {
@@ -57,6 +48,9 @@ export function PhaserGameProvider(context: interfaces.Context) {
 
 				return Promise.resolve(game);
 			}
+
+			const plugins = await Promise.all(context.container.getAll<() => Promise<void>>('phaser:plugins').map((provider: any) => provider()));
+			console.log('plugins', plugins);
 
 			const backgroundColor: any = 0x000000;
 
@@ -113,21 +107,7 @@ export function PhaserGameProvider(context: interfaces.Context) {
 				},
 				plugins: {
 					global: [
-						{
-							key: 'ui:manager',
-							plugin: UIManagerPlugin,
-							start: true,
-						},
-						{
-							key: 'audio-manager',
-							plugin: AudioManagerPlugin,
-							start: true,
-						},
-						{
-							key: 'soundtrack-manager',
-							plugin: SoundtrackManagerPlugin,
-							start: true,
-						},
+						...plugins,
 					],
 				},
 				scene: [IntroScene],

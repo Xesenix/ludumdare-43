@@ -1,7 +1,5 @@
 import { Container, ContainerModule, interfaces } from 'inversify';
 
-import { UIManagerPluginProvider } from 'lib/phaser/ui-manager.plugin';
-
 import { IPhaserGameProvider, PhaserGameProvider } from './game.provider';
 import { IntroSceneProvider } from './scene/intro.scene';
 
@@ -16,5 +14,13 @@ export const PhaserGameModule = (container: Container) => new ContainerModule((b
 		);
 	bind<IPhaserGameProvider>('phaser:game-provider').toProvider(PhaserGameProvider);
 	bind('phaser:scene:intro:provider').toProvider(IntroSceneProvider);
-	bind('phaser:ui-manager-plugin:provider').toProvider(UIManagerPluginProvider);
+	bind('phaser:plugins').toProvider(
+		(context: interfaces.Context) => (config = { key: 'ui:manager', start: true }) =>
+			import(/* webpackChunkName: "phaser" */ 'lib/phaser/ui-manager.plugin').then(
+				async ({ UIManagerPluginProvider }) => await UIManagerPluginProvider(context)(),
+			).then((UIManagerPlugin) => ({
+				...config,
+				plugin: UIManagerPlugin,
+			})),
+	);
 });

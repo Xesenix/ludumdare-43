@@ -18,6 +18,6 @@ export class SoundScapeModule {
 			.to(SoundtrackPlayer)
 			.inSingletonScope();
 
-		this.app.bind('soundtrack-manager-plugin:provider').toProvider(lazyPhaserSoundtrackManagerPluginProvider);
+		this.app.bind('phaser:plugins').toProvider(lazyPhaserSoundtrackManagerPluginProvider);
 	}
 }

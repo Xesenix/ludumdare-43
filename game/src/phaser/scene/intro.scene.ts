@@ -141,15 +141,12 @@ current sound: ${currentSoundtrack}`,
 	private enterActionMode() {
 		if (this.mode !== 'action' && this.stm && this.sm) {
 			this.stm.soundtrackPlayer.scheduleNext(action, 0);
-			this.idleTimeout = this.sm.context.currentTime + note140 * 16;
 			this.mode = 'action';
 		}
 	}
 
 	private setupSoundTrack() {
 		if (this.sm) {
-			this.idleTimeout = this.sm.context.currentTime;
-
 			// this.input.on('pointerdown', (pointer) => {
 			// 	if (pointer.buttons === 1) {
 			// 		this.enterActionMode();

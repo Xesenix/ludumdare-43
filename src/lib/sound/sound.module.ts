@@ -21,7 +21,7 @@ export class SoundModule {
 
 		if (phaser) {
 			// TODO: this factory returns class figure out how to correctly type this binding
-			app.bind('audio-manager-plugin:provider').toProvider(lazyPhaserAudioManagerPluginProvider);
+			app.bind('phaser:plugins').toProvider(lazyPhaserAudioManagerPluginProvider);
 			app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(lazyPhaserAudioLoaderServiceProvider);
 		} else {
 			app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(audioLoaderProvider);
