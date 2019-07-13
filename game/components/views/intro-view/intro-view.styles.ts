@@ -5,7 +5,7 @@ import { IAppTheme } from 'theme';
 export const styles = (theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
 	const title = {
-		...theme.typography.title,
+		...(theme.typography as any).title,
 		marginBottom: '.5em',
 	};
 

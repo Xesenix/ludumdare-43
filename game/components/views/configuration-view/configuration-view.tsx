@@ -14,8 +14,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
-import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
 
 import LanguageSelectorComponent from 'components/language/language-selector/language-selector';
 import ThemeSelectorComponent from 'components/theme/theme-selector/theme-selector';
@@ -174,7 +174,7 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 						/>
 					</Grid>
 					<Grid item xs={12} md={9} className={classes.slider}>
-						<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction} />
+						<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction as any} />
 					</Grid>
 				</Grid>
 				<Grid item xs={12} container>
@@ -186,7 +186,7 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 						/>
 					</Grid>
 					<Grid item xs={12} md={9} className={classes.slider}>
-						<Slider min={0} max={1} step={1 / 32} value={musicVolume} onChange={dispatchSetMusicVolumeAction} />
+						<Slider min={0} max={1} step={1 / 32} value={musicVolume} onChange={dispatchSetMusicVolumeAction as any} />
 					</Grid>
 				</Grid>
 				<Grid item xs={12} container>
@@ -198,7 +198,7 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 						/>
 					</Grid>
 					<Grid item xs={12} md={9} className={classes.slider}>
-						<Slider min={0} max={1} step={1 / 32} value={effectsVolume} onChange={dispatchSetEffectsVolumeAction} />
+						<Slider min={0} max={1} step={1 / 32} value={effectsVolume} onChange={dispatchSetEffectsVolumeAction as any} />
 					</Grid>
 				</Grid>
 			</Grid>

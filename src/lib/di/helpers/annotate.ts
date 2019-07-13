@@ -17,7 +17,7 @@ function annotate<T>(
 
 	(dependencies).forEach((injection: helperInterfaces.Injection, index: number) => {
 
-		if ((injection as helperInterfaces.BasicInjection).type === undefined) {
+		if ((injection as helperInterfaces.IBasicInjection).type === undefined) {
 
 			// Add inject metadata
 			decorate(
@@ -33,18 +33,18 @@ function annotate<T>(
 			// Add inject metadata
 			decorate(
 				inject(
-					(injection as helperInterfaces.BasicInjection).type,
+					(injection as helperInterfaces.IBasicInjection).type,
 				) as any,
 				constructor,
 				index,
 			);
 
 			// Add named metadata
-			if ((injection as helperInterfaces.NamedInjection).named !== undefined) {
+			if ((injection as helperInterfaces.INamedInjection).named !== undefined) {
 
 				decorate(
 					named(
-						(injection as helperInterfaces.NamedInjection).named,
+						(injection as helperInterfaces.INamedInjection).named,
 					) as any,
 					constructor,
 					index,
@@ -52,11 +52,11 @@ function annotate<T>(
 			}
 
 			// Add tagged metadata
-			if ((injection as helperInterfaces.TaggedInjection).tagged !== undefined) {
+			if ((injection as helperInterfaces.ITaggedInjection).tagged !== undefined) {
 				decorate(
 					tagged(
-						(injection as helperInterfaces.TaggedInjection).tagged.key,
-						(injection as helperInterfaces.TaggedInjection).tagged.value,
+						(injection as helperInterfaces.ITaggedInjection).tagged.key,
+						(injection as helperInterfaces.ITaggedInjection).tagged.value,
 					) as any,
 					constructor,
 					index,

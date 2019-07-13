@@ -69,6 +69,7 @@ function registerDynamicValue(container: interfaces.Container) {
 }
 
 function registerFunction(container: interfaces.Container) {
+	// tslint:disable:ban-types
 	return <T extends Function>(
 		identifier: interfaces.ServiceIdentifier<T>,
 		func: T,

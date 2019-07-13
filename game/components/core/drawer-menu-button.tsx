@@ -20,7 +20,7 @@ function DrawerMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styl
 		<Fab
 			classes={props.classes}
 			color={props.active && props.activeColor ? props.activeColor : props.color}
-			component={props.component as React.ComponentClass}
+			component={props.component as any}
 			onClick={props.onClick}
 			variant="extended"
 		>

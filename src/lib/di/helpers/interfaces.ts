@@ -1,20 +1,20 @@
 import * as inversify from 'inversify';
 
-export interface BasicInjection {
+export interface IBasicInjection {
 	type: inversify.interfaces.ServiceIdentifier<any>;
 }
 
-export interface NamedInjection extends BasicInjection {
+export interface INamedInjection extends IBasicInjection {
 	named: string;
 }
 
-export interface TaggedInjection extends BasicInjection {
+export interface ITaggedInjection extends IBasicInjection {
 	tagged: { key: string, value: string };
 }
 
 export type Injection = (
 	inversify.interfaces.ServiceIdentifier<any> |
-	BasicInjection |
-	NamedInjection |
-	TaggedInjection
+	IBasicInjection |
+	INamedInjection |
+	ITaggedInjection
 );

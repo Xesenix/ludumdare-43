@@ -4,7 +4,7 @@ import memoize from 'lodash-es/memoize';
 
 import { helpers, interfaces as vi } from './helpers';
 
-type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.BasicInjection | vi.NamedInjection | vi.TaggedInjection;
+type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.IBasicInjection | vi.INamedInjection | vi.ITaggedInjection;
 
 /**
  * Annotate class with constructor dependency injection.
