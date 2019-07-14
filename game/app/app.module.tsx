@@ -2,30 +2,15 @@ import { Container } from 'inversify';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { GameModule } from 'game/game.module';
-import { EventManagerModule } from 'lib/core/event-manager.module';
-import { DataStoreModule } from 'lib/data-store';
-import { DebugModule } from 'lib/debug';
-import { DIContext } from 'lib/di';
-import { FullScreenModule } from 'lib/fullscreen';
-import { I18nModule, II18nState } from 'lib/i18n';
-import { IApplication, IEventEmitter, IValueAction } from 'lib/interfaces';
-import { ServiceWorkerModule } from 'lib/service-worker';
-import { SoundModule } from 'lib/sound';
-import { SoundScapeModule } from 'lib/sound-scape';
-import { PhaserGameModule } from 'phaser/game.module';
-import { ThemeModule } from 'theme';
-import { DefaultThemeModule } from 'themes/default/default-theme.module';
-import { ModernThemeModule } from 'themes/modern/modern-theme.module';
-import { SharpThemeModule } from 'themes/sharp/sharp-theme.module';
-import { IUIState, UIModule } from 'ui';
+// core
+import EventManagerModule from 'lib/core/event-manager.module';
+import DebugModule from 'lib/debug/debug.module';
+import ServiceWorkerModule from 'lib/service-worker/service-worker.module';
 
-import App from './app';
+import { DIContext } from 'lib/di';
+import { IApplication, IEventEmitter } from 'lib/interfaces';
 
 declare const process: any;
-
-type IAppState = IUIState & II18nState;
-type AppAction = IValueAction<any>;
 
 /**
  * Main module for application. Defines all dependencies and provides default setup for configuration variables.
@@ -41,44 +26,16 @@ export class AppModule extends Container implements IApplication {
 			(window as any).__inversifyDevtools__(this);
 		}
 
-		ServiceWorkerModule.register();
-
+		// core dependencies
 		DebugModule.register(this);
 		EventManagerModule.register(this);
 
-		// load modules
-
-		// application themeing
-		ThemeModule.register(this);
-		DefaultThemeModule.register(this);
-		SharpThemeModule.register(this);
-		ModernThemeModule.register(this);
-
-		// fullscreen bindings
-		FullScreenModule.register(this, document.querySelector('body') as HTMLElement);
-
-		// sound
-		SoundModule.register(this);
-		SoundScapeModule.register(this);
-
-		// translations
-		I18nModule.register(this);
-
-		// phaser
-		this.load(PhaserGameModule(this));
-
-		// data store
-		DataStoreModule.register<IAppState, AppAction>(this);
-
 		// rendering DOM - from outside of react
+		this.bind<Document>('document').toConstantValue(document);
 		this.bind<Window>('window').toConstantValue(window);
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
 
-		// ui
-		UIModule.register(this);
-
-		// game
-		GameModule.register(this);
+		ServiceWorkerModule.register(this);
 	}
 
 	public banner() {
@@ -96,6 +53,25 @@ export class AppModule extends Container implements IApplication {
 		);
 	}
 
+	public load() {
+		const dependencies = [
+			import(/* webpackChunkName: "ui" */ 'game/game.module'),
+			import(/* webpackChunkName: "ui" */ 'lib/data-store/data-store.module'),
+			import(/* webpackChunkName: "ui" */ 'lib/fullscreen/fullscreen.module'),
+			import(/* webpackChunkName: "ui" */ 'lib/i18n/i18n.module'),
+			import(/* webpackChunkName: "ui" */ 'lib/sound/sound.module'),
+			import(/* webpackChunkName: "ui" */ 'lib/sound-scape/sound-scape.module'),
+			import(/* webpackChunkName: "ui" */ 'phaser/game.module'),
+			import(/* webpackChunkName: "ui" */ 'theme/theme.module'),
+			import(/* webpackChunkName: "ui" */ 'themes/default/default-theme.module'),
+			import(/* webpackChunkName: "ui" */ 'themes/modern/modern-theme.module'),
+			import(/* webpackChunkName: "ui" */ 'themes/sharp/sharp-theme.module'),
+			import(/* webpackChunkName: "ui" */ 'ui/ui.module'),
+		];
+		return Promise.all<{ default: { register: (IApplication) => void } }>(dependencies)
+			.then((modules) => modules.forEach(({ default: m }) => m.register(this)));
+	}
+
 	public boot(): Promise<void[]> {
 		const console = this.get<Console>('debug:console');
 		const providers = this.getAll<() => Promise<void>>('boot');
@@ -111,13 +87,14 @@ export class AppModule extends Container implements IApplication {
 	public start(): Promise<AppModule> {
 		// start all required modules
 		const console = this.get<Console>('debug:console');
+		const container = this.get<HTMLElement>('ui:root');
 
-		return this.boot().then(
-			() => {
+		return this.load()
+			.then(() => this.boot())
+			.then(() => import(/* webpackChunkName: "app" */ './app'))
+			.then(({ default: App }) => {
 				this.banner();
 				this.get<IEventEmitter>('event-manager').emit('app:boot');
-
-				const container = this.get<HTMLElement>('ui:root');
 
 				ReactDOM.render((
 						<DIContext.Provider value={this}>

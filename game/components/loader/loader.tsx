@@ -17,7 +17,7 @@ const i18nTileLabel = (__: II18nTranslation) => __('Loading error');
 const i18nDescriptionLabel = (__: II18nTranslation) => __('Something went wrong while loading module try again later.');
 const i18nCtaLabel = (__: II18nTranslation) => __('Retry');
 
-function Loader({ classes, isLoading, retry, size = 128 }) {
+function Loader({ classes, isLoading, retry = null, size = 128 }) {
 	return (
 		<div
 			className={classes.root}
@@ -43,14 +43,17 @@ function Loader({ classes, isLoading, retry, size = 128 }) {
 						>
 							<I18nLabel render={i18nDescriptionLabel}/>
 						</Typography>
-						<Fab
-							className={classes.cta}
-							color="default"
-							onClick={retry}
-							variant="extended"
-						>
-							<I18nLabel render={i18nCtaLabel}/>
-						</Fab>
+						{ !!retry
+							? <Fab
+								className={classes.cta}
+								color="default"
+								onClick={retry}
+								variant="extended"
+							>
+								<I18nLabel render={i18nCtaLabel}/>
+							</Fab>
+							: null
+						}
 					</Paper>
 				)
 			}

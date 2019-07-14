@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
-import { UIModule as BaseUIModule } from 'lib/ui';
+import BaseUIModule from 'lib/ui/ui.module';
 
 import { createSetCompactModeAction, createSetDrawerOpenAction } from './actions';
 import { reducer } from './reducers';
@@ -10,7 +10,7 @@ import { UIBootProvider } from './ui-boot.provider';
 /**
  * Connect application fullscreen state with datastore.
  */
-export class UIModule extends BaseUIModule {
+export default class UIModule extends BaseUIModule {
 	public static register(app: IApplication) {
 		// call base ui module
 		BaseUIModule.register(app);

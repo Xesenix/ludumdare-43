@@ -19,7 +19,7 @@ import {
 	ThemesNames,
 } from './theme.interfaces';
 
-export class ThemeModule {
+export default class ThemeModule {
 	public static register(app: IApplication) {
 
 		// define logic needed to bootstrap module

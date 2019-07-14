@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 
-export class DebugModule {
+export default class DebugModule {
 	public static register(container: Container) {
 		// console
 		const noop = () => {};

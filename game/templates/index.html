@@ -20,14 +20,16 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
 </head>
-<body>
+<body style="background-color: #333; color: #ddd;">
 	<div id="app" class="container">
-		<h1><%= htmlWebpackPlugin.options.data.title %></h1>
-		<p>
-			You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year.<br/>
-			Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.
-		</p>
-		<h3>Loading...</h3>
+		<div class="preload">
+			<h1><%= htmlWebpackPlugin.options.data.title %></h1>
+			<p>
+				You are the leader of a small village in this very hostile world you need to decide if you will pay tribute to the gods or stand on your own against plagues that visit this world every year.<br/>
+				Manage your villagers assign them to work so they can gather resources for sacrifices or village development. Or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world.
+			</p>
+			<h3>Loading...</h3>
+		</div>
 	</div>
 
 	<div class="footer">

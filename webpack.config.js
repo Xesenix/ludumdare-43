@@ -4,6 +4,8 @@ const fs = require('fs');
 const { DuplicatesPlugin } = require('inspectpack/plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const NgrockWebpackPlugin = require('ngrock-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const ChunkProgressWebpackPlugin = require('chunk-progress-webpack-plugin');
 const webpackBase = require('webpack');
 
 const { application, webpack } = require('xes-webpack-core');
@@ -68,6 +70,7 @@ const configureWebpack = (config) => {
 		new webpackBase.DefinePlugin(env),
 		...config.plugins,
 		new DuplicatesPlugin(),
+		new ChunkProgressWebpackPlugin(),
 	];
 
 	// TODO: move to xes-webpack-core
@@ -96,6 +99,11 @@ const configureWebpack = (config) => {
 		config.plugins.push(new CompressionPlugin());
 		// if you are using moment you can reduce amount of locales here
 		config.plugins.push(new webpackBase.ContextReplacementPlugin(/moment[\/\\]locale$/, /(en|pl)$/));
+
+		config.optimization.minimizer = [
+			...config.optimization.minimizer || [],
+			new TerserPlugin()
+		];
 	}
 
 	if (process.env.EXPOSE === 'ngrok') {

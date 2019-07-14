@@ -7,7 +7,7 @@ import { DataStoreProvider, IDataStoreProvider } from './data-store.provider';
 import { useStore } from './use-store';
 
 // prettier-ignore
-export class DataStoreModule {
+export default class DataStoreModule {
 	public static register<T extends object, A extends Action>(
 		// prettier-ignore
 		app: IApplication,

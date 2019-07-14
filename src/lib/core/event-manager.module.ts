@@ -9,7 +9,7 @@ import { IApplication, IEventEmitter } from 'lib/interfaces';
  * app.get<(name: string) => IEventEmitter>('event-manager:repository') // repository for named event emitters
  * app.get<IEventEmitter>('event-manager') // event emitter defined for `main` key
  */
-export class EventManagerModule {
+export default class EventManagerModule {
 	public static register(app: IApplication) {
 		app.bind<(name: string) => IEventEmitter>('event-manager:repository').toFactory(() => {
 			return memoize((name: string) => new EventEmitter());

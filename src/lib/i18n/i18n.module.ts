@@ -22,7 +22,7 @@ import {
 } from './i18n.interfaces';
 import { reducer } from './reducers/index';
 
-export class I18nModule {
+export default class I18nModule {
 	public static register(app: IApplication) {
 		// define logic needed to bootstrap module
 		app.bind('boot').toProvider(I18nBootProvider);

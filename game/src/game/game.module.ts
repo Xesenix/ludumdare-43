@@ -7,7 +7,7 @@ import { GameBootProvider } from './game-boot.provider';
 import { IGameState } from './game.interfaces';
 import { reducer } from './reducers';
 
-export class GameModule {
+export default class GameModule {
 	public static register(app: IApplication) {
 		app.bind('boot').toProvider(GameBootProvider);
 

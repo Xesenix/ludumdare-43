@@ -19,14 +19,20 @@ const componentNameRegexp = /function ([a-zA-Z0-9_]+)\(/;
 export function connectToInjector<T, I = any>(
 	// prettier-ignore
 	select: { [K in keyof I]: { dependencies: string[], value?: (...dependencies: any[]) => Promise<I[K]> } },
-	Preloader: React.FunctionComponent = () => <>loading...</>,
+	{
+		Preloader = () => <>loading...</>,
+		whenReady = () => Promise.resolve(),
+	}: {
+		Preloader?: React.FunctionComponent,
+		whenReady?: () => Promise<void>,
+	} = {},
 ) {
 	return <E extends T>(Consumer: React.ComponentType<E & I>) => {
 		const [, decoratedComponentNameMatch = ''] = componentNameRegexp.exec(Consumer.toString()) || [];
 		const className = `DI.Injector(${decoratedComponentNameMatch})`;
 
 		function DIInjector(props: E) {
-			const injectedState = useInjector<I>(select);
+			const injectedState = useInjector<I>(select, whenReady);
 
 			if (Object.keys(injectedState).length > 0) {
 				return <Consumer {...props} {...injectedState} />;

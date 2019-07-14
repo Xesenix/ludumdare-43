@@ -9,7 +9,7 @@ import { IAudioContextFactory, IAudioFileLoaderProvider, IAudioMixer, IAudioTrac
 import { lazyPhaserAudioLoaderServiceProvider } from './phaser/phaser-audio-loader.provider';
 import { lazyPhaserAudioManagerPluginProvider } from './phaser/phaser-audio-manager-plugin.provider';
 
-export class SoundModule {
+export default class SoundModule {
 	public static register(app: IApplication, phaser: boolean = true) {
 		// we don't want to provide AudioContext just as value because we want to wait for it being needed
 		app.bind<IAudioContextFactory>('audio-context:factory').toFactory(({ container }: interfaces.Context) => {

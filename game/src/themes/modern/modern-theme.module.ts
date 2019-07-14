@@ -1,8 +1,9 @@
 import { II18nTranslation } from 'lib/i18n';
 import { IApplication } from 'lib/interfaces';
-import { IAppTheme, IThemeBuilder, ThemeModule } from 'theme';
+import { IAppTheme, IThemeBuilder } from 'theme';
+import ThemeModule from 'theme/theme.module';
 
-export class ModernThemeModule {
+export default class ModernThemeModule {
 	public static register(app: IApplication) {
 		ThemeModule.registerTheme(
 			app,

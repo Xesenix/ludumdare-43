@@ -1,12 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Oswald');
 
+@import "./preload.scss";
+
+$footer-height: 32px;
+
 // FF fullscreen
 html {
 	overflow: auto;
 }
 
 body {
-	padding-bottom: 32px;
+	padding: 0 0 32px;
+	margin: 0;
 
 	// FF fullscreen
 	&:fullscreen {
@@ -21,11 +26,17 @@ body {
 
 .container {
 	display: grid;
+	min-height: calc(100vh - #{$footer-height});
+	justify-content: center;
 	position: relative;
 	z-index: 0;
 }
 
 .footer {
+	display: grid;
+	align-content: center;
+	height: $footer-height;
+	box-sizing: border-box;
 	background-color: black;
 	bottom: 0;
 	color: white;

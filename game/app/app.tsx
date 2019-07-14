@@ -63,7 +63,7 @@ const diDecorator = connectToInjector<IAppExternalProps, IAppInternalProps>({
 	getTheme: {
 		dependencies: ['theme:get-theme()'],
 	},
-});
+}, { Preloader: () => <Loader isLoading={true}/>, });
 
 function App(props: IAppProps) {
 	const { getTheme, bindToStore } = props;

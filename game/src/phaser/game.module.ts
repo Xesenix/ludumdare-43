@@ -1,4 +1,6 @@
-import { Container, ContainerModule, interfaces } from 'inversify';
+import { interfaces } from 'inversify';
+
+import { IApplication } from 'lib/interfaces';
 
 import { IPhaserGameProvider, PhaserGameProvider } from './game.provider';
 import { IntroSceneProvider } from './scene/intro.scene';
@@ -7,23 +9,25 @@ import { IntroSceneProvider } from './scene/intro.scene';
 export type IPhaserProvider = () => Promise<any>;
 
 // prettier-ignore
-export const PhaserGameModule = (container: Container) => new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind) => {
-	bind<IPhaserProvider>('phaser:provider')
-		.toProvider(() => () =>
-			import(/* webpackChunkName: "phaser" */ './phaser')
-				.then(({ default: Phaser }) => Phaser),
-		);
-	bind<IPhaserGameProvider>('phaser:game-provider').toProvider(PhaserGameProvider);
-	bind('phaser:scene:intro:provider').toProvider(IntroSceneProvider);
-	bind('phaser:plugins')
-		.toProvider((context: interfaces.Context) => (config = { key: 'ui:manager', start: true }) =>
-			import(/* webpackChunkName: "phaser" */ 'lib/phaser/ui-manager.plugin')
-				.then(
-					async ({ UIManagerPluginProvider }) => await UIManagerPluginProvider(context)(),
-				)
-				.then((UIManagerPlugin) => ({
-					...config,
-					plugin: UIManagerPlugin,
-				})),
-		);
-});
+export default class PhaserGameModule {
+	public static register(app: IApplication) {
+		app.bind<IPhaserProvider>('phaser:provider')
+			.toProvider(() => () =>
+				import(/* webpackChunkName: "phaser" */ './phaser')
+					.then(({ default: Phaser }) => Phaser),
+			);
+		app.bind<IPhaserGameProvider>('phaser:game-provider').toProvider(PhaserGameProvider);
+		app.bind('phaser:scene:intro:provider').toProvider(IntroSceneProvider);
+		app.bind('phaser:plugins')
+			.toProvider((context: interfaces.Context) => (config = { key: 'ui:manager', start: true }) =>
+				import(/* webpackChunkName: "phaser" */ 'lib/phaser/ui-manager.plugin')
+					.then(
+						async ({ UIManagerPluginProvider }) => await UIManagerPluginProvider(context)(),
+					)
+					.then((UIManagerPlugin) => ({
+						...config,
+						plugin: UIManagerPlugin,
+					})),
+			);
+	}
+}
