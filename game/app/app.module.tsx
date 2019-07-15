@@ -10,6 +10,8 @@ import ServiceWorkerModule from 'lib/service-worker/service-worker.module';
 import { DIContext } from 'lib/di';
 import { IApplication, IEventEmitter } from 'lib/interfaces';
 
+import 'reflect-metadata';
+
 declare const process: any;
 
 /**
