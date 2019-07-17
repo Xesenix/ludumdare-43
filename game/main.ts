@@ -3,12 +3,14 @@
 import(/* webpackChunkName: "preload" */ './app/preloader')
 	.then(({ default: PreloadComponent }) => PreloadComponent)
 	.then((PreloadComponent) => {
-		const root: HTMLElement = document.getElementById('app');
+		const root: HTMLElement | null = document.getElementById('app');
 
 		function preloadProgress(ev: any) {
 			console.log(ev.detail);
-			root.innerHTML = '';
-			root.appendChild(PreloadComponent(ev.detail.resource || {}));
+			if (root) {
+				root.innerHTML = '';
+				root.appendChild(PreloadComponent(ev.detail.resource || {}));
+			}
 		}
 		preloadProgress({ detail: {} });
 
