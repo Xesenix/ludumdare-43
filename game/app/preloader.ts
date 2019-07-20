@@ -1,27 +1,38 @@
-function element(tag: string, attributes: any, children: any[] = []) {
-	const el = document.createElement(tag);
+import { renderHtml } from 'lib/dom-helper';
+import { IPreloadProgress } from 'lib/preload';
 
-	Object.entries(attributes).forEach(([key, value]) => el.setAttribute(key, value));
-
-	children.forEach((child) => {
-		if (typeof child === 'string') {
-			el.appendChild(document.createTextNode(child));
-		} else {
-			el.appendChild(child);
-		}
+function PreloadComponent(
+	// prettier-ignore
+	progress: IPreloadProgress = {},
+	progressFormater = (loaded: number, total: number) => `${loaded} / ${total}`,
+	labelFormater = (label: string) => label,
+) {
+	const loaders = Object.entries(progress);
+	return renderHtml({
+		tag: 'div',
+		attributes: { class: 'preload' },
+		children: [
+			{
+				tag: 'div',
+				attributes: { class: 'content' },
+				children: [
+					{ tag: 'img', attributes: { src: 'assets/thumb.png' } },
+					{ tag: 'h1', children: ['Collecting tools'] },
+					{ tag: 'h2', children: ['Please wait while application is loading'] },
+					{
+						tag: 'div',
+						attributes: { class: 'resources' },
+						children: loaders.length > 0
+							? loaders.map(([key, { url, loaded, total }]) => [
+								{ tag: 'span', key, attributes: { class: 'label' }, children: [labelFormater(url)] },
+								{ tag: 'span', key, attributes: { class: 'progress' }, children: [progressFormater(loaded, total)] },
+							]).reduce((r, a) => [...r, ...a])
+							: [],
+					},
+				],
+			},
+		],
 	});
-
-	return el;
-}
-
-function PreloadComponent({ loaded = 0, total = 0 } = {}) {
-	return element('div', { class: 'preload' }, [
-		element('div', { class: 'content' }, [
-			element('h1', {}, ['Collecting tools']),
-			element('h2', {}, ['Please wait while application is loading']),
-			total > 0 ? element('h3', {}, [`${loaded} / ${total}`]) : null,
-		].filter(Boolean)),
-	]);
 }
 
 export default PreloadComponent;
