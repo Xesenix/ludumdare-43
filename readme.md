@@ -97,6 +97,12 @@ Links:
 
 * [MDN web docs - game development](https://developer.mozilla.org/en-US/docs/Games)
 
+### Handling download progress
+
+To be able to visualize progress of downloading modules splitted by weback I needed to use `ChunkProgressWebpackPlugin` it converts request for lazy loaded modules into XHR request. Unfortunately it didn't handle correctly progress of downloading gziped content. In general in chrome when downloading gziped content we get lengthComputable === false so we need to send additional header info with uncompressed data size [as suggested in stackoverflow](https://stackoverflow.com/questions/15097712/how-can-i-use-deflated-gzipped-content-with-an-xhr-onprogress-function/32799706#32799706).
+
+This solution requires to create own server that can add those additional data or not show precentage progress of downloading if this additional data is not available.
+
 ### Caveats
 
 * Why I don't use `Function.bind` and instead use instance functions when it supposed to be more optimized? [`this` in Typescript](https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript)

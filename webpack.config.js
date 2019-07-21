@@ -5,7 +5,7 @@ const { DuplicatesPlugin } = require('inspectpack/plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const NgrockWebpackPlugin = require('ngrock-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const ChunkProgressWebpackPlugin = require('chunk-progress-webpack-plugin');
+const ChunkProgressWebpackPlugin = require('./webpack/plugins/chunk-progress-webpack-plugin');
 const webpackBase = require('webpack');
 
 const { application, webpack } = require('xes-webpack-core');
