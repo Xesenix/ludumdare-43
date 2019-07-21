@@ -50,8 +50,9 @@ const factoryConfig = {
 const configureWebpack = (config) => {
 	console.log(chalk.bold.yellow('Base WEBPACK setup'), process.env.ENV);
 
-	config.output.filename = '[name].js';
-	config.output.chunkFilename = '[name].js';
+	// need hash because firefox annoying cache
+	config.output.filename = '[name].[hash].js';
+	config.output.chunkFilename = '[name].[hash].js';
 
 	// handle SPA routing redirecting any path to root index.html
 	// config.output.publicPath = '/';

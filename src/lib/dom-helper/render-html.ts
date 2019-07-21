@@ -10,11 +10,12 @@ interface IElementDescriptor {
 }
 
 export function renderHtml({ tag, key, attributes = {}, children = [] }: IElementDescriptor) {
+	const nodes = children.filter(Boolean);
 	const cacheKey = JSON.stringify({
 		tag,
 		key,
 		attributes,
-		children: children.map((child, index) => ({
+		children: nodes.map((child, index) => ({
 			key: typeof child === 'object' && !!child.key ? `node(${child.key})` : index,
 		})),
 	});
@@ -26,8 +27,8 @@ export function renderHtml({ tag, key, attributes = {}, children = [] }: IElemen
 		}
 	});
 
-	if (children.length > 0) {
-		children.forEach((child, index) => {
+	if (nodes.length > 0) {
+		nodes.forEach((child, index) => {
 			const node = el.childNodes[index];
 			if (!node) {
 				if (typeof child === 'string') {

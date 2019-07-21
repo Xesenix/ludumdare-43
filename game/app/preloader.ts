@@ -19,16 +19,16 @@ function PreloadComponent(
 					{ tag: 'img', attributes: { src: 'assets/thumb.png' } },
 					{ tag: 'h1', children: ['Collecting tools'] },
 					{ tag: 'h2', children: ['Please wait while application is loading'] },
-					{
-						tag: 'div',
-						attributes: { class: 'resources' },
-						children: loaders.length > 0
-							? loaders.map(([key, { url, loaded, total }]) => [
-								{ tag: 'span', key, attributes: { class: 'label' }, children: [labelFormater(url)] },
-								{ tag: 'span', key, attributes: { class: 'progress' }, children: [progressFormater(loaded, total)] },
-							]).reduce((r, a) => [...r, ...a])
-							: [],
-					},
+					loaders.length > 0
+						? {
+							tag: 'div',
+							attributes: { class: 'resources' },
+							children: loaders.map(([key, { url, loaded, total }]) => [
+									{ tag: 'span', key, attributes: { class: 'label' }, children: [labelFormater(url)] },
+									{ tag: 'span', key, attributes: { class: 'progress' }, children: [progressFormater(loaded, total)] },
+								]).reduce((r, a) => [...r, ...a]),
+						}
+						: null,
 				],
 			},
 		],
