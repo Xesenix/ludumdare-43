@@ -5,7 +5,6 @@ import * as ReactDOM from 'react-dom';
 // core
 import EventManagerModule from 'lib/core/event-manager.module';
 import DebugModule from 'lib/debug/debug.module';
-import ServiceWorkerModule from 'lib/service-worker/service-worker.module';
 
 import { DIContext } from 'lib/di';
 import { IApplication, IEventEmitter } from 'lib/interfaces';
@@ -36,8 +35,6 @@ export class AppModule extends Container implements IApplication {
 		this.bind<Document>('document').toConstantValue(document);
 		this.bind<Window>('window').toConstantValue(window);
 		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
-
-		ServiceWorkerModule.register(this);
 	}
 
 	public banner() {

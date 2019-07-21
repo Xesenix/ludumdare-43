@@ -62,6 +62,7 @@ const configureWebpack = (config) => {
 
 	const env = Object.entries(getEnv(process.env.ENV, app)).reduce((result, [key, value]) => {
 		result[`process.env.${key}`] = JSON.stringify(value);
+		process.env[key] = value;
 
 		return result;
 	}, {});
@@ -78,7 +79,7 @@ const configureWebpack = (config) => {
 		// this option doesn't work well with tests
 		// for some reason it mismatches files so karma doesn't see spec files
 		config.optimization.splitChunks = {
-			chunks: 'all',
+			// chunks: 'all',
 		};
 	}
 
@@ -102,7 +103,7 @@ const configureWebpack = (config) => {
 
 		config.optimization.minimizer = [
 			...config.optimization.minimizer || [],
-			new TerserPlugin()
+			new TerserPlugin(),
 		];
 	}
 

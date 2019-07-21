@@ -22,10 +22,9 @@ module.exports = (config) => {
 		}),
 	);
 
-	if (process.env.ENV === 'production') {
+	if (process.env.SERVICE_WORKER === 'true') {
 		console.log(chalk.bold.yellow('Adding Service Worker...'));
 		config.plugins = [
-			...config.plugins,
 			/**
 			 * @see https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
 			 */
@@ -48,6 +47,7 @@ module.exports = (config) => {
 				short_name: packageConfig.name,
 				theme_color: appConfig.templateData.themeColor,
 			}),
+			...config.plugins,
 		];
 	}
 
