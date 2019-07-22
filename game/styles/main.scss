@@ -13,6 +13,8 @@ body {
 	padding: 0 0 32px;
 	margin: 0;
 
+	font-family: "Oswald", "Helvetica", "Arial", sans-serif;
+
 	// FF fullscreen
 	&:fullscreen {
 		overflow: auto;
@@ -22,6 +24,12 @@ body {
 	&:-webkit-full-screen {
 		overflow: auto;
 	}
+}
+
+.ie {
+	display: block;
+	margin: 1rem;
+	text-align: center;
 }
 
 .container {

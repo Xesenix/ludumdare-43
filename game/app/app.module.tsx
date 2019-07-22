@@ -20,7 +20,11 @@ declare const process: any;
  * @extends {Container}
  */
 export class AppModule extends Container implements IApplication {
-	constructor() {
+	constructor(
+		root: HTMLElement,
+		document: Document,
+		window: Window,
+	) {
 		super();
 
 		if ((window as any).__inversifyDevtools__) {
@@ -34,7 +38,7 @@ export class AppModule extends Container implements IApplication {
 		// rendering DOM - from outside of react
 		this.bind<Document>('document').toConstantValue(document);
 		this.bind<Window>('window').toConstantValue(window);
-		this.bind<HTMLElement>('ui:root').toConstantValue(document.getElementById('app') as HTMLElement);
+		this.bind<HTMLElement>('ui:root').toConstantValue(root);
 	}
 
 	public banner() {
