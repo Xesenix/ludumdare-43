@@ -16,7 +16,7 @@ const filter = (contextLib) => contextLib
  * @see https://github.com/webpack-contrib/karma-webpack#alternative-usage
  */
 filter((require as any).context('./di', true, /\.(t|j)sx?$/));
-filter((require as any).context('./sound', true, /\.(t|j)sx?$/));
+filter((require as any).context('./audio', true, /\.(t|j)sx?$/));
 filter((require as any).context('./sound-scape', true, /\.(t|j)sx?$/));
 filter((require as any).context('./i18n', true, /\.(t|j)sx?$/));
 

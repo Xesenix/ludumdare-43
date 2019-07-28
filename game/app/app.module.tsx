@@ -62,14 +62,17 @@ export class AppModule extends Container implements IApplication {
 			import(/* webpackChunkName: "ui" */ 'lib/data-store/data-store.module'),
 			import(/* webpackChunkName: "ui" */ 'lib/fullscreen/fullscreen.module'),
 			import(/* webpackChunkName: "ui" */ 'lib/i18n/i18n.module'),
-			import(/* webpackChunkName: "ui" */ 'lib/sound/sound.module'),
-			import(/* webpackChunkName: "ui" */ 'lib/sound-scape/sound-scape.module'),
 			import(/* webpackChunkName: "ui" */ 'phaser/game.module'),
 			import(/* webpackChunkName: "ui" */ 'theme/theme.module'),
 			import(/* webpackChunkName: "ui" */ 'themes/default/default-theme.module'),
 			import(/* webpackChunkName: "ui" */ 'themes/modern/modern-theme.module'),
 			import(/* webpackChunkName: "ui" */ 'themes/sharp/sharp-theme.module'),
 			import(/* webpackChunkName: "ui" */ 'ui/ui.module'),
+			import(/* webpackChunkName: "audio" */ 'lib/audio/audio.module'),
+			// import(/* webpackChunkName: "audio" */ 'lib/phaser/audio.module'),
+			import(/* webpackChunkName: "audio" */ 'lib/audio/audio-loader.module'),
+			import(/* webpackChunkName: "audio" */ 'lib/sound-scape/sound-scape.module'),
+			import(/* webpackChunkName: "audio" */ 'sound-director/sound-director.module'),
 		];
 		return Promise.all<{ default: { register: (IApplication) => void } }>(dependencies)
 			.then((modules) => modules.forEach(({ default: m }) => m.register(this)));

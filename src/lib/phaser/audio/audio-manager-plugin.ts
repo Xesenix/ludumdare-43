@@ -1,17 +1,16 @@
 import { Store } from 'redux';
 
-import { createClassProvider } from 'lib/di';
-
 import {
 	// prettier-ignore
 	IAudioBufferRepository,
 	IAudioConfigurationState,
 	IAudioFileLoader,
 	IStateAwareAudioMixer,
-} from '../interfaces';
+} from 'lib/audio/interfaces';
+import { createClassProvider } from 'lib/di';
 
 // prettier-ignore
-export const AudioManagerPluginProvider = createClassProvider('audio-manager-plugin', [
+export const PhaserAudioManagerPluginProvider = createClassProvider('audio-manager-plugin', [
 	// prettier-ignore
 	'phaser:provider()',
 	'data-store',

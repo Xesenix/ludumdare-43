@@ -16,7 +16,6 @@ function annotate<T>(
 	decorate(injectable(), constructor);
 
 	(dependencies).forEach((injection: helperInterfaces.Injection, index: number) => {
-
 		if ((injection as helperInterfaces.IBasicInjection).type === undefined) {
 
 			// Add inject metadata

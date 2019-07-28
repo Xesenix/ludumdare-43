@@ -1,6 +1,6 @@
+import { IAudioTrack } from 'lib/audio';
 import { inject } from 'lib/di';
 import { IEventEmitter } from 'lib/interfaces';
-import { IAudioTrack } from 'lib/sound';
 
 import { IScheduledSoundtrack, ISoundtrack } from '../interfaces';
 

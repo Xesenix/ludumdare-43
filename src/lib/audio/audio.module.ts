@@ -2,15 +2,12 @@ import { interfaces } from 'inversify';
 import { IApplication } from 'lib/interfaces';
 
 import { AudioBufferRepository } from './audio-buffer-repository';
-import { audioLoaderProvider } from './audio-loader.provider';
 import { AudioMixer } from './audio-mixer';
 import { AudioMixerTrack } from './audio-mixer-track';
-import { IAudioContextFactory, IAudioFileLoaderProvider, IAudioMixer, IAudioTrack } from './interfaces';
-import { lazyPhaserAudioLoaderServiceProvider } from './phaser/phaser-audio-loader.provider';
-import { lazyPhaserAudioManagerPluginProvider } from './phaser/phaser-audio-manager-plugin.provider';
+import { IAudioContextFactory, IAudioMixer, IAudioTrack } from './interfaces';
 
-export default class SoundModule {
-	public static register(app: IApplication, phaser: boolean = true) {
+export default class AudioModule {
+	public static register(app: IApplication) {
 		// we don't want to provide AudioContext just as value because we want to wait for it being needed
 		app.bind<IAudioContextFactory>('audio-context:factory').toFactory(({ container }: interfaces.Context) => {
 			if (!container.isBound('audio-context')) {
@@ -18,14 +15,6 @@ export default class SoundModule {
 			}
 			return container.get('audio-context');
 		});
-
-		if (phaser) {
-			// TODO: this factory returns class figure out how to correctly type this binding
-			app.bind('phaser:plugins').toProvider(lazyPhaserAudioManagerPluginProvider);
-			app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(lazyPhaserAudioLoaderServiceProvider);
-		} else {
-			app.bind<IAudioFileLoaderProvider>('audio-loader:provider').toProvider(audioLoaderProvider);
-		}
 
 		app.bind<AudioBufferRepository>('audio-repository')
 			.to(AudioBufferRepository)

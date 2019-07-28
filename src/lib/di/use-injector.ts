@@ -36,6 +36,7 @@ export function useInjector<I>(
 						value = (dep: any) => Promise.resolve(dep),
 						dependencies,
 					}) => value.apply({}, dependencies.map((key) => {
+						// TODO: remove duplication implemented in decorators
 						const nameMatch = nameRegexp.exec(key);
 						const callMatch = callRegexp.exec(key);
 						const multipleMatch = multipleRegexp.exec(key);

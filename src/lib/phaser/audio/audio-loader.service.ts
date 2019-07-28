@@ -1,11 +1,10 @@
-import { createProvider, inject } from 'lib/di';
-
 import {
 	// prettier-ignore
 	IAudioBufferRepository,
 	IAudioContextFactory,
 	IAudioFileLoader,
-} from '../interfaces';
+} from 'lib/audio/interfaces';
+import { createProvider, inject } from 'lib/di';
 
 // prettier-ignore
 export const PhaserAudioLoaderServiceProvider = createProvider('phaser-audio-loader-service', [

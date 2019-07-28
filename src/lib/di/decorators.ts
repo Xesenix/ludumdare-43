@@ -1,5 +1,5 @@
 import * as inversify from 'inversify';
-import { interfaces as ii } from 'inversify';
+import { Container, interfaces as ii } from 'inversify';
 import memoize from 'lodash-es/memoize';
 
 import { helpers, interfaces as vi } from './helpers';
@@ -46,48 +46,54 @@ export function injectable(): any {
  * @param factory factory function into which we want to inject dependencies
  */
 export async function resolveDependencies<T = any>(
-	container: ii.Container,
+	container: Container,
 	dependencies: string[],
 	factory: (...args: any[]) => T,
 ) {
+	const nameRegexp = /\@([a-zA-Z0-9_-]+)/;
+	const callRegexp = /(\(\))/;
+	const multipleRegexp = /(\[\])$/;
 	const klass = factory(
 		...(await Promise.all(
-			dependencies.map((dep: string) => {
-				const multiple = dep.indexOf('[]') > -1;
-				const callable = dep.indexOf('()') > -1;
-				if (multiple) {
-					const key = dep.replace('[]', '').replace('()', '');
-					if (!container.isBound(key)) {
-						console.error('error:', dep, key, 'key not bound');
-						return Promise.reject();
-					}
-					const results = container.getAll<any>(key);
-					if (callable) {
-						try {
-							return Promise.all(results.map((result) => result()));
-						} catch (err) {
-							console.error('error:', dep, key, results, err);
-							return Promise.reject(err);
-						}
-					}
-					return Promise.all(results);
-				} else {
-					const key = dep.replace('()', '');
-					if (!container.isBound(key)) {
-						console.error('error:', dep, key, 'key not bound');
-						return Promise.reject();
-					}
-					const result = container.get<any>(key);
-					if (callable) {
-						try {
-							return result();
-						} catch (err) {
-							console.error('error:', dep, key, result, err);
-							return Promise.reject(err);
-						}
-					}
-					return Promise.resolve(result);
+			dependencies.map(async (key: string) => {
+				// TODO: remove duplication implemented in use-injector
+				const nameMatch = nameRegexp.exec(key);
+				const callMatch = callRegexp.exec(key);
+				const multipleMatch = multipleRegexp.exec(key);
+				const callable = !!callMatch;
+				let injection: any;
+
+				// handling keys with call signature:
+				// some_key()
+				if (!!callMatch) {
+					key = key.replace(callMatch[0], '');
 				}
+
+				if (!!multipleMatch) {
+					key = key.replace(multipleMatch[0], '');
+				}
+
+				// handling keys with named dependencies like:
+				// some_key@name
+				if (!!multipleMatch) {
+					if (!!nameMatch) {
+						key = key.replace(nameMatch[0], '');
+						injection = container.getAllNamed<any>(key, nameMatch[1]);
+					} else {
+						injection = container.getAll<any>(key);
+					}
+
+					return Promise.all(callable ? injection.map((dep) => dep()) : injection);
+				} else {
+					if (!!nameMatch) {
+						key = key.replace(nameMatch[0], '');
+						injection = container.getNamed<any>(key, nameMatch[1]);
+					} else {
+						injection = container.get<any>(key);
+					}
+				}
+
+				return callable ? injection() : injection;
 			}),
 		)),
 	);
