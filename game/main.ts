@@ -6,9 +6,10 @@ import PreloadComponent from './app/preloader';
 
 window.addEventListener('load', () => {
 	const root: HTMLElement = document.getElementById('app') || document.body;
-	console.log(window.navigator.userAgent);
+
 	const oldIE = window.navigator.userAgent.indexOf('MSIE ') >= 0;
 	const newIE = window.navigator.userAgent.indexOf('Trident/') >= 0;
+
 	if (oldIE || newIE) {
 		root.innerHTML = '';
 		root.appendChild(IEComponent());
