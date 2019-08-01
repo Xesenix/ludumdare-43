@@ -71,10 +71,10 @@ function replaceRequireEnsure(chunkId) {
 					xhr.onload = resolve;
 					xhr.onerror = reject;
 					xhr.send();
-				}).then(function (event) {
+				}).then(function (originalEvent) {
 					// TODO: sned request to chunk-progress-webpack-plugin to add possibility to handle custom size headers
 					// introduced change for handling gziped content
-					const total = parseInt(event.target.getResponseHeader('x-decompressed-content-length') || event.target.getResponseHeader('content-length'), 10);
+					const total = parseInt(originalEvent.target.getResponseHeader('x-decompressed-content-length') || originalEvent.target.getResponseHeader('content-length'), 10);
 					totalSize[url] = total;
 					progress.totalSize += total;
 					// ---
@@ -91,6 +91,7 @@ function replaceRequireEnsure(chunkId) {
 							document.dispatchEvent(new CustomEvent(
 								'chunk-progress-webpack-plugin', {
 									detail: {
+										originalEvent,
 										loaded: loaded,
 										total: progress.totalSize,
 										resource: {

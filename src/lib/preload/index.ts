@@ -17,9 +17,18 @@ export interface IPreloadProgress {
 export function preload(renderProgress: (progress: IPreloadProgress) => void, document: Document) {
 	let animationFrameHandler;
 	const progress: IPreloadProgress = {};
-	function preloadProgress(ev: any) {
-		if (ev.detail.resource.url) {
-			progress[ev.detail.resource.url] = Object.assign(progress[ev.detail.resource.url] || {}, ev.detail.resource);
+
+	function preloadProgress(event: any = {}) {
+		const { detail = {} } = event;
+		const { originalEvent = {}, resource = {} } = detail;
+		const { target = null } = originalEvent;
+		console.log('size', resource, target && target.getResponseHeader('x-decompressed-content-length'), target && target.getResponseHeader('content-length'));
+		const total = target
+			? parseInt(target.getResponseHeader('x-decompressed-content-length') || target.getResponseHeader('content-length'), 10)
+			: 0;
+
+		if (resource.url) {
+			progress[resource.url] = Object.assign(progress[resource.url] || {}, resource, { total });
 		}
 		animationFrameHandler = requestAnimationFrame(() => {
 			if (animationFrameHandler) {
@@ -27,7 +36,8 @@ export function preload(renderProgress: (progress: IPreloadProgress) => void, do
 			}
 		});
 	}
-	preloadProgress({ detail: { resource: {} } });
+
+	preloadProgress();
 
 	document.addEventListener('chunk-progress-webpack-plugin', preloadProgress);
 
