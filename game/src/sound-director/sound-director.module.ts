@@ -1,4 +1,4 @@
-import { IApplication } from 'lib/interfaces';
+import { IApplication, IEventEmitter } from 'lib/interfaces';
 import { ISoundtrack } from 'lib/sound-scape/interfaces';
 
 import { SoundDirectorBootProvider } from './sound-director-boot.provider';
@@ -52,7 +52,12 @@ export default class SoundDirectorModule {
 	public static register(app: IApplication) {
 		const console: Console = app.get<Console>('debug:console');
 		console.debug('SoundDirectorModule');
-		app.bind('boot').toProvider(SoundDirectorBootProvider);
+
+		app.get<IEventEmitter>('event-manager').on('app:boot', () => {
+			console.debug('SoundDirectorModule:initialize');
+			const soundDirector = app.get<SoundDirectorService>('sound-director');
+			soundDirector.start();
+		});
 
 		app.bind<SoundDirectorService>('sound-director').to(SoundDirectorService);
 		app.bind<ISoundtrack>('soundtrack').toConstantValue(ambient).whenTargetNamed('ambient');

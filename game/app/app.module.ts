@@ -1,12 +1,9 @@
 import { Container } from 'inversify';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 // core
 import EventManagerModule from 'lib/core/event-manager.module';
 import DebugModule from 'lib/debug/debug.module';
 
-import { DIContext } from 'lib/di';
 import { IApplication, IEventEmitter } from 'lib/interfaces';
 
 import 'reflect-metadata';
@@ -92,27 +89,17 @@ export class AppModule extends Container implements IApplication {
 
 	public start(): Promise<AppModule> {
 		// start all required modules
-		const console = this.get<Console>('debug:console');
-		const container = this.get<HTMLElement>('ui:root');
-
 		return this.load()
 			.then(() => this.boot())
 			.then(() => import(/* webpackChunkName: "app" */ './app'))
 			.then(({ default: App }) => {
 				this.banner();
-				this.get<IEventEmitter>('event-manager').emit('app:boot');
-
-				ReactDOM.render((
-						<DIContext.Provider value={this}>
-							<App />
-						</DIContext.Provider>
-					),
-					container,
-				);
+				this.get<IEventEmitter>('event-manager').emit('app:boot', { App });
 
 				return this;
 			},
 			(error) => {
+				const console = this.get<Console>('debug:console');
 				console.error(error);
 
 				return this;

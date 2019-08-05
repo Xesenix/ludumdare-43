@@ -1,3 +1,4 @@
+import { IEventEmitter } from 'lib/interfaces';
 import { IPreloadProgress, preload } from 'lib/preload';
 import ServiceWorkerModule from 'lib/service-worker/service-worker.module';
 
@@ -25,9 +26,10 @@ window.addEventListener('load', () => {
 			.then(() => import(/* webpackChunkName: "app" */ './app/app.module'))
 			.then(({ AppModule }) => {
 				const app = new AppModule(root, document, window);
+				app.get<IEventEmitter>('event-manager').on('app:boot', clearPreload);
 
 				// loading other application modules
-				return app.start().then(clearPreload);
+				return app.start();
 			});
 	}
 });

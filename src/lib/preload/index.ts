@@ -22,7 +22,7 @@ export function preload(renderProgress: (progress: IPreloadProgress) => void, do
 		const { detail = {} } = event;
 		const { originalEvent = {}, resource = {} } = detail;
 		const { target = null } = originalEvent;
-		console.log('size', resource, target && target.getResponseHeader('x-decompressed-content-length'), target && target.getResponseHeader('content-length'));
+
 		const total = target
 			? parseInt(target.getResponseHeader('x-decompressed-content-length') || target.getResponseHeader('content-length'), 10)
 			: 0;
