@@ -32,7 +32,7 @@ const diDecorator = connectToInjector<IVolumeExternalProps, IVolumeInternalProps
 
 type IVolumeProps = IVolumeExternalProps & IVolumeInternalProps;
 
-function VolumeComponent(props: IVolumeProps) {
+function MasterVolumeComponent(props: IVolumeProps) {
 	const {
 		// prettier-ignore
 		dispatchSetVolumeAction,
@@ -51,4 +51,4 @@ function VolumeComponent(props: IVolumeProps) {
 	);
 }
 
-export default hot(module)(diDecorator(VolumeComponent));
+export default hot(module)(diDecorator(MasterVolumeComponent));

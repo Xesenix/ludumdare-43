@@ -71,7 +71,7 @@ export class AppModule extends Container implements IApplication {
 			import(/* webpackChunkName: "audio" */ 'lib/sound-scape/sound-scape.module'),
 			import(/* webpackChunkName: "audio" */ 'sound-director/sound-director.module'),
 		];
-		return Promise.all<{ default: { register: (IApplication) => void } }>(dependencies)
+		return Promise.all<{ default: { register: (app: IApplication) => void } }>(dependencies)
 			.then((modules) => modules.forEach(({ default: m }) => m.register(this)));
 	}
 
@@ -92,18 +92,19 @@ export class AppModule extends Container implements IApplication {
 		return this.load()
 			.then(() => this.boot())
 			.then(() => import(/* webpackChunkName: "app" */ './app'))
-			.then(({ default: App }) => {
-				this.banner();
-				this.get<IEventEmitter>('event-manager').emit('app:boot', { App });
+			.then(
+				({ default: App }) => {
+					this.banner();
+					this.get<IEventEmitter>('event-manager').emit('app:boot', { App });
 
-				return this;
-			},
-			(error) => {
-				const console = this.get<Console>('debug:console');
-				console.error(error);
+					return this;
+				},
+				(error) => {
+					const console = this.get<Console>('debug:console');
+					console.error(error);
 
-				return this;
-			},
-		);
+					return this;
+				},
+			);
 	}
 }
