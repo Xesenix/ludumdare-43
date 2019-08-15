@@ -12,7 +12,7 @@ export interface IPreloadProgress {
  * Requires chunk-progress-webpack-plugin to work.
  *
  * @param renderProgress function rendering preload view
- * @param root dome node for rendering progress component
+ * @param root DOM node for rendering progress component
  */
 export function preload(renderProgress: (progress: IPreloadProgress) => void, document: Document) {
 	let animationFrameHandler;
@@ -21,15 +21,18 @@ export function preload(renderProgress: (progress: IPreloadProgress) => void, do
 	function preloadProgress(event: any = {}) {
 		const { detail = {} } = event;
 		const { originalEvent = {}, resource = {} } = detail;
-		const { target = null } = originalEvent;
+		const { target = null, lengthComputable = false } = originalEvent;
 
 		const total = target
-			? parseInt(target.getResponseHeader('x-decompressed-content-length') || target.getResponseHeader('content-length'), 10)
+			? lengthComputable
+				? parseInt(target.getResponseHeader('content-length'), 10)
+				: parseInt(target.getResponseHeader('x-decompressed-content-length'), 10) || 0
 			: 0;
 
 		if (resource.url) {
 			progress[resource.url] = Object.assign(progress[resource.url] || {}, resource, { total });
 		}
+
 		animationFrameHandler = requestAnimationFrame(() => {
 			if (animationFrameHandler) {
 				renderProgress(progress);
