@@ -13,7 +13,7 @@ export default class ServiceWorkerModule {
 				});
 		}
 
-		console.log('ServiceWorkerModule:service worker unaviable');
+		console.log('ServiceWorkerModule:service worker unavailable');
 
 		return Promise.resolve();
 	}
