@@ -113,9 +113,9 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 				elevation={0}
 			>
 				<Slide
-					key={location.key}
-					in={true}
 					direction="left"
+					in={true}
+					key={location.key}
 				>
 					<div className={classes.container}>{content}</div>
 				</Slide>

@@ -37,11 +37,11 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 
 	return (
 		<form className={classes.root}>
-			<Typography variant="h5" component="h1" className={classes.section}>
+			<Typography className={classes.section} component="h1" variant="h5">
 				{__('Sound configuration')}
 			</Typography>
 			<SoundConfigurationComponent />
-			<Typography variant="h5" component="h1" className={classes.section}>
+			<Typography className={classes.section} component="h1" variant="h5">
 				{__('User interface configuration')}
 			</Typography>
 			<UIConfigurationComponent />

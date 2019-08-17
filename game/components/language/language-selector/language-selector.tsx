@@ -21,7 +21,10 @@ function LanguageSelectorComponent(props: ILanguageSelectorViewProps) {
 	]);
 	// tslint:disable:jsx-no-lambda
 	return (
-		<Select value={language} onChange={(event) => update(event.target.value as any as LanguageType)}>
+		<Select
+			onChange={(event) => update(event.target.value as any as LanguageType)}
+			value={language}
+		>
 			<MenuItem value={'en'}>{__('english')}</MenuItem>
 			<MenuItem value={'pl'}>{__('polish')}</MenuItem>
 		</Select>

@@ -47,7 +47,13 @@ function MusicVolumeComponent(props: IMusicVolumeProps) {
 	]);
 
 	return (
-		<Slider min={0} max={1} step={1 / 32} value={musicVolume} onChange={dispatchSetMusicVolumeAction as any} />
+		<Slider
+			max={1}
+			min={0}
+			onChange={dispatchSetMusicVolumeAction as any}
+			step={1 / 32}
+			value={musicVolume}
+		/>
 	);
 }
 

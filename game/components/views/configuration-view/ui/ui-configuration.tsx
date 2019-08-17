@@ -40,7 +40,7 @@ export function UIConfigurationComponent(props: IConfigurationViewProps) {
 
 	return (
 		<>
-			<Grid item xs={12} container component="section" className={classes.section}>
+			<Grid className={classes.section} component="section" container item xs={12}>
 				<FormControl className={classes.formControl}>
 					<InputLabel>{__('language')}</InputLabel>
 					<LanguageSelectorComponent />

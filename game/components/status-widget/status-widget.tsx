@@ -52,15 +52,15 @@ function StatusWidgetComponent(props: IStatusWidgetProps): any {
 	return (
 		<Paper className={classes.root} elevation={0}>
 			<Grid container>
-				<Grid className={classes.resources} item xs={6} sm={4}>
+				<Grid className={classes.resources} item sm={4} xs={6}>
 					<Typography variant="h5">{__(`Resources`)}</Typography>
 					<Typography className={classes.resourcesAmountLabel} variant="h4">
 						{resources.current}
 						<Typography
 							// prettier-ignore
 							className={resources.income > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-							variant="h5"
 							component="span"
+							variant="h5"
 						>
 							({resources.income > 0 ? '+' : ''}
 							{resources.income})
@@ -68,18 +68,18 @@ function StatusWidgetComponent(props: IStatusWidgetProps): any {
 					</Typography>
 					{compact ? null : <Typography variant="caption">{__(`Hire more workers to collect more resources.`)}</Typography>}
 				</Grid>
-				<Grid className={classes.year} item xs={12} sm={4}>
+				<Grid className={classes.year} item sm={4} xs={12}>
 					<Typography variant="h4">{_$(turn + 1, `Year one`, `Year %{turn}`, { turn: turn + 1 })}</Typography>
 				</Grid>
-				<Grid className={classes.population} item xs={6} sm={4}>
+				<Grid className={classes.population} item sm={4} xs={6}>
 					<Typography variant="h5">{__(`Population`)}</Typography>
 					<Typography className={classes.populationAmountLabel} variant="h4">
 						{population.current}
 						<Typography
 							// prettier-ignore
 							className={population.change > 0 ? classes.positiveChangeLabel : classes.negativeChangeLabel}
-							variant="h5"
 							component="span"
+							variant="h5"
 						>
 							{population.change ? `(${population.change > 0 ? '+' : ''}${population.change})` : null}
 						</Typography>

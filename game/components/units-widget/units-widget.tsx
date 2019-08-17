@@ -53,25 +53,25 @@ function UnitsWidgetComponent(props: IUnitsWidgetProps): any {
 		>
 			<Typography
 				// prettier-ignore
+				align="center"
 				className={classes.unitNameLabel}
 				variant="h5"
-				align="center"
 			>
 				{label}
 			</Typography>
 			<Typography
 				// prettier-ignore
+				align="center"
 				className={classes.unitAmountLabel}
 				variant="h3"
-				align="center"
 			>
 				{amount}
 				{change === 0 ? null : (
 					<Typography
 						// prettier-ignore
 						className={change > 0 ? classes.unitPositiveChangeLabel : classes.unitNegativeChangeLabel}
-						variant="h4"
 						component="span"
+						variant="h4"
 					>
 						({change > 0 ? '+' : ''}
 						{change})
@@ -81,9 +81,9 @@ function UnitsWidgetComponent(props: IUnitsWidgetProps): any {
 			{compact ? null : (
 				<Typography
 					// prettier-ignore
+					align="center"
 					className={classes.description}
 					variant="caption"
-					align="center"
 				>
 					{children}
 				</Typography>

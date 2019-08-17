@@ -37,13 +37,13 @@ function IntroViewComponent(props: IIntroViewProps) {
 
 	return (
 		<Paper className={classes.root} elevation={0}>
-			<Typography className={classes.title} variant="h1" component="h1" align="center">
+			<Typography align="center" className={classes.title} component="h1" variant="h1">
 				{__( `The greatest sacrifice` )}
 			</Typography>
-			<Typography className={classes.subtitle} variant="h4" component="h2" align="center">
+			<Typography align="center" className={classes.subtitle} component="h2" variant="h4">
 				{__( `Ludumdare 43 edition` )}
 			</Typography>
-			<Typography className={classes.description} variant="h5" component="p" align="center">
+			<Typography align="center" className={classes.description} component="p" variant="h5">
 				{__( `You are the leader of a small village in this very hostile world.` )}{' '}
 				{__( `You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own.` )}
 				<br />
@@ -54,9 +54,9 @@ function IntroViewComponent(props: IIntroViewProps) {
 				{__( `Go to ludumdare 43 game page` )}
 			</Button>
 			<Fab
+				className={classes.cta}
 				color="primary"
 				component={GameLink}
-				className={classes.cta}
 				variant="extended"
 			>
 				{__( `Play` )}

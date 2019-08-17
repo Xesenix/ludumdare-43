@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core';
+import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -17,7 +17,16 @@ const i18nTileLabel = (__: II18nTranslation) => __('Loading error');
 const i18nDescriptionLabel = (__: II18nTranslation) => __('Something went wrong while loading module try again later.');
 const i18nCtaLabel = (__: II18nTranslation) => __('Retry');
 
-function Loader({ classes, isLoading, retry = null, size = 128 }) {
+/** Component public properties required to be provided by parent component. */
+export interface ILoaderPropsExternalProps {
+	isLoading: boolean;
+	retry?: (() => void) | null;
+	size?: number;
+}
+
+type ILoaderProps = ILoaderPropsExternalProps & WithStyles<typeof styles>;
+
+function Loader({ classes, isLoading, retry = null, size = 128 }: ILoaderProps) {
 	return (
 		<div
 			className={classes.root}
@@ -28,30 +37,31 @@ function Loader({ classes, isLoading, retry = null, size = 128 }) {
 				: (
 					<Paper className={classes.notification}>
 						<Typography
-							className={classes.title}
-							variant="h5"
-							component="title"
 							align="center"
+							className={classes.title}
+							component="title"
+							variant="h5"
 						>
 							<I18nLabel render={i18nTileLabel}/>
 						</Typography>
 						<Typography
-							className={classes.description}
-							variant="body2"
-							component="p"
 							align="center"
+							className={classes.description}
+							component="p"
+							variant="body2"
 						>
 							<I18nLabel render={i18nDescriptionLabel}/>
 						</Typography>
-						{ !!retry
-							? <Fab
-								className={classes.cta}
-								color="default"
-								onClick={retry}
-								variant="extended"
-							>
-								<I18nLabel render={i18nCtaLabel}/>
-							</Fab>
+						{ retry != null
+							?
+								<Fab
+									className={classes.cta}
+									color="default"
+									onClick={retry}
+									variant="extended"
+								>
+									<I18nLabel render={i18nCtaLabel}/>
+								</Fab>
 							: null
 						}
 					</Paper>

@@ -79,12 +79,11 @@ function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
 	return (
 		<Grid className={classes.root} container spacing={8}>
 			<Grid item xs={12}>
-				<Typography variant="h4" component="h3">
+				<Typography component="h3" variant="h4">
 					{__(`Sacrifices made %{count}`, { count: sacrificeCount })}:
 				</Typography>
 				{compact ? null : (
 					<Typography
-						variant="caption"
 						component="p"
 						dangerouslySetInnerHTML={{
 							__html: __(
@@ -97,15 +96,16 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 								},
 							),
 						}}
+						variant="caption"
 					/>
 				)}
 			</Grid>
 			<Grid item xs={12}>
-				<Typography variant="h6" component="h4">
+				<Typography component="h4" variant="h6">
 					{__(`Immunity`)}
 				</Typography>
 				{compact ? null : (
-					<Typography variant="caption" component="p">
+					<Typography component="p" variant="caption">
 						{__(`Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year.`, {
 							resourceCost,
 						})}
@@ -114,45 +114,45 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 				<Button
 					// prettier-ignore
 					color="secondary"
-					variant="contained"
 					disabled={disabled || !canSacraficeForImmunity(currentState)}
 					onClick={game.sacrificeResourcesForImmunityAction}
 					size="small"
+					variant="contained"
 				>
 					{__(`Sacrifice %{resourceCost}&nbsp;resources`, { resourceCost })}
 				</Button>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h6" component="h4">
+				<Typography component="h4" variant="h6">
 					{__(`Weakness lvl %{weaknessLevel}`, { weaknessLevel })}
 				</Typography>
 				{compact ? null : (
 					<Typography
-						variant="caption"
 						component="p"
 						dangerouslySetInnerHTML={{
 							__html: __(`This sacrifice permanently weakness enemies by -%{perLevelWeaknessReduction}% multiplicative for every level.`, {
 								perLevelWeaknessReduction,
 							}),
 						}}
+						variant="caption"
 					/>
 				)}
 				<Typography
-					variant="caption"
 					component="p"
 					dangerouslySetInnerHTML={{
 						__html: __(`Current enemy power reduction <strong>%{powerReduction}%</strong>`, {
 							powerReduction,
 						}),
 					}}
+					variant="caption"
 				/>
 				<Button
 					color="secondary"
-					variant="contained"
 					disabled={disabled || !canSacraficeForEnemiesWeakness(currentState)}
 					onClick={game.sacrificeIdlesForEnemiesWeaknessAction}
 					size="small"
+					variant="contained"
 				>
 					{__(`Sacrifice %{populationCost}&nbsp;idle population (next level %{nextLevelWeaknessReduction}%)`, {
 						nextLevelWeaknessReduction,

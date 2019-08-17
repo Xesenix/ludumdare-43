@@ -2,8 +2,8 @@ import { connectToInjector } from 'lib/di';
 import { IAppThemesDescriptors } from 'theme';
 
 export interface IThemeSelectorViewProps {
-	items: IAppThemesDescriptors;
 	bindToStore: (keys: (keyof IThemeState)[]) => IThemeState;
+	items: IAppThemesDescriptors;
 	update: (value: string) => void;
 }
 
@@ -12,11 +12,11 @@ interface IThemeState {
 }
 
 export const themeDIDecorator = connectToInjector<{}, IThemeSelectorViewProps>({
-	items: {
-		dependencies: ['theme:theme-descriptors:provider()'],
-	},
 	bindToStore: {
 		dependencies: ['data-store:bind'],
+	},
+	items: {
+		dependencies: ['theme:theme-descriptors:provider()'],
 	},
 	update: {
 		dependencies: ['ui:actions@setTheme'],

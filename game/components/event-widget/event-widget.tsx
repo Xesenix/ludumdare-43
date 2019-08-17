@@ -138,15 +138,15 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 							className={classes.consequencesContainer}
 							container
 							item
-							xs={12}
 							sm={8}
+							xs={12}
 						>
 							<Grid item xs={12}>
 								<Typography
 									// prettier-ignore
 									className={classes.label}
-									variant="h5"
 									component="p"
+									variant="h5"
 								>
 									{__(`Attack consequences`)}
 								</Typography>

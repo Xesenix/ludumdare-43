@@ -84,16 +84,16 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 	return (
 		<Grid className={classes.root} container spacing={8}>
 			<Grid item xs={12}>
-				<Typography variant="h4" component="h3">
+				<Typography component="h3" variant="h4">
 					{__(`Buildings`)}:
 				</Typography>
 			</Grid>
 			<Grid item xs={12}>
-				<Typography variant="h6" component="h4">
+				<Typography component="h4" variant="h6">
 					{__(`Wall lvl %{wallLevel}`, { wallLevel })}
 				</Typography>
 				{compact ? null : (
-					<Typography variant="caption" component="p">
+					<Typography component="p" variant="caption">
 						{__(`Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)`, {
 							wallsReduction,
 							wallsBuildCost,
@@ -103,20 +103,20 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 				<Button
 					// prettier-ignore
 					color="secondary"
-					variant="contained"
 					disabled={disabled || !canBuildWalls(currentState)(1)}
 					onClick={buildWall}
+					variant="contained"
 				>
 					{__(`Build wall %{wallsBuildCost} resources`, { wallsBuildCost })}
 				</Button>
 			</Grid>
 
 			<Grid item xs={12}>
-				<Typography variant="h6" component="h4">
+				<Typography component="h4" variant="h6">
 					{__(`Cottage lvl %{cottagesLevel}`, { cottagesLevel })}
 				</Typography>
 				{compact ? null : (
-					<Typography variant="caption" component="p">
+					<Typography component="p" variant="caption">
 						{__(`Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)`, {
 							cottagesLevel,
 							cottagesBuildCost,
@@ -126,9 +126,9 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 				<Button
 					// prettier-ignore
 					color="secondary"
-					variant="contained"
 					disabled={disabled || !canBuildCottages(currentState)(1)}
 					onClick={buildCottage}
+					variant="contained"
 				>
 					{__(`Build cottage %{cottagesBuildCost} resources`, { cottagesBuildCost })}
 				</Button>

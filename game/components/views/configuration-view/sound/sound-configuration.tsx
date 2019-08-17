@@ -25,12 +25,12 @@ export interface ISoundConfigurationExternalProps {}
 /** Internal component properties include properties injected via dependency injection. */
 interface ISoundConfigurationInternalProps {
 	__: II18nTranslation;
+	bindToStore: (keys: (keyof ISoundConfigurationState)[]) => ISoundConfigurationState;
 	di?: Container;
 	dispatchSetEffectsMutedAction: (event: any, checked: boolean) => void;
 	dispatchSetMusicMutedAction: (event: any, checked: boolean) => void;
 	dispatchSetMutedAction: (event: any, checked: boolean) => void;
 	getTheme: () => IAppTheme;
-	bindToStore: (keys: (keyof ISoundConfigurationState)[]) => ISoundConfigurationState;
 }
 
 /** Internal component state. */
@@ -50,6 +50,9 @@ const diDecorator = connectToInjector<ISoundConfigurationExternalProps, ISoundCo
 	__: {
 		dependencies: ['i18n:translate'],
 	},
+	bindToStore: {
+		dependencies: ['data-store:bind'],
+	},
 	dispatchSetEffectsMutedAction: {
 		dependencies: ['ui:actions@setEffectsMuted'],
 		value: (setEffectsMuted: (value: boolean) => void) => Promise.resolve((event: any, checked: boolean) => setEffectsMuted(checked)),
@@ -65,21 +68,18 @@ const diDecorator = connectToInjector<ISoundConfigurationExternalProps, ISoundCo
 	getTheme: {
 		dependencies: ['theme:get-theme()'],
 	},
-	bindToStore: {
-		dependencies: ['data-store:bind'],
-	},
 });
 
 export function SoundConfigurationComponent(props: ISoundConfigurationProps) {
 	const {
 		// prettier-ignore
 		__,
+		bindToStore,
 		classes,
 		dispatchSetEffectsMutedAction,
 		dispatchSetMusicMutedAction,
 		dispatchSetMutedAction,
 		getTheme,
-		bindToStore,
 	} = props;
 	const {
 		// prettier-ignore
@@ -110,61 +110,61 @@ export function SoundConfigurationComponent(props: ISoundConfigurationProps) {
 
 	return (
 		<>
-			<Grid container spacing={0} alignItems="stretch" component="section" className={classes.section}>
-				<Grid item xs={12} sm={4}>
+			<Grid alignItems="stretch" className={classes.section} component="section" container spacing={0}>
+				<Grid item sm={4} xs={12}>
 					<FormControlLabel
 						className={classes.margin}
+						control={<Checkbox checked={mute} checkedIcon={muteOnIcon} icon={muteOffIcon} onChange={dispatchSetMutedAction} />}
 						label={__('master mute')}
-						control={<Checkbox checkedIcon={muteOnIcon} icon={muteOffIcon} checked={mute} onChange={dispatchSetMutedAction} />}
 					/>
 				</Grid>
-				<Grid item xs={12} sm={4}>
+				<Grid item sm={4} xs={12}>
 					<FormControlLabel
 						className={classes.margin}
+						control={<Checkbox checked={musicMuted} checkedIcon={musicOffIcon} icon={musicOnIcon} onChange={dispatchSetMusicMutedAction} />}
 						label={__('music mute')}
-						control={<Checkbox checkedIcon={musicOffIcon} icon={musicOnIcon} checked={musicMuted} onChange={dispatchSetMusicMutedAction} />}
 					/>
 				</Grid>
-				<Grid item xs={12} sm={4}>
+				<Grid item sm={4} xs={12}>
 					<FormControlLabel
 						className={classes.margin}
+						control={<Checkbox checked={effectsMuted} checkedIcon={soundOffIcon} icon={soundOnIcon} onChange={dispatchSetEffectsMutedAction} />}
 						label={__('fx mute')}
-						control={<Checkbox checkedIcon={soundOffIcon} icon={soundOnIcon} checked={effectsMuted} onChange={dispatchSetEffectsMutedAction} />}
 					/>
 				</Grid>
-				<Grid item xs={12} container>
-					<Grid item xs={12} md={3}>
+				<Grid container item xs={12}>
+					<Grid item md={3} xs={12}>
 						<FormControlLabel
 							className={classes.margin}
-							label={__('master volume')}
 							control={<span className={classes.icon}>{mute ? muteOnIcon : muteOffIcon}</span>}
+							label={__('master volume')}
 						/>
 					</Grid>
-					<Grid item xs={12} md={9} className={classes.slider}>
+					<Grid className={classes.slider} item xs={12} md={9}>
 						<MasterVolumeComponent />
 					</Grid>
 				</Grid>
-				<Grid item xs={12} container>
-					<Grid item xs={12} md={3}>
+				<Grid container item xs={12}>
+					<Grid item md={3} xs={12}>
 						<FormControlLabel
 							className={classes.margin}
-							label={__('music volume')}
 							control={<span className={classes.icon}>{mute || musicMuted ? musicOffIcon : musicOnIcon}</span>}
+							label={__('music volume')}
 						/>
 					</Grid>
-					<Grid item xs={12} md={9} className={classes.slider}>
+					<Grid className={classes.slider} item xs={12} md={9}>
 						<MusicVolumeSliderComponent />
 					</Grid>
 				</Grid>
-				<Grid item xs={12} container>
-					<Grid item xs={12} md={3}>
+				<Grid container item xs={12}>
+					<Grid item md={3} xs={12}>
 						<FormControlLabel
 							className={classes.margin}
-							label={__('sound volume')}
 							control={<span className={classes.icon}>{mute || effectsMuted ? soundOffIcon : soundOnIcon}</span>}
+							label={__('sound volume')}
 						/>
 					</Grid>
-					<Grid item xs={12} md={9} className={classes.slider}>
+					<Grid className={classes.slider} item md={9} xs={12}>
 						<EffectsVolumeComponent />
 					</Grid>
 				</Grid>

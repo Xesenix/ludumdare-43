@@ -47,7 +47,13 @@ function MasterVolumeComponent(props: IVolumeProps) {
 	]);
 
 	return (
-		<Slider min={0} max={1} step={1 / 32} value={volume} onChange={dispatchSetVolumeAction as any} />
+		<Slider
+			max={1}
+			min={0}
+			onChange={dispatchSetVolumeAction as any}
+			step={1 / 32}
+			value={volume}
+		/>
 	);
 }
 

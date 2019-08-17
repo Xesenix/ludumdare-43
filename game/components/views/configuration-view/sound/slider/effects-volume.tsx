@@ -47,7 +47,13 @@ function EffectsVolumeComponent(props: IEffectsVolumeProps) {
 	]);
 
 	return (
-		<Slider min={0} max={1} step={1 / 32} value={effectsVolume} onChange={dispatchSetEffectsVolumeAction as any} />
+		<Slider
+			max={1}
+			min={0}
+			onChange={dispatchSetEffectsVolumeAction as any}
+			step={1 / 32}
+			value={effectsVolume}
+		/>
 	);
 }
 

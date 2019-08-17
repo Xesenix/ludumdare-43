@@ -40,12 +40,12 @@ function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
 	const {
 		// prettier-ignore
 		__,
+		canTrain,
 		classes,
+		disabled,
 		label,
 		train,
 		trained = 0,
-		disabled,
-		canTrain,
 	} = props;
 
 	const updateStep = React.useCallback((ev: KeyboardEvent) => {

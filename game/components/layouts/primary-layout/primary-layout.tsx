@@ -88,8 +88,8 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 					<Hidden mdUp>
 						<TopMenuButton
 							color="primary"
-							onClick={toggleDrawer}
 							Icon={MenuIcon}
+							onClick={toggleDrawer}
 						/>
 					</Hidden>
 				</Toolbar>
@@ -112,9 +112,9 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 				elevation={0}
 			>
 				<Slide
-					key={location.key}
-					in={true}
 					direction="left"
+					in={true}
+					key={location.key}
 				>
 					<div className={classes.container}>{content}</div>
 				</Slide>

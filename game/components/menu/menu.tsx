@@ -22,9 +22,9 @@ import LanguageSelectorComponent from './language-selector/language-selector';
 export interface IMenuItemExternalProps {
 	active?: boolean;
 	activeColor?: PropTypes.Color;
+	ActiveIcon?: React.ComponentType;
 	color?: PropTypes.Color;
 	component?: React.ReactType;
-	ActiveIcon?: React.ComponentType;
 	Icon?: React.ComponentType;
 	label?: React.ReactNode;
 	onClick?: () => void;
@@ -46,13 +46,13 @@ interface IMenuInternalProps extends IStoreComponentInternalProps<IMenuState> {
 
 /** Internal component state. */
 interface IMenuState {
-	fullscreen: boolean;
-	mute: boolean;
 	compactMode: boolean;
+	fullscreen: boolean;
 	/** required for interface updates after changing application language */
 	language: LanguageType;
 	/** required for interface updates after loading language */
 	languages: any;
+	mute: boolean;
 }
 
 type IMenuProps = IMenuExternalProps & IMenuInternalProps & RouteComponentProps;
@@ -115,8 +115,8 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 						// prettier-ignore
 						color="primary"
 						component={ConfigLink}
-						key="config"
 						Icon={theme.icons.config}
+						key="config"
 						label={__('Configuration')}
 					/>
 				) : null}
@@ -126,8 +126,8 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 						// prettier-ignore
 						color="primary"
 						component={GameLink}
-						key="game"
 						Icon={theme.icons.undo}
+						key="game"
 						label={__('Back')}
 					/>
 				) : null}
@@ -135,30 +135,30 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 				<MenuItem
 					// prettier-ignore
 					active={fullscreen}
-					color="default"
-					key="fullscreen"
-					onClick={this.toggleFullScreen}
 					ActiveIcon={theme.icons.fullscreenOn}
+					color="default"
 					Icon={theme.icons.fullscreenOff}
+					key="fullscreen"
 					label={__('Fullscreen')}
+					onClick={this.toggleFullScreen}
 				/>
 
 				<MenuItem
 					// prettier-ignore
 					active={mute}
-					color="default"
-					onClick={this.toggleMute}
 					ActiveIcon={theme.icons.muteOn}
+					color="default"
 					Icon={theme.icons.muteOff}
 					label={__('Mute')}
+					onClick={this.toggleMute}
 				/>
 				<MenuItem
 					// prettier-ignore
 					active={compactMode}
-					color="default"
 					activeColor="secondary"
-					onClick={this.toggleCompactMode}
+					color="default"
 					label={__('Compact')}
+					onClick={this.toggleCompactMode}
 				/>
 
 				<LanguageSelectorComponent MenuItem={MenuItem} />

@@ -161,14 +161,14 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 		const consequences: IGameState = game.calculateConsequences();
 
 		const restartBlock = (
-			<Grid item xs={12} style={{ padding: '24px', textAlign: 'center' }}>
+			<Grid item style={{ padding: '24px', textAlign: 'center' }} xs={12}>
 				<Fab
 					// prettier-ignore
 					color="default"
-					variant="extended"
 					disabled={blockNextTurn}
 					onClick={game.resetGame}
 					size="large"
+					variant="extended"
 				>
 					{__('Restart')}
 				</Fab>
@@ -181,15 +181,15 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 
 		const winBlock = (
 			<Paper className={classes.root} elevation={0}>
-				<Grid container spacing={0} alignItems="center">
-					<Grid item xs={12} style={{ marginBottom: '12px' }}>
+				<Grid alignItems="center" container spacing={0}>
+					<Grid item style={{ marginBottom: '12px' }} xs={12}>
 						<PhaserViewComponent keepInstanceOnRemove />
 					</Grid>
 					<Grid item xs={12}>
-						<Typography variant="h4" component="h3" align="center">
+						<Typography align="center" component="h3" variant="h4">
 							{__(`Your village is safe everybody are in heaven now.`)}
 						</Typography>
-						<Typography variant="subtitle1" component="p" align="center">
+						<Typography align="center" component="p" variant="subtitle1">
 							{_$(
 								// prettier-ignore
 								currentState.turn,
@@ -236,8 +236,8 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 
 		const loseBlock = (
 			<Paper className={classes.root} elevation={0}>
-				<Grid container spacing={0} alignItems="center">
-					<Grid item xs={12} style={{ marginBottom: '12px' }}>
+				<Grid alignItems="center" container spacing={0}>
+					<Grid item style={{ marginBottom: '12px' }} xs={12}>
 						<PhaserViewComponent keepInstanceOnRemove />
 					</Grid>
 					<Grid item xs={12}>
@@ -259,7 +259,7 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 		const gameBlock = (
 			<Paper className={classes.root} elevation={0}>
 				<Grid container spacing={compactMode ? 1 : 3}>
-					<Grid item sm={12} xs={12} style={{ marginBottom: '12px' }}>
+					<Grid item sm={12} style={{ marginBottom: '12px' }} xs={12}>
 						{compactMode ? null : <PhaserViewComponent keepInstanceOnRemove />}
 						<EventWidgetComponent
 							// prettier-ignore
@@ -267,7 +267,7 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 							currentState={currentState}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={12}>
+					<Grid item sm={12} xs={12}>
 						<StatusWidgetComponent
 							// prettier-ignore
 							compact={compactMode}
@@ -283,109 +283,109 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 							turn={currentState.turn}
 						/>
 					</Grid>
-					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
+					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							compact={compactMode}
-							label={__('Idlers')}
 							amount={getCurrentIdles(currentState)}
 							change={getCurrentIdles(consequences) - getCurrentIdles(currentState)}
+							compact={compactMode}
+							label={__('Idlers')}
 						>
 							{__(`Population without occupation will produce children in rate 1 child per every 2 idle persons.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
+					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							compact={compactMode}
-							label={__('Children')}
 							amount={getCurrentChildren(currentState)}
 							change={getCurrentChildren(consequences) - getCurrentChildren(currentState)}
+							compact={compactMode}
+							label={__('Children')}
 						>
 							{__(`Those young villagers will become idle population in next year (if they survive next year attack).
 They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
+					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
+							amount={getCurrentWorkers(currentState)}
+							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
 							compact={compactMode}
 							label={__('Workers')}
-							amount={getCurrentWorkers(currentState)}
 							trained={getTrainedWorkers(currentState)}
-							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
 						>
 							{__(`Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={compactMode ? 6 : 12} sm={compactMode ? 3 : 6}>
+					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
+							amount={getCurrentGuards(currentState)}
+							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
 							compact={compactMode}
 							label={__('Guards')}
-							amount={getCurrentGuards(currentState)}
 							trained={getTrainedGuards(currentState)}
-							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
 						>
 							{__(`They will protect other units from being attacked and resources from being stolen.
 Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.`)}
 						</UnitsWidgetComponent>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item sm={6} xs={12}>
 						<TrainWidgetComponent
 							// prettier-ignore
+							canTrain={canTrainWorkers(currentState)}
 							disabled={blockNextTurn}
 							label={__('train/release workers')}
-							canTrain={canTrainWorkers(currentState)}
 							train={game.trainWorkers}
 							trained={getTrainedWorkers(currentState)}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item sm={6} xs={12}>
 						<TrainWidgetComponent
 							// prettier-ignore
+							canTrain={canTrainGuards(currentState)}
 							disabled={blockNextTurn}
 							label={__('train/release guards')}
-							canTrain={canTrainGuards(currentState)}
 							train={game.trainGuards}
 							trained={getTrainedGuards(currentState)}
 						/>
 					</Grid>
-					<Grid className={classes.actionbar} container item xs={12} justify="center">
+					<Grid className={classes.actionbar} container item justify="center" xs={12}>
 						<Fab
 							// prettier-ignore
 							color="primary"
-							variant="extended"
 							disabled={blockNextTurn}
 							onClick={this.progressToNextTurn}
 							size="large"
+							variant="extended"
 						>
 							<ActionIcon />
 							{currentState.immunity ? __('Continue') : __('Defend yourself')}
 						</Fab>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item sm={6} xs={12}>
 						<SacrificesWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
+							disabled={blockNextTurn}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item sm={6} xs={12}>
 						<BuildingsWidgetComponent
 							// prettier-ignore
-							disabled={blockNextTurn}
 							compact={compactMode}
+							disabled={blockNextTurn}
 						/>
 					</Grid>
-					<Grid className={classes.actionbar} container item xs={12} justify="center">
+					<Grid className={classes.actionbar} container item justify="center" xs={12}>
 						<Fab
 							// prettier-ignore
 							color="primary"
-							variant="extended"
 							disabled={blockNextTurn || !canMakeUltimateSacrifice(currentState)}
 							onClick={game.makeUltimateSacrificeAction}
 							size="large"
+							variant="extended"
 						>
 							<WinIcon />{' '}
 							{__(`Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)`, {

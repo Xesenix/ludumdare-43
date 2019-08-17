@@ -22,7 +22,10 @@ function ThemeSelectorComponent(props: IThemeSelectorViewProps) {
 	]);
 	// tslint:disable:jsx-no-lambda
 	return (
-		<Select value={theme} onChange={(event) => update(event.target.value as string)}>
+		<Select
+			onChange={(event) => update(event.target.value as string)}
+			value={theme}
+		>
 			{
 				Object.entries<IAppThemeDescriptor>(items)
 					.map(([key, { localizedLabel }]) => (
