@@ -1,10 +1,11 @@
 import { connectToInjector } from 'lib/di';
-import { II18nTranslation } from 'lib/i18n';
+import { II18nTranslation, ILanguageDescriptor } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
 
 export interface ILanguageSelectorViewProps {
 	__: II18nTranslation;
 	bindToStore: (keys: (keyof ILanguageState)[]) => ILanguageState;
+	availableLanguages: ILanguageDescriptor[];
 	update: (value: LanguageType) => void;
 }
 
@@ -18,6 +19,9 @@ export const languageDIDecorator = connectToInjector<{}, ILanguageSelectorViewPr
 	},
 	bindToStore: {
 		dependencies: ['data-store:bind'],
+	},
+	availableLanguages: {
+		dependencies: ['i18n:available-languages'],
 	},
 	update: {
 		dependencies: ['i18n:actions@setCurrentLanguage'],

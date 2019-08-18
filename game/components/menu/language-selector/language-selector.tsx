@@ -2,6 +2,8 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
 import { ILanguageSelectorViewProps, languageDIDecorator } from 'components/language/decorator';
+import { ILanguageDescriptor } from 'lib/i18n';
+
 import { IMenuItemExternalProps } from '../menu';
 
 interface IMenuLanguageSelectorExternalProps {
@@ -13,6 +15,8 @@ type IMenuLanguageSelectorViewProps = IMenuLanguageSelectorExternalProps & ILang
 function LanguageSelectorComponent(props: IMenuLanguageSelectorViewProps) {
 	const {
 		// prettier-ignore
+		__,
+		availableLanguages,
 		bindToStore,
 		update,
 		MenuItem,
@@ -24,22 +28,19 @@ function LanguageSelectorComponent(props: IMenuLanguageSelectorViewProps) {
 	// tslint:disable:jsx-no-lambda
 	return (
 		<>
-			<MenuItem
-				// prettier-ignore
-				active={language === 'pl'}
-				color="default"
-				activeColor="secondary"
-				onClick={() => update('pl')}
-				label="PL"
-			/>
-			<MenuItem
-				// prettier-ignore
-				active={language === 'en'}
-				color="default"
-				activeColor="secondary"
-				onClick={() => update('en')}
-				label="EN"
-			/>
+			{
+				availableLanguages.map(({ locale, i18nShortLabel }: ILanguageDescriptor) => (
+					<MenuItem
+						// prettier-ignore
+						active={language === locale}
+						activeColor="secondary"
+						color="default"
+						key={locale}
+						label={i18nShortLabel(__)}
+						onClick={() => update(locale)}
+					/>
+				))
+			}
 		</>
 	);
 }

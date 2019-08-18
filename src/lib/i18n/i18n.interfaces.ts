@@ -28,3 +28,9 @@ export interface II18nState extends Object {
 }
 
 export type I18nAction = IValueAction<any> | ISetLanguageReadyAction;
+
+export interface ILanguageDescriptor {
+	i18nLabel: (__: II18nTranslation) => string;
+	i18nShortLabel: (__: II18nTranslation) => string;
+	locale: LanguageType;
+}

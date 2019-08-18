@@ -4,8 +4,12 @@ import { Container } from 'inversify';
 import EventManagerModule from 'lib/core/event-manager.module';
 import DebugModule from 'lib/debug/debug.module';
 
-import { IApplication, IEventEmitter } from 'lib/interfaces';
+import {
+	IApplication,
+	IEventEmitter,
+} from 'lib/interfaces';
 
+import I18nModule from 'i18n/i18n.module';
 import 'reflect-metadata';
 
 declare const process: any;
@@ -36,6 +40,9 @@ export class AppModule extends Container implements IApplication {
 		this.bind<Document>('document').toConstantValue(document);
 		this.bind<Window>('window').toConstantValue(window);
 		this.bind<HTMLElement>('ui:root').toConstantValue(root);
+
+		// i18n - app localization setup
+		I18nModule.register(this);
 	}
 
 	public banner() {

@@ -6,6 +6,7 @@ import { ICreateSetAction, LanguageType } from 'lib/interfaces';
 
 import { ICreateSetLanguageReadyAction } from './actions';
 import { i18n } from './i18n';
+import { II18nTranslation, ILanguageDescriptor } from './i18n.interfaces';
 
 export type SetLanguageReadyActionType = (locale: LanguageType, value: boolean) => void;
 
@@ -47,6 +48,17 @@ export function I18nBootProvider({ container }: interfaces.Context) {
 		.then((store: Store<any, any>) => {
 			console.debug('I18nBootProvider:boot');
 
+			if (!container.isBound('i18n:available-languages')) {
+				console.debug('I18nBootProvider:use default available languages');
+				container.bind<ILanguageDescriptor[]>('i18n:available-languages').toConstantValue([
+					{
+						i18nLabel: (__: II18nTranslation) => __('english'),
+						i18nShortLabel: (__: II18nTranslation) => __('EN'),
+						locale: 'en' as LanguageType,
+					},
+				]);
+			}
+
 			const createSetCurrentLanguageAction = container.get<ICreateSetAction<LanguageType>>('data-store:action:create:set-current-language');
 			container.bind('i18n:actions')
 				.toConstantValue((value: LanguageType) => store.dispatch(createSetCurrentLanguageAction(value)))
@@ -61,6 +73,6 @@ export function I18nBootProvider({ container }: interfaces.Context) {
 			const sync = syncLocaleWithStore(store, setLanguageReadyAction);
 			store.subscribe(sync);
 
-			return sync();
+			return sync().catch(console.error);
 		});
 }
