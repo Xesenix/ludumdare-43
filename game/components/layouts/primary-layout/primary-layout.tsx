@@ -1,4 +1,3 @@
-import { Slide, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -16,6 +15,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
+import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 
 // icons
@@ -25,7 +25,7 @@ import DrawerMenuButton from 'components/core/drawer-menu-button';
 import TopMenuButton from 'components/core/top-menu-button';
 import { IMenuExternalProps } from 'components/menu/menu';
 
-import { styles } from './primary-layout.styles';
+import { useStyles } from './primary-layout.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IPrimaryLayoutExternalProps {
@@ -44,7 +44,7 @@ interface IPrimaryLayoutState {
 	drawerOpen: boolean;
 }
 
-type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & RouteComponentProps & WithStyles<typeof styles>;
+type IPrimaryLayoutProps = IPrimaryLayoutExternalProps & IPrimaryLayoutInternalProps & RouteComponentProps;
 
 const diDecorator = connectToInjector<IPrimaryLayoutExternalProps, IPrimaryLayoutInternalProps>({
 	...diStoreComponentDependencies,
@@ -58,13 +58,14 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 	const {
 		// prettier-ignore
 		bindToStore,
-		classes,
 		content = null,
 		dispatchSetDrawerOpenAction,
 		loading = false,
 		location,
 		Menu,
 	} = props;
+
+	const classes = useStyles();
 
 	const { drawerOpen } = bindToStore([
 		// prettier-ignore
@@ -123,4 +124,4 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(withRouter(diDecorator(PrimaryLayoutComponent)))) as any as React.ComponentType<IPrimaryLayoutExternalProps>;
+export default hot(module)(withRouter(diDecorator(PrimaryLayoutComponent))) as any as React.ComponentType<IPrimaryLayoutExternalProps>;

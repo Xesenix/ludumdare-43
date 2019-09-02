@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -6,11 +5,15 @@ import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
 // elements
-import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 
-import { styles } from './configuration-view.styles';
+import GameConfigurationComponent from './game/game-configuration';
 import SoundConfigurationComponent from './sound/sound-configuration';
 import UIConfigurationComponent from './ui/ui-configuration';
+
+import { useStyles } from './configuration-view.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewExternalProps {}
@@ -20,7 +23,7 @@ interface IConfigurationViewInternalProps {
 	__: II18nTranslation;
 }
 
-type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
+type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps;
 
 const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
 	__: {
@@ -32,9 +35,9 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 	} = props;
 
+	const classes = useStyles();
 	return (
 		<form className={classes.root}>
 			<Typography className={classes.section} component="h1" variant="h5">
@@ -49,4 +52,4 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(ConfigurationViewComponent)));
+export default hot(module)(diDecorator(ConfigurationViewComponent));

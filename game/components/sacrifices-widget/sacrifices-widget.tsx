@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import produce from 'immer';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
@@ -30,7 +29,7 @@ import {
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { styles } from './sacrifices-widget.styles';
+import { useStyles } from './sacrifices-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface ISacrificesWidgetExternalProps {
@@ -44,7 +43,7 @@ interface ISacrificesWidgetInternalProps {
 	game: Game;
 }
 
-type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps & WithStyles<typeof styles>;
+type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps;
 
 const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrificesWidgetInternalProps>({
 	__: {
@@ -59,11 +58,13 @@ function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 		compact,
 		disabled,
 		game,
 	} = props;
+
+	const classes = useStyles();
+
 	const currentState = game.getState();
 
 	const turn = currentState.turn;
@@ -164,4 +165,4 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(SacrificesWidgetComponent)));
+export default hot(module)(diDecorator(SacrificesWidgetComponent));

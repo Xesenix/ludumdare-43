@@ -13,7 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import LanguageSelectorComponent from 'components/language/language-selector/language-selector';
 import ThemeSelectorComponent from 'components/theme/theme-selector/theme-selector';
 
-import { styles } from '../configuration-view.styles';
+import { useStyles } from '../configuration-view.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IConfigurationViewExternalProps {}
@@ -23,7 +23,7 @@ interface IConfigurationViewInternalProps {
 	__: II18nTranslation;
 }
 
-type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & WithStyles<typeof styles>;
+type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps;
 
 const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
 	__: {
@@ -35,8 +35,9 @@ export function UIConfigurationComponent(props: IConfigurationViewProps) {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 	} = props;
+
+	const classes = useStyles();
 
 	return (
 		<>
@@ -54,4 +55,4 @@ export function UIConfigurationComponent(props: IConfigurationViewProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(UIConfigurationComponent))) as React.FunctionComponent<IConfigurationViewExternalProps>;
+export default hot(module)(diDecorator(UIConfigurationComponent)) as React.FunctionComponent<IConfigurationViewExternalProps>;

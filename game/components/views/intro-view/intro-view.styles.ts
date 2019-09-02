@@ -1,9 +1,9 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { fluidSize } from 'lib/jss';
 import { IAppTheme } from 'theme';
 
-export const styles = (theme: Theme) => {
+export const useStyles = makeStyles((theme: Theme) => {
 	const appTheme: IAppTheme = theme as IAppTheme;
 	const title = {
 		...(theme.typography as any).title,
@@ -42,4 +42,4 @@ export const styles = (theme: Theme) => {
 			...fluidSize('width', 280, 480, 320, 1280),
 		},
 	});
-};
+});

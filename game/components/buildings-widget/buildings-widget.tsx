@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
@@ -29,7 +28,7 @@ import {
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { styles } from './buildings-widget.styles';
+import { useStyles } from './buildings-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IBuildingsWidgetExternalProps {
@@ -45,7 +44,7 @@ interface IBuildingsWidgetInternalProps {
 	store?: Store<any, any>;
 }
 
-type IBuildingsWidgetProps = IBuildingsWidgetExternalProps & IBuildingsWidgetInternalProps & WithStyles<typeof styles>;
+type IBuildingsWidgetProps = IBuildingsWidgetExternalProps & IBuildingsWidgetInternalProps;
 
 const diDecorator = connectToInjector<IBuildingsWidgetExternalProps, IBuildingsWidgetInternalProps>({
 	__: {
@@ -60,11 +59,12 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 		compact,
 		disabled,
 		game,
 	} = props;
+
+	const classes = useStyles();
 
 	const buildWall = React.useCallback(() => {
 		game.buildWalls(1);
@@ -137,4 +137,4 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(BuildingsWidgetComponent)));
+export default hot(module)(diDecorator(BuildingsWidgetComponent));

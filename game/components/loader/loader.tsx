@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -11,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { II18nTranslation } from 'lib/i18n';
 import I18nLabel from 'lib/i18n/components/i18n-label';
 
-import { styles } from './loader.styles';
+import { useStyles } from './loader.styles';
 
 const i18nTileLabel = (__: II18nTranslation) => __('Loading error');
 const i18nDescriptionLabel = (__: II18nTranslation) => __('Something went wrong while loading module try again later.');
@@ -24,9 +23,11 @@ export interface ILoaderPropsExternalProps {
 	size?: number;
 }
 
-type ILoaderProps = ILoaderPropsExternalProps & WithStyles<typeof styles>;
+type ILoaderProps = ILoaderPropsExternalProps;
 
-function Loader({ classes, isLoading, retry = null, size = 128 }: ILoaderProps) {
+function Loader({ isLoading, retry = null, size = 128 }: ILoaderProps) {
+	const classes = useStyles();
+
 	return (
 		<div
 			className={classes.root}
@@ -71,4 +72,4 @@ function Loader({ classes, isLoading, retry = null, size = 128 }: ILoaderProps) 
 	);
 }
 
-export default hot(module)(withStyles(styles)(Loader));
+export default hot(module)(Loader);

@@ -1,4 +1,4 @@
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -7,7 +7,7 @@ import Fab from '@material-ui/core/Fab';
 
 import { IMenuItemExternalProps } from 'components/menu/menu';
 
-export const styles = (theme: Theme) => {
+export const useStyles = makeStyles((theme: Theme) => {
 	return createStyles({
 		root: {
 			'& svg': {
@@ -23,14 +23,16 @@ export const styles = (theme: Theme) => {
 		secondary: {},
 		focusVisible: {},
 	});
-};
+}, { name: 'TopMenuButton' });
 
-function TopMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styles>) {
+function TopMenuButton(props: IMenuItemExternalProps) {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
+
+	const classes = useStyles();
 
 	return (
 		<Fab
-			classes={props.classes}
+			classes={classes}
 			color={props.active && props.activeColor ? props.activeColor : props.color}
 			component={props.component as any}
 			onClick={props.onClick}
@@ -42,4 +44,4 @@ function TopMenuButton(props: IMenuItemExternalProps & WithStyles<typeof styles>
 	);
 }
 
-export default hot(module)(withStyles(styles, { name: 'TopMenuButton' })(TopMenuButton));
+export default hot(module)(TopMenuButton);

@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -10,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { connectToInjector } from 'lib/di';
 import { II18nPluralTranslation, II18nTranslation } from 'lib/i18n';
 
-import { styles } from './status-widget.styles';
+import { useStyles } from './status-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IStatusWidgetExternalProps {
@@ -26,7 +25,7 @@ interface IStatusWidgetInternalProps {
 	_$: II18nPluralTranslation;
 }
 
-type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps & WithStyles<typeof styles>;
+type IStatusWidgetProps = IStatusWidgetExternalProps & IStatusWidgetInternalProps;
 
 const diDecorator = connectToInjector<IStatusWidgetExternalProps, IStatusWidgetInternalProps>({
 	__: {
@@ -42,12 +41,13 @@ function StatusWidgetComponent(props: IStatusWidgetProps): any {
 		// prettier-ignore
 		__,
 		_$,
-		classes,
 		compact,
 		population,
 		resources,
 		turn,
 	} = props;
+
+	const classes = useStyles();
 
 	return (
 		<Paper className={classes.root} elevation={0}>
@@ -92,4 +92,4 @@ function StatusWidgetComponent(props: IStatusWidgetProps): any {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(StatusWidgetComponent)));
+export default hot(module)(diDecorator(StatusWidgetComponent));

@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const title = {
 	padding: '12px',
@@ -6,7 +6,7 @@ const title = {
 	textAlign: 'center' as 'center', // if its not casted it complains about beeing type string
 };
 
-export const styles = (theme: Theme) =>
+export const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		attackTitle: {
 			...title,
@@ -50,4 +50,4 @@ export const styles = (theme: Theme) =>
 			color: theme.palette.secondary.contrastText,
 			backgroundColor: theme.palette.secondary.main,
 		},
-	});
+	}));

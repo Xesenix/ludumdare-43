@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core';
 import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
@@ -17,7 +16,7 @@ import EffectsVolumeComponent from './slider/effects-volume';
 import MasterVolumeComponent from './slider/master-volume';
 import MusicVolumeSliderComponent from './slider/music-volume';
 
-import { styles } from '../configuration-view.styles';
+import { useStyles } from '../configuration-view.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface ISoundConfigurationExternalProps {}
@@ -44,7 +43,7 @@ interface ISoundConfigurationState {
 	mute: boolean;
 }
 
-type ISoundConfigurationProps = ISoundConfigurationExternalProps & ISoundConfigurationInternalProps & WithStyles<typeof styles>;
+type ISoundConfigurationProps = ISoundConfigurationExternalProps & ISoundConfigurationInternalProps;
 
 const diDecorator = connectToInjector<ISoundConfigurationExternalProps, ISoundConfigurationInternalProps>({
 	__: {
@@ -75,7 +74,6 @@ export function SoundConfigurationComponent(props: ISoundConfigurationProps) {
 		// prettier-ignore
 		__,
 		bindToStore,
-		classes,
 		dispatchSetEffectsMutedAction,
 		dispatchSetMusicMutedAction,
 		dispatchSetMutedAction,
@@ -94,6 +92,7 @@ export function SoundConfigurationComponent(props: ISoundConfigurationProps) {
 		'musicMuted',
 		'mute',
 	]);
+	const classes = useStyles();
 	const theme = getTheme();
 	const MuteOffIcon = theme.icons.muteOff;
 	const muteOffIcon = <MuteOffIcon />;
@@ -173,4 +172,4 @@ export function SoundConfigurationComponent(props: ISoundConfigurationProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(SoundConfigurationComponent))) as React.FunctionComponent<ISoundConfigurationExternalProps>;
+export default hot(module)(diDecorator(SoundConfigurationComponent)) as React.FunctionComponent<ISoundConfigurationExternalProps>;

@@ -184,7 +184,7 @@ export default (
 			container: {
 				wrapper: {
 					maxWidth: '1200px',
-					padding: `64px 64px`,
+					padding: `32px 64px`,
 					background: palette.background.paper,
 					boxShadow: palette.type === 'dark' ? 'inset 2px 2px 4px #000' : 'none',
 					[breakpoints.down('sm')]: {

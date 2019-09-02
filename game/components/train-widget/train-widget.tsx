@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -9,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { styles } from './train-widget.styles';
+import { useStyles } from './train-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface ITrainUnitsWidgetExternalProps {
@@ -26,7 +25,7 @@ interface ITrainUnitsWidgetInternalProps {
 	__: II18nTranslation;
 }
 
-type ITrainUnitsWidgetProps = ITrainUnitsWidgetExternalProps & ITrainUnitsWidgetInternalProps & WithStyles<typeof styles>;
+type ITrainUnitsWidgetProps = ITrainUnitsWidgetExternalProps & ITrainUnitsWidgetInternalProps;
 
 const diDecorator = connectToInjector<ITrainUnitsWidgetExternalProps, ITrainUnitsWidgetInternalProps>({
 	__: {
@@ -41,12 +40,13 @@ function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
 		// prettier-ignore
 		__,
 		canTrain,
-		classes,
 		disabled,
 		label,
 		train,
 		trained = 0,
 	} = props;
+
+	const classes = useStyles();
 
 	const updateStep = React.useCallback((ev: KeyboardEvent) => {
 		const newStep = ev.ctrlKey ? 25 : ev.altKey ? 5 : 1;
@@ -135,4 +135,4 @@ function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(TrainUnitsWidgetComponent)));
+export default hot(module)(diDecorator(TrainUnitsWidgetComponent));

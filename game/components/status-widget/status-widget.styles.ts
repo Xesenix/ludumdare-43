@@ -1,6 +1,6 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-export const styles = (theme: Theme) =>
+export const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			background: 'transparent !important',
@@ -59,4 +59,4 @@ export const styles = (theme: Theme) =>
 		negativeChangeLabel: {
 			color: '#c70000',
 		},
-	});
+	}));

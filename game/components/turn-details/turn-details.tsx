@@ -1,8 +1,5 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Container } from 'inversify';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Store } from 'redux';
 
 // elements
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { styles } from './turn-details.styles';
+import { useStyles } from './turn-details.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface ITurnDetailsExternalProps {
@@ -25,7 +22,7 @@ interface ITurnDetailsInternalProps {
 	__: II18nTranslation;
 }
 
-type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
+type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps;
 
 const diDecorator = connectToInjector<ITurnDetailsExternalProps, ITurnDetailsInternalProps>({
 	__: {
@@ -37,9 +34,10 @@ function TurnDetailsComponent(props: ITurnDetailsProps): any {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 		consequences,
 	} = props;
+
+	const classes = useStyles();
 
 	return (
 		<Paper className={classes.root} elevation={1}>
@@ -139,4 +137,4 @@ function TurnDetailsComponent(props: ITurnDetailsProps): any {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(TurnDetailsComponent)));
+export default hot(module)(diDecorator(TurnDetailsComponent));

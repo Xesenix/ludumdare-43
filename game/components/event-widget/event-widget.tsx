@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -24,7 +23,7 @@ import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
 import { getWallsLevel, getWallsReduction } from 'game/models/buildings/walls';
-import { styles } from './event-widget.styles';
+import { useStyles } from './event-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IEventWidgetExternalProps {
@@ -37,7 +36,7 @@ interface IEventWidgetInternalProps {
 	__: II18nTranslation;
 }
 
-type IEventWidgetProps = IEventWidgetExternalProps & IEventWidgetInternalProps & WithStyles<typeof styles>;
+type IEventWidgetProps = IEventWidgetExternalProps & IEventWidgetInternalProps;
 
 const diDecorator = connectToInjector<IEventWidgetExternalProps, IEventWidgetInternalProps>({
 	__: {
@@ -49,10 +48,12 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 	const {
 		// prettier-ignore
 		__,
-		classes,
 		consequences,
 		currentState,
 	} = props;
+
+	const classes = useStyles();
+
 	const {
 		// prettier-ignore
 		event,
@@ -197,4 +198,4 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 	return description;
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(EventWidgetComponent)));
+export default hot(module)(diDecorator(EventWidgetComponent));

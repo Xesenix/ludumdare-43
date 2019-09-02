@@ -1,4 +1,3 @@
-import { withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -13,7 +12,7 @@ import { II18nTranslation } from 'lib/i18n';
 
 import { GameLink } from 'components/core/navigation-links';
 
-import { styles } from './intro-view.styles';
+import { useStyles } from './intro-view.styles';
 
 /** Component public properties required to be provided by parent component. */
 export interface IIntroViewExternalProps {
@@ -24,7 +23,7 @@ interface IIntroViewInternalProps {
 	__: II18nTranslation;
 }
 
-type IIntroViewProps = IIntroViewExternalProps & IIntroViewInternalProps & WithStyles<typeof styles>;
+type IIntroViewProps = IIntroViewExternalProps & IIntroViewInternalProps;
 
 const diDecorator = connectToInjector<IIntroViewExternalProps, IIntroViewInternalProps>({
 	__: {
@@ -33,7 +32,8 @@ const diDecorator = connectToInjector<IIntroViewExternalProps, IIntroViewInterna
 });
 
 function IntroViewComponent(props: IIntroViewProps) {
-	const { classes, __ } = props;
+	const { __ } = props;
+	const classes = useStyles();
 
 	return (
 		<Paper className={classes.root} elevation={0}>
@@ -65,4 +65,4 @@ function IntroViewComponent(props: IIntroViewProps) {
 	);
 }
 
-export default hot(module)(withStyles(styles)(diDecorator(IntroViewComponent)));
+export default hot(module)(diDecorator(IntroViewComponent));
