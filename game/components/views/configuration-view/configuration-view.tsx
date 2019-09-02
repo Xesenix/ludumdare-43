@@ -31,6 +31,14 @@ const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigur
 	},
 });
 
+function TabPanel({ selected, index, children, ...props }) {
+	return (
+		<Container hidden={selected !== index} {...props}>
+			{ children }
+		</Container>
+	);
+}
+
 export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	const {
 		// prettier-ignore
@@ -38,17 +46,34 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	} = props;
 
 	const classes = useStyles();
+
+	const [selectedTab, selectTab] = React.useState(0);
+
+	const onTabChange = React.useCallback((event: React.ChangeEvent<{}>, newValue: number) => {
+		selectTab(newValue);
+	}, [selectTab]);
+
 	return (
-		<form className={classes.root}>
-			<Typography className={classes.section} component="h1" variant="h5">
-				{__('Sound configuration')}
-			</Typography>
-			<SoundConfigurationComponent />
-			<Typography className={classes.section} component="h1" variant="h5">
-				{__('User interface configuration')}
-			</Typography>
-			<UIConfigurationComponent />
-		</form>
+		<Container className={classes.root}>
+			<Tabs
+				onChange={onTabChange}
+				scrollButtons="on"
+				value={selectedTab}
+				variant="scrollable"
+			>
+				<Tab label={__('Sound configuration')}/>
+				<Tab label={__('User interface configuration')}/>
+			</Tabs>
+
+			<TabPanel className={classes.section} index={0} selected={selectedTab}>
+				<SoundConfigurationComponent />
+			</TabPanel>
+
+			<TabPanel className={classes.section} index={1} selected={selectedTab}>
+				<UIConfigurationComponent />
+			</TabPanel>
+
+		</Container>
 	);
 }
 
