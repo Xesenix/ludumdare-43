@@ -20,10 +20,13 @@ function ThemeSelectorComponent(props: IThemeSelectorViewProps) {
 		// prettier-ignore
 		'theme',
 	]);
+
+	const onChange = React.useCallback((event) => update(event.target.value as string), [update]);
+
 	// tslint:disable:jsx-no-lambda
 	return (
 		<Select
-			onChange={(event) => update(event.target.value as string)}
+			onChange={onChange}
 			value={theme}
 		>
 			{

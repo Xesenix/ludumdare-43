@@ -1,7 +1,6 @@
 import { IApplication, IEventEmitter } from 'lib/interfaces';
 import { ISoundtrack } from 'lib/sound-scape/interfaces';
 
-import { SoundDirectorBootProvider } from './sound-director-boot.provider';
 import { SoundDirectorService } from './sound-director.service';
 
 const note140 = 240 / 140;

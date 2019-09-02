@@ -13,16 +13,18 @@ export function GameBootProvider({ container }: interfaces.Context) {
 	const console: Console = container.get<Console>('debug:console');
 	console.debug('GameBootProvider');
 
-	return () => container.get<() => Promise<Store<any, any>>>('data-store:provider')()
-		.then((store: Store<any, any>) => {
+	return () => container.get<() => Promise<Store<IGameState>>>('data-store:provider')()
+		.then((store: Store<IGameState>) => {
 			console.debug('GameBootProvider:boot');
 			const createSetGameStateAction = container.get<ICreateSetAction<IGameState>>('data-store:action:create:set-game-state');
 
-			container.bind('game:actions').toConstantValue((value: IGameState) => store.dispatch(createSetGameStateAction(value))).whenTargetNamed('setGameStateAction');
+			container.bind('game:actions')
+				.toConstantValue((value: IGameState) => store.dispatch(createSetGameStateAction(value)))
+				.whenTargetNamed('setGameStateAction');
 
 			const em = container.get<IEventEmitter>('event-manager');
 			// one way binding game state to redux store
-			em.on('state:update', (newState) => {
+			em.on('state:update', (newState: IGameState) => {
 				store.dispatch(createSetGameStateAction(newState));
 			});
 

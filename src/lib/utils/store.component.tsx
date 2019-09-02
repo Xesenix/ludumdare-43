@@ -20,6 +20,7 @@ export const diStoreComponentDependencies = {
 
 /**
  * Base react component updating when any of provided store keys updates.
+ * @deprecated use useStore
  */
 export abstract class StoreComponent<P extends IStoreComponentInternalProps<S>, S extends object, SS = any> extends React.Component<P, S, SS> {
 	protected unsubscribeDataStore?: any;

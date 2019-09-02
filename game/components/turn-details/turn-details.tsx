@@ -23,8 +23,6 @@ export interface ITurnDetailsExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface ITurnDetailsInternalProps {
 	__: II18nTranslation;
-	di?: Container;
-	store?: Store<any, any>;
 }
 
 type ITurnDetailsProps = ITurnDetailsExternalProps & ITurnDetailsInternalProps & WithStyles<typeof styles>;
