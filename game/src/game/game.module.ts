@@ -2,6 +2,8 @@ import { Reducer } from 'redux';
 
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
+import { initialGameState } from '../../data/initial-state';
+
 import { createSetGameStateAction } from './actions';
 import { GameBootProvider } from './game-boot.provider';
 import { IGameState } from './game.interfaces';
@@ -19,5 +21,7 @@ export default class GameModule {
 
 		// add reducer from this module
 		app.bind<Reducer<any, any>>('data-store:reducers').toConstantValue(reducer);
+
+		app.bind('game:initial-state').toConstantValue(initialGameState);
 	}
 }

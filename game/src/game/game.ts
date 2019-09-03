@@ -1,6 +1,9 @@
 import produce, { createDraft, finishDraft } from 'immer';
 
-import { IGameState } from 'game';
+import { inject } from 'lib/di';
+import { IRandomGenerator } from 'lib/random-generator';
+
+import { IGameState } from './game.interfaces';
 import { setResourcesReserved } from './models/resources/resources';
 import {
 	// prettier-ignore
@@ -44,11 +47,17 @@ import {
 
 // prepare constant modifiers instead of recreating them with each method call
 
+@inject([
+	'game:initial-state',
+	'game:data-store',
+	'game:rng-service',
+])
 export class Game {
 	constructor(
 		// prettier-ignore
 		private initialState: IGameState,
 		private dataStore: DataStore<IGameState>,
+		private rngService: IRandomGenerator<number>,
 	) {
 		this.resetGame();
 	}
@@ -86,6 +95,7 @@ export class Game {
 	}
 
 	public resetGame = (): void => {
+		this.rngService.seed(Date.now().toString());
 		this.dataStore.setState(produce(this.initialState, () => {}));
 	}
 
@@ -118,6 +128,9 @@ export class Game {
 		draft.immunity = false;
 
 		this.progress(draft);
+
+		this.rngService.next();
+
 		setResourcesUsedInLastTurn(0)(draft);
 		setResourcesStolenInLastTurn(0)(draft);
 		setChildrenKilledInLastTurn(0)(draft);

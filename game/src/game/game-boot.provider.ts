@@ -3,8 +3,7 @@ import { Store } from 'redux';
 
 import { ICreateSetAction, IEventEmitter } from 'lib/interfaces';
 
-import { initialGameState } from '../../data/initial-state';
-
+import { IRandomGenerator } from 'lib/random-generator/interface';
 import { Game } from './game';
 import { IGameState } from './game.interfaces';
 import { DataStore } from './store';
@@ -28,9 +27,16 @@ export function GameBootProvider({ container }: interfaces.Context) {
 				store.dispatch(createSetGameStateAction(newState));
 			});
 
-			const dataStore = new DataStore<IGameState>({} as any, em);
-			const game = new Game(initialGameState, dataStore);
+			container.bind<IEventEmitter>('game:event-manager')
+				.toConstantValue(em);
 
-			container.bind<Game>('game').toConstantValue(game);
+			container.bind<DataStore<IGameState>>('game:data-store')
+				.to(DataStore)
+				.inSingletonScope();
+
+			container.bind<IRandomGenerator<number>>('game:rng-service')
+				.toConstantValue(container.get<IRandomGenerator<number>>('random-generator:random-number-service'));
+
+			container.bind<Game>('game').to(Game).inSingletonScope();
 		});
 }

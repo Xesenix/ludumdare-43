@@ -1,5 +1,10 @@
+import { inject } from 'lib/di';
 import { IEventEmitter } from 'lib/interfaces';
 
+@inject([
+	'game:initial-state',
+	'game:event-manager',
+])
 export class DataStore<T> {
 	constructor(
 		// prettier-ignore
