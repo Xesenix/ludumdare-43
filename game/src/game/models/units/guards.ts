@@ -8,9 +8,9 @@ export const changeAmountOfCurrentGuards = (amount: number) => (state: IGameStat
 
 // === GUARDS_TRAINED
 
-export const getTrainedGuards = (state: IGameState) => state.guards.trained;
-export const setTrainedGuards = (value: number) => (state: IGameState) => { state.guards.trained = value; return state; };
-export const changeAmountOfTrainedGuards = (amount: number) => (state: IGameState) => { state.guards.trained += amount; return state; };
+export const getTrainedGuards = (state: IGameState) => state.command.train.guards;
+export const setTrainedGuards = (value: number) => (state: IGameState) => { state.command.train.guards = value; return state; };
+export const changeAmountOfTrainedGuards = (amount: number) => (state: IGameState) => { state.command.train.guards += amount; return state; };
 
 // === GUARDS_KILLED_IN_THIS_TURN
 

@@ -11,14 +11,16 @@ import {
 	trainWorkersRule,
 } from './training';
 
-const workers = { current: 0, trained: 0, killed: { current: 0, total: 0 } };
-const guards = { current: 0, trained: 0, killed: { current: 0, total: 0 } };
+const command = { train: { guards: 0, workers: 0 } };
+const workers = { current: 0, killed: { current: 0, total: 0 } };
+const guards = { current: 0, killed: { current: 0, total: 0 } };
 
 describe('systems/training', () => {
 	describe('scheduleTrainingWorkers', () => {
 		it('should not break anything if there is no scheduled training', () => {
 			const baseState: Partial<IGameState> = {
 				idles: { current: 20, killed: { current: 0, total: 0 } },
+				command,
 				workers,
 				guards,
 			};
@@ -31,13 +33,14 @@ describe('systems/training', () => {
 		it('should scheduled training', () => {
 			const amount = 5;
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 4, } },
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				workers: { current: 3, killed: { current: 0, total: 0 } },
 				guards,
 			};
 
 			const expectedState = createDraft(baseState) as IGameState;
-			expectedState.workers.trained += amount;
+			expectedState.command.train.workers += amount;
 
 			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
@@ -47,13 +50,14 @@ describe('systems/training', () => {
 		it('should scheduled release', () => {
 			const amount = -2;
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 4, } },
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				workers: { current: 3, killed: { current: 0, total: 0 } },
 				guards,
 			};
 
 			const expectedState = createDraft(baseState) as IGameState;
-			expectedState.workers.trained += amount;
+			expectedState.command.train.workers += amount;
 
 			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
@@ -63,13 +67,14 @@ describe('systems/training', () => {
 		it('should scheduled conform max training capacity', () => {
 			const amount = 25;
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 4, } },
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				workers: { current: 3, killed: { current: 0, total: 0 } },
 				guards,
 			};
 
 			const expectedState = createDraft(baseState) as IGameState;
-			expectedState.workers.trained = 20;
+			expectedState.command.train.workers = 20;
 
 			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
@@ -79,13 +84,14 @@ describe('systems/training', () => {
 		it('should scheduled conform min training capacity', () => {
 			const amount = -25;
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 4, } },
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+				workers: { current: 3, killed: { current: 0, total: 0 } },
 				guards,
 			};
 
 			const expectedState = createDraft(baseState) as IGameState;
-			expectedState.workers.trained = -3;
+			expectedState.command.train.workers = -3;
 
 			const state = produce(baseState as IGameState, scheduleTrainingWorkers(amount));
 
@@ -96,8 +102,9 @@ describe('systems/training', () => {
 	describe('trainWorkersRule', () => {
 		it('should not break anything if there is no scheduled training', () => {
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 0 } },
 				idles: { current: 120, killed: { current: 0, total: 0 } },
-				workers: { current: 20, trained: 0, killed: { current: 0, total: 0 } },
+				workers: { current: 20, killed: { current: 0, total: 0 } },
 				guards,
 			};
 
@@ -109,8 +116,9 @@ describe('systems/training', () => {
 		it('should recalculate scheduled workers training', () => {
 			const amount = 15;
 			const baseState: Partial<IGameState> = {
+				command: { train: { guards: 0, workers: 0 } },
 				idles: { current: 20, killed: { current: 0, total: 0 } },
-				workers: { current: 3, trained: 0, killed: { current: 0, total: 0 } },
+				workers: { current: 3, killed: { current: 0, total: 0 } },
 				guards,
 			};
 			const expectedState = createDraft(baseState) as IGameState;
@@ -128,9 +136,10 @@ describe('systems/training', () => {
 			it('should check if there is enough free resources', () => {
 				const amount = 2;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: -1, workers: 1 } },
 					idles: { current: 25, killed: { current: 0, total: 0 } },
-					workers: { current: 15, trained: 1, killed: { current: 0, total: 0 } },
-					guards: { current: 1, trained: -1, killed: { current: 0, total: 10 } },
+					workers: { current: 15, killed: { current: 0, total: 0 } },
+					guards: { current: 1, killed: { current: 0, total: 10 } },
 					resources: {
 						amount: 3,
 						reserved: 1, // just enough for 2
@@ -145,9 +154,10 @@ describe('systems/training', () => {
 			it('should check if there is enough free population', () => {
 				const amount = 3;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: -1, workers: 3 } },
 					idles: { current: 5, killed: { current: 0, total: 0 } },
-					workers: { current: 15, trained: 3, killed: { current: 0, total: 0 } },
-					guards: { current: 1, trained: -1, killed: { current: 0, total: 10 } },
+					workers: { current: 15, killed: { current: 0, total: 0 } },
+					guards: { current: 1, killed: { current: 0, total: 10 } },
 					resources: {
 						amount: 15,
 						reserved: 0,
@@ -162,9 +172,10 @@ describe('systems/training', () => {
 			it('should check if there is enough free guards to release', () => {
 				const amount = -2;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: -1, workers: 3 } },
 					idles: { current: 5, killed: { current: 0, total: 0 } },
-					workers: { current: 15, trained: 3, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: -1, killed: { current: 0, total: 10 } },
+					workers: { current: 15, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 10 } },
 					resources: {
 						amount: 0,
 						reserved: 0,
@@ -180,8 +191,9 @@ describe('systems/training', () => {
 		describe('scheduleTrainingGuards', () => {
 			it('should not break anything if there is no scheduled training', () => {
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 0, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 0, trained: 0, killed: { current: 0, total: 0 } },
+					guards: { current: 0, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 30,
@@ -199,8 +211,9 @@ describe('systems/training', () => {
 			it('should scheduled training', () => {
 				const amount = 5;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 0, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 10,
@@ -211,7 +224,7 @@ describe('systems/training', () => {
 				};
 
 				const expectedState = createDraft(baseState) as IGameState;
-				expectedState.guards.trained += amount;
+				expectedState.command.train.guards += amount;
 				expectedState.resources.reserved += amount;
 
 				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
@@ -222,8 +235,9 @@ describe('systems/training', () => {
 			it('should scheduled release', () => {
 				const amount = -3;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 4, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 10,
@@ -234,7 +248,7 @@ describe('systems/training', () => {
 				};
 
 				const expectedState = createDraft(baseState) as IGameState;
-				expectedState.guards.trained += amount;
+				expectedState.command.train.guards += amount;
 				expectedState.resources.reserved += amount;
 
 				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
@@ -245,8 +259,9 @@ describe('systems/training', () => {
 			it('should scheduled conform min training capacity', () => {
 				const amount = -23;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 4, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 10,
@@ -257,7 +272,7 @@ describe('systems/training', () => {
 				};
 
 				const expectedState = createDraft(baseState) as IGameState;
-				expectedState.guards.trained = -3;
+				expectedState.command.train.guards = -3;
 				expectedState.resources.reserved = 1;
 
 				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
@@ -268,8 +283,9 @@ describe('systems/training', () => {
 			it('should scheduled conform max training capacity', () => {
 				const amount = 23;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 4, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 30,
@@ -280,7 +296,7 @@ describe('systems/training', () => {
 				};
 
 				const expectedState = createDraft(baseState) as IGameState;
-				expectedState.guards.trained = 20;
+				expectedState.command.train.guards = 20;
 				expectedState.resources.reserved = 21;
 
 				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
@@ -291,8 +307,9 @@ describe('systems/training', () => {
 			it('should scheduled conform max training resource amount', () => {
 				const amount = 23;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 4, workers: 0 } },
 					idles: { current: 20, killed: { current: 0, total: 0 } },
-					guards: { current: 3, trained: 4, killed: { current: 0, total: 0 } },
+					guards: { current: 3, killed: { current: 0, total: 0 } },
 					workers,
 					resources: {
 						amount: 10,
@@ -303,7 +320,7 @@ describe('systems/training', () => {
 				};
 
 				const expectedState = createDraft(baseState) as IGameState;
-				expectedState.guards.trained = 9;
+				expectedState.command.train.guards = 9;
 				expectedState.resources.reserved = 10;
 
 				const state = produce(baseState as IGameState, scheduleTrainingGuards(amount));
@@ -315,13 +332,13 @@ describe('systems/training', () => {
 		describe('trainGuardsRule', () => {
 			it('should not break anything if there is no scheduled training', () => {
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 0, workers: 0 } },
 					idles: {
 						current: 120,
 						killed: { current: 0, total: 0 },
 					},
 					guards: {
 						current: 20,
-						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
 					workers,
@@ -341,13 +358,13 @@ describe('systems/training', () => {
 			it('should recalculate scheduled guards training', () => {
 				const amount = 4;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 0, workers: 0 } },
 					idles: {
 						current: 20,
 						killed: { current: 0, total: 0 },
 					},
 					guards: {
 						current: 3,
-						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
 					workers,
@@ -373,13 +390,13 @@ describe('systems/training', () => {
 			it('should recalculate scheduled guards release', () => {
 				const amount = -3;
 				const baseState: Partial<IGameState> = {
+					command: { train: { guards: 0, workers: 0 } },
 					idles: {
 						current: 20,
 						killed: { current: 0, total: 0 },
 					},
 					guards: {
 						current: 3,
-						trained: 0,
 						killed: { current: 0, total: 0 },
 					},
 					workers,

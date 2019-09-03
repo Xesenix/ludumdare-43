@@ -8,23 +8,23 @@ export interface IGameState {
 		max: number;
 	};
 
+	command: {
+		train: {
+			guards: number;
+			workers: number;
+		};
+	};
+
 	/**
 	 *
 	 */
 	workers: {
 		current: number;
-
 		killed: { current: number; total: number };
-
-		/** updated by action */
-		trained: number;
 	};
 
 	guards: {
 		current: number;
-
-		/** updated by action */
-		trained: number;
 		killed: { current: number; total: number };
 	};
 

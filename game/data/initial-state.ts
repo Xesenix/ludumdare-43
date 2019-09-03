@@ -5,18 +5,19 @@ export const initialGameState: IGameState = {
 		current: 20,
 		max: 20,
 	},
+	command: {
+		train: { guards: 0, workers: 0 },
+	},
 	idles: {
 		current: 20,
 		killed: { current: 0, total: 0 },
 	},
 	guards: {
 		current: 0,
-		trained: 0,
 		killed: { current: 0, total: 0 },
 	},
 	workers: {
 		current: 0,
-		trained: 0,
 		killed: { current: 0, total: 0 },
 	},
 	children: {

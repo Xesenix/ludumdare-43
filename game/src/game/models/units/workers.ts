@@ -8,9 +8,9 @@ export const changeAmountOfCurrentWorkers = (amount: number) => (state: IGameSta
 
 // === WORKERS_TRAINED
 
-export const getTrainedWorkers = (state: IGameState) => state.workers.trained;
-export const setTrainedWorkers = (value: number) => (state: IGameState) => { state.workers.trained = value; return state; };
-export const changeAmountOfTrainedWorkers = (amount: number) => (state: IGameState) => { state.workers.trained += amount; return state; };
+export const getTrainedWorkers = (state: IGameState) => state.command.train.workers;
+export const setTrainedWorkers = (value: number) => (state: IGameState) => { state.command.train.workers = value; return state; };
+export const changeAmountOfTrainedWorkers = (amount: number) => (state: IGameState) => { state.command.train.workers += amount; return state; };
 
 // === WORKERS_KILLED_IN_THIS_TURN
 
