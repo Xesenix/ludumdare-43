@@ -90,6 +90,7 @@
     "inversify": "^5.0.1",
     "istanbul": "github:Xesenix/istanbul",
     "lodash-es": "^4.17.11",
+    "math-random-seed": "^2.0.0",
     "moment": "^2.24.0",
     "ngrock-webpack-plugin": "0.0.2",
     "node-gettext": "^2.0.0",

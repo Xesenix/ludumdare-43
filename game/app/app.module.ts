@@ -62,6 +62,7 @@ export class AppModule extends Container implements IApplication {
 
 	public load() {
 		const dependencies = [
+			import(/* webpackChunkName: "ui" */ 'lib/random-generator/random-generator.module'),
 			import(/* webpackChunkName: "ui" */ 'game/game.module'),
 			import(/* webpackChunkName: "ui" */ 'lib/data-store/data-store.module'),
 			import(/* webpackChunkName: "ui" */ 'lib/fullscreen/fullscreen.module'),
