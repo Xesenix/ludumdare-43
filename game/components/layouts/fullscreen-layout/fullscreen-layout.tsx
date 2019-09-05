@@ -116,7 +116,7 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 				<Slide
 					direction="left"
 					in={true}
-					key={location.key}
+					key={location.pathname.split('/')[1]}
 				>
 					<div className={classes.container}>{content}</div>
 				</Slide>

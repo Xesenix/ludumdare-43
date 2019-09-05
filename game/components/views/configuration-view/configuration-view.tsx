@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Link, Route, Switch } from 'react-router-dom';
 
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
 // elements
 import Container from '@material-ui/core/Container';
+import Fade from '@material-ui/core/Fade';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
@@ -23,7 +26,7 @@ interface IConfigurationViewInternalProps {
 	__: II18nTranslation;
 }
 
-type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps;
+type IConfigurationViewProps = IConfigurationViewExternalProps & IConfigurationViewInternalProps & RouteComponentProps;
 
 const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigurationViewInternalProps>({
 	__: {
@@ -31,50 +34,47 @@ const diDecorator = connectToInjector<IConfigurationViewExternalProps, IConfigur
 	},
 });
 
-function TabPanel({ selected, index, children, ...props }) {
-	return (
-		<Container hidden={selected !== index} {...props}>
-			{ children }
-		</Container>
-	);
-}
-
 export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	const {
 		// prettier-ignore
 		__,
+		location,
 	} = props;
 
 	const classes = useStyles();
 
-	const [selectedTab, selectTab] = React.useState(0);
-
-	const onTabChange = React.useCallback((event: React.ChangeEvent<{}>, newValue: number) => {
-		selectTab(newValue);
-	}, [selectTab]);
-
 	return (
 		<Container className={classes.root}>
 			<Tabs
-				onChange={onTabChange}
 				scrollButtons="on"
-				value={selectedTab}
+				value={location.pathname}
 				variant="scrollable"
 			>
-				<Tab label={__('Sound configuration')}/>
-				<Tab label={__('User interface configuration')}/>
+				<Tab component={Link} label={__('Sound configuration')} value="/config" to="/config"/>
+				<Tab component={ConfigureUILink} label={__('User interface configuration')} value="/config/ui"/>
 			</Tabs>
 
-			<TabPanel className={classes.section} index={0} selected={selectedTab}>
-				<SoundConfigurationComponent />
-			</TabPanel>
-
-			<TabPanel className={classes.section} index={1} selected={selectedTab}>
-				<UIConfigurationComponent />
-			</TabPanel>
-
+			<Fade
+				in={true}
+				key={location.pathname.split('/')[2]}
+			>
+				<Container className={classes.section}>
+					<Switch>
+						<Route
+							exact
+							path="/config"
+							component={SoundConfigurationComponent}
+						/>
+						<Route
+							exact
+							path="/config/ui"
+							component={UIConfigurationComponent}
+						/>
+					</Switch>
+				</Container>
+			</Fade>
 		</Container>
 	);
 }
 
-export default hot(module)(diDecorator(ConfigurationViewComponent));
+export default hot(module)(withRouter(diDecorator(ConfigurationViewComponent)));

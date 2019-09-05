@@ -110,7 +110,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 		// TODO: need menu component that renders diffrent buttons depending on context (toolbar, drawer) and is influenced by css theme
 		return (
 			<>
-				{location.pathname !== '/config' ? (
+				{!location.pathname.startsWith('/config') ? (
 					<MenuItem
 						// prettier-ignore
 						color="primary"
@@ -121,7 +121,7 @@ class MenuComponent extends StoreComponent<IMenuProps, IMenuState> {
 					/>
 				) : null}
 
-				{location.pathname === '/config' ? (
+				{location.pathname.startsWith('/config') ? (
 					<MenuItem
 						// prettier-ignore
 						color="primary"
