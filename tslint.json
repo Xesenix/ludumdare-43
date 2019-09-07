@@ -6,6 +6,11 @@
 		"tslint-eslint-rules",
 		"tslint-react"
 	],
+	"linterOptions": {
+		"exclude": [
+			"node_modules/**"
+		]
+	},
 	"jsRules": {
 		"indent": [true, "tabs", 2],
 		"quotemark": [true, "single", "jsx-double"]
