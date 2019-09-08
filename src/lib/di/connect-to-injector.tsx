@@ -6,7 +6,7 @@ import { useInjector } from './use-injector';
 const componentNameRegexp = /function ([a-zA-Z0-9_]+)\(/;
 
 /**
- * Map dependencies from DI container into component properties.
+ * Map dependencies from DI container into component properties by creating HOC decorator.
  *
  * @export
  * @template T interface for properties injected via component properties

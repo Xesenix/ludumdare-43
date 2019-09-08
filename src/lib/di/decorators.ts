@@ -2,6 +2,7 @@ import * as inversify from 'inversify';
 import { Container, interfaces as ii } from 'inversify';
 import memoize from 'lodash-es/memoize';
 
+import { getDependencies } from './get-dependencies';
 import { helpers, interfaces as vi } from './helpers';
 
 type DependencyType = string | symbol | ii.Newable<any> | ii.Abstract<any> | vi.IBasicInjection | vi.INamedInjection | vi.ITaggedInjection;
@@ -41,64 +42,15 @@ export function injectable(): any {
  * Uses context container to inject named dependencies into function.
  *
  * @param container dependency injection container
- * @param key unique identifier that will be used internally to store result of factory in container
  * @param dependencies list identifiers of required dependencies in addition if identifier ends with '()' it will resolve provider result before injecting it
  * @param factory factory function into which we want to inject dependencies
  */
-export async function resolveDependencies<T = any>(
-	container: Container,
+export async function resolveDependencies<T>(
+	container: ii.Container,
 	dependencies: string[],
 	factory: (...args: any[]) => T,
 ) {
-	const nameRegexp = /\@([a-zA-Z0-9_-]+)/;
-	const callRegexp = /(\(\))/;
-	const multipleRegexp = /(\[\])$/;
-	const klass = factory(
-		...(await Promise.all(
-			dependencies.map(async (key: string) => {
-				// TODO: remove duplication implemented in use-injector
-				const nameMatch = nameRegexp.exec(key);
-				const callMatch = callRegexp.exec(key);
-				const multipleMatch = multipleRegexp.exec(key);
-				const callable = !!callMatch;
-				let injection: any;
-
-				// handling keys with call signature:
-				// some_key()
-				if (!!callMatch) {
-					key = key.replace(callMatch[0], '');
-				}
-
-				if (!!multipleMatch) {
-					key = key.replace(multipleMatch[0], '');
-				}
-
-				// handling keys with named dependencies like:
-				// some_key@name
-				if (!!multipleMatch) {
-					if (!!nameMatch) {
-						key = key.replace(nameMatch[0], '');
-						injection = container.getAllNamed<any>(key, nameMatch[1]);
-					} else {
-						injection = container.getAll<any>(key);
-					}
-
-					return Promise.all(callable ? injection.map((dep) => dep()) : injection);
-				} else {
-					if (!!nameMatch) {
-						key = key.replace(nameMatch[0], '');
-						injection = container.getNamed<any>(key, nameMatch[1]);
-					} else {
-						injection = container.get<any>(key);
-					}
-				}
-
-				return callable ? injection() : injection;
-			}),
-		)),
-	);
-
-	return klass;
+	return factory(...(await getDependencies<T>(container as Container, dependencies)));
 }
 
 /**
@@ -126,7 +78,7 @@ export function createProvider<T = any>(
 			factory,
 		});
 
-		const klass = await resolveDependencies<T>(container, dependencies, factory);
+		const klass = resolveDependencies<T>(container, dependencies, factory);
 
 		if (shouldResolve) {
 			if (!container.isBound(key)) {
