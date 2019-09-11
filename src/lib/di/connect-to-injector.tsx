@@ -14,6 +14,8 @@ const componentNameRegexp = /function ([a-zA-Z0-9_]+)\(/;
  * @template E interface exposed for properties injected via component properties
  * @param Consumer component into which we want to inject dependencies from dependency container
  * @param select map dependencies from container to properties names injected into decorated component properties
+ * @param config.Preloader component to show when waiting for resolving dependencies
+ * @param config.whenReady promise resolved when we can inject resolved dependencies
  * @returns component with injected values from DI container
  */
 export function connectToInjector<T, I = any>(
@@ -21,10 +23,10 @@ export function connectToInjector<T, I = any>(
 	select: { [K in keyof I]: { dependencies: string[], value?: (...dependencies: any[]) => Promise<I[K]> } },
 	{
 		Preloader = () => <>loading...</>,
-		whenReady = () => Promise.resolve(),
+		whenReady = Promise.resolve(),
 	}: {
 		Preloader?: React.FunctionComponent,
-		whenReady?: () => Promise<void>,
+		whenReady?: Promise<void>,
 	} = {},
 ) {
 	return <E extends T>(Consumer: React.ComponentType<E & I>) => {

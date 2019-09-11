@@ -32,7 +32,7 @@ export default class ThemeModule {
 
 		app.bind<Promise<IAppThemesDescriptors>>('theme:theme-descriptors:provider')
 			.toProvider(({ container }: interfaces.Context) => () => resolveDependencies<IAppThemesDescriptors>(container, [
-				'theme:theme:provider()[]',
+				'theme:theme:provider[]()',
 			], (
 				themeDescriptors,
 			) => themeDescriptors

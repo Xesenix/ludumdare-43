@@ -5,12 +5,14 @@ import { DIContext } from './context';
 import { getDependencies } from './get-dependencies';
 
 /**
+ * Hook for collecting dependencies from DI Container via react context.
  * @template I interface for properties injected via dependency injection
  * @param select map dependencies from container to properties names injected into decorated component properties
+ * @param whenReady promise signaling when dependencies can be injected
  */
 export function useInjector<I>(
 	select: { [K in keyof I]: { dependencies: string[]; value?: (...dependencies: any[]) => Promise<I[K]> } },
-	whenReady: () => Promise<void> = () => Promise.resolve(),
+	whenReady: Promise<void> = Promise.resolve(),
 ) {
 	const [injectedState, setState] = React.useState<I>({} as I);
 	const keys = Object.keys(select);
@@ -42,7 +44,7 @@ export function useInjector<I>(
 						return result;
 					}, {});
 
-					whenReady().then(() => {
+					whenReady.then(() => {
 						setState(state);
 					});
 				}

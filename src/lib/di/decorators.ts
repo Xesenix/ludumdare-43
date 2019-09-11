@@ -59,16 +59,16 @@ export async function resolveDependencies<T>(
  * @param key unique identifier that will be used internally to store result of factory in container
  * @param dependencies list identifiers of required dependencies in addition if identifier ends with '()' it will resolve provider result before injecting it
  * @param factory factory function into which we want to inject dependencies
- * @param shouldResolve if true will try resolve factory result from DIC else will return result of factory without further modifications
+ * @param singleton if true will try resolve factory result from DIC else will return result of factory without further modifications
  * @returns provider function
  */
 export function createProvider<T = any>(
 	key: string,
 	dependencies: string[],
 	factory: (...args: any[]) => T,
-	shouldResolve: boolean = true,
+	singleton: boolean = true,
 	cache: boolean = true,
-) {
+): (ctx: ii.Context) => () => Promise<T> {
 	const cacheResult: (cb: (ctx: ii.Context) => any) => any = cache ? memoize : (cb: (ctx: ii.Context) => any) => cb;
 	return cacheResult(({ container }: ii.Context) => async () => {
 		const console = container.get<Console>('debug:console:DEBUG_DI');
@@ -78,19 +78,19 @@ export function createProvider<T = any>(
 			factory,
 		});
 
-		const klass = resolveDependencies<T>(container, dependencies, factory);
+		const constructor = resolveDependencies<T>(container, dependencies, factory);
 
-		if (shouldResolve) {
+		if (singleton) {
 			if (!container.isBound(key)) {
 				container
 					.bind(key)
-					.to(klass as any)
+					.to(constructor as any)
 					.inSingletonScope();
 			}
 			return container.get(key);
 		}
 
-		return klass;
+		return constructor;
 	});
 }
 
@@ -104,6 +104,10 @@ export function createProvider<T = any>(
  * @param factory factory function into which we want to inject dependencies
  * @returns provider function returning object created by factory without further resolving
  */
-export function createClassProvider<T = any>(key: string, dependencies: string[], factory: (...args: any[]) => any) {
+export function createClassProvider<T = any>(
+	key: string,
+	dependencies: string[],
+	factory: (...args: any[]) => any,
+) {
 	return createProvider<T>(key, dependencies, factory, false);
 }

@@ -1,4 +1,5 @@
 import { Container } from 'inversify';
+
 import { getDependencies } from './get-dependencies';
 
 describe('di/get-dependencies', () => {
@@ -20,6 +21,16 @@ describe('di/get-dependencies', () => {
 			container.bind<string>('multiple:_Creator-0').toFactory(() => () => 'J').whenTargetNamed('target');
 			container.bind<string>('multiple:defaults').toConstantValue('X').whenTargetIsDefault();
 			container.bind<string>('multiple:defaults').toConstantValue('Y').whenTargetIsDefault();
+			container.bind<string>('constant:tagged').toConstantValue('0').whenTargetIsDefault();
+			container.bind<string>('constant:tagged').toConstantValue('1').whenTargetNamed('_with-Name0');
+			container.bind<string>('constant:tagged').toConstantValue('2').whenTargetTagged('named', '_with-Name0');
+			container.bind<string>('constant:tagged').toConstantValue('3').whenTargetTagged('_s0m3-n4m3', 'p4ssW0rd');
+			container.bind<string>('constant:tagged').toConstantValue('4').whenTargetTagged('_s0m3-n4m3', 'p4ssW0rd');
+			container.bind<string>('build:tagged').toProvider(() => async () => '0').whenTargetIsDefault();
+			container.bind<string>('build:tagged').toProvider(() => async () => '1').whenTargetNamed('_with-Name0');
+			container.bind<string>('build:tagged').toFactory(() => () => '2').whenTargetTagged('named', '_with-Name0');
+			container.bind<string>('build:tagged').toProvider(() => async () => '3').whenTargetTagged('_s0m3-n4m3', 'p4ssW0rd');
+			container.bind<string>('build:tagged').toFactory(() => () => '4').whenTargetTagged('_s0m3-n4m3', 'p4ssW0rd');
 		});
 
 		[
@@ -80,7 +91,7 @@ describe('di/get-dependencies', () => {
 			},
 			{
 				description: 'getAll and call as function (for providers and factories should resolve them)',
-				selector: ['multiple:_Creator-0()[]'],
+				selector: ['multiple:_Creator-0[]()'],
 				expected: [['C', 'D', 'H', 'I', 'J']],
 			},
 			{
@@ -90,7 +101,7 @@ describe('di/get-dependencies', () => {
 			},
 			{
 				description: 'getAllNamed empty and call as function (for providers and factories should resolve them)',
-				selector: ['multiple:_Creator-0@()[]'],
+				selector: ['multiple:_Creator-0@[]()'],
 				expected: [['C']],
 			},
 			{
@@ -100,7 +111,7 @@ describe('di/get-dependencies', () => {
 			},
 			{
 				description: 'getAllNamed target and call as function (for providers and factories should resolve them)',
-				selector: ['multiple:_Creator-0@target()[]'],
+				selector: ['multiple:_Creator-0@target[]()'],
 				expected: [['H', 'J']],
 			},
 			{
@@ -110,15 +121,55 @@ describe('di/get-dependencies', () => {
 			},
 			{
 				description: 'getAllNamed Target-diff_01 and call as function (for providers and factories should resolve them)',
-				selector: ['multiple:_Creator-0@Target-diff_01()[]'],
+				selector: ['multiple:_Creator-0@Target-diff_01[]()'],
 				expected: [['I']],
+			},
+			{
+				description: 'getTagged _s0m3-n4m3=p4ssW0rd',
+				selector: ['constant:tagged@_s0m3-n4m3=p4ssW0rd'],
+				error: true,
+			},
+			{
+				description: 'getAllTagged _s0m3-n4m3=p4ssW0rd',
+				selector: ['constant:tagged@_s0m3-n4m3=p4ssW0rd[]'],
+				expected: [['3', '4']],
+			},
+			{
+				description: 'getTagged named=_with-Name0',
+				selector: ['constant:tagged@named=_with-Name0'],
+				error: true,
+			},
+			{
+				description: 'getAllTagged named=_with-Name0',
+				selector: ['constant:tagged@named=_with-Name0[]'],
+				expected: [['1', '2']],
+			},
+			{
+				description: 'getTagged _s0m3-n4m3=p4ssW0rd and call as function (for providers and factories should resolve them)',
+				selector: ['build:tagged@_s0m3-n4m3=p4ssW0rd()'],
+				error: true,
+			},
+			{
+				description: 'getAllTagged _s0m3-n4m3=p4ssW0rd and call as function (for providers and factories should resolve them)',
+				selector: ['build:tagged@_s0m3-n4m3=p4ssW0rd[]()'],
+				expected: [['3', '4']],
+			},
+			{
+				description: 'getTagged named=_with-Name0 and call as function (for providers and factories should resolve them)',
+				selector: ['build:tagged@named=_with-Name0()'],
+				error: true,
+			},
+			{
+				description: 'getAllTagged named=_with-Name0 and call as function (for providers and factories should resolve them)',
+				selector: ['build:tagged@named=_with-Name0[]()'],
+				expected: [['1', '2']],
 			},
 			{
 				description: 'getting multiple dependencies',
 				selector: [
 					'multiple:_const-A0[]',
 					'multiple:_Creator-0@()',
-					'multiple:_Creator-0@Target-diff_01()[]',
+					'multiple:_Creator-0@Target-diff_01[]()',
 				],
 				expected: [
 					['A', 'B', 'E', 'F', 'G'],

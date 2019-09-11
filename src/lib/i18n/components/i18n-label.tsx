@@ -32,7 +32,6 @@ const diDecorator = connectToInjector<II18nLabelExternalProps, II18nLabelInterna
 	bindToStore: {
 		dependencies: ['data-store:bind'],
 	},
-
 });
 
 type II18nLabelProps = II18nLabelExternalProps & II18nLabelInternalProps;
