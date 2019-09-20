@@ -25,7 +25,7 @@ export const useStyles = makeStyles((theme: Theme) => {
 	});
 }, { name: 'TopMenuButton' });
 
-function TopMenuButton(props: IMenuItemExternalProps) {
+const TopMenuButton = React.forwardRef((props: IMenuItemExternalProps, ref: any) => {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	const classes = useStyles();
@@ -37,11 +37,12 @@ function TopMenuButton(props: IMenuItemExternalProps) {
 			component={props.component as any}
 			onClick={props.onClick}
 			variant="extended"
+			innerRef={ref}
 		>
 			{Icon ? <Icon /> : null}
 			{props.label || ''}
 		</Fab>
 	);
-}
+});
 
 export default hot(module)(TopMenuButton);

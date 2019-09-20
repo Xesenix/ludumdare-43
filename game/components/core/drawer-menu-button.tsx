@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme: Theme) => {
 	});
 }, { name: 'DrawerMenuButton' });
 
-function DrawerMenuButton(props: IMenuItemExternalProps) {
+const DrawerMenuButton = React.forwardRef((props: IMenuItemExternalProps, ref: any) => {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	const classes = useStyles();
@@ -30,6 +30,6 @@ function DrawerMenuButton(props: IMenuItemExternalProps) {
 			{props.label}
 		</Fab>
 	);
-}
+});
 
 export default hot(module)(DrawerMenuButton);
