@@ -1,7 +1,7 @@
 import { interfaces } from 'inversify';
 import { Store } from 'redux';
 
-import { createProvider } from 'lib/di';
+import { createClassProvider } from 'lib/di';
 
 export type IPhaserGameProvider = (forceNew?: boolean) => Promise<Phaser.Game>;
 
@@ -18,24 +18,27 @@ export function PhaserGameProvider(context: interfaces.Context) {
 		// preload phaser module that is needed by subsequential modules
 		// TODO: convert to observable so it can return progress on loading
 		// prettier-ignore
-		return createProvider('phaser:game', [
+		return createClassProvider('phaser:game', [
 			// prettier-ignore
 			'data-store:provider()',
 			'phaser:container',
 			'phaser:provider()',
 			'phaser:scene:intro:provider()',
+			'phaser:plugins[]()',
 		], async (
 			// prettier-ignore
 			store: Store,
 			parent,
 			Phaser,
 			IntroScene,
+			plugins,
 		) => {
 			console.debug('PhaserGameProvider:injected', {
 				store,
 				parent,
 				Phaser,
 				IntroScene,
+				plugins,
 			});
 
 			if (!forceNew && game !== null) {
@@ -48,9 +51,6 @@ export function PhaserGameProvider(context: interfaces.Context) {
 
 				return Promise.resolve(game);
 			}
-
-			const plugins = await Promise.all(context.container.getAll<() => Promise<void>>('phaser:plugins').map((provider: any) => provider()));
-			console.log('plugins', plugins);
 
 			const backgroundColor: any = 0x000000;
 
@@ -128,6 +128,6 @@ export function PhaserGameProvider(context: interfaces.Context) {
 				console.debug('PhaserGameProvider:error', parent, error);
 				return Promise.reject(error);
 			}
-		}, false, false)(context)();
+		})(context)();
 	};
 }
