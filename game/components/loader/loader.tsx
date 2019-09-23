@@ -12,62 +12,21 @@ import I18nLabel from 'lib/i18n/components/i18n-label';
 
 import { useStyles } from './loader.styles';
 
-const i18nTileLabel = (__: II18nTranslation) => __('Loading error');
-const i18nDescriptionLabel = (__: II18nTranslation) => __('Something went wrong while loading module try again later.');
-const i18nCtaLabel = (__: II18nTranslation) => __('Retry');
-
 /** Component public properties required to be provided by parent component. */
 export interface ILoaderPropsExternalProps {
-	isLoading: boolean;
-	retry?: (() => void) | null;
 	size?: number;
 }
 
 type ILoaderProps = ILoaderPropsExternalProps;
 
-function Loader({ isLoading, retry = null, size = 128 }: ILoaderProps) {
+function Loader({ size = 128 }: ILoaderProps) {
 	const classes = useStyles();
 
 	return (
 		<div
 			className={classes.root}
 		>
-			{
-				isLoading
-				? <CircularProgress size={size}/>
-				: (
-					<Paper className={classes.notification}>
-						<Typography
-							align="center"
-							className={classes.title}
-							component="title"
-							variant="h5"
-						>
-							<I18nLabel render={i18nTileLabel}/>
-						</Typography>
-						<Typography
-							align="center"
-							className={classes.description}
-							component="p"
-							variant="body2"
-						>
-							<I18nLabel render={i18nDescriptionLabel}/>
-						</Typography>
-						{ retry != null
-							?
-								<Fab
-									className={classes.cta}
-									color="default"
-									onClick={retry}
-									variant="extended"
-								>
-									<I18nLabel render={i18nCtaLabel}/>
-								</Fab>
-							: null
-						}
-					</Paper>
-				)
-			}
+			<CircularProgress size={size}/>
 		</div>
 	);
 }

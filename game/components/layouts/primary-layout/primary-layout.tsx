@@ -23,6 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import DrawerMenuButton from 'components/core/drawer-menu-button';
 import TopMenuButton from 'components/core/top-menu-button';
+import Loader from 'components/loader/loader';
 import { IMenuExternalProps } from 'components/menu/menu';
 
 import { useStyles } from './primary-layout.styles';
@@ -79,21 +80,23 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 	return (
 		<>
 			<AppBar position="fixed">
-				<Toolbar>
-					<Hidden smDown>
-						<Menu
-							key="menu"
-							MenuItem={TopMenuButton}
-						/>
-					</Hidden>
-					<Hidden mdUp>
-						<TopMenuButton
-							color="primary"
-							Icon={MenuIcon}
-							onClick={toggleDrawer}
-						/>
-					</Hidden>
-				</Toolbar>
+				<React.Suspense fallback={<Loader size={32}/>}>
+					<Toolbar>
+						<Hidden smDown>
+							<Menu
+								key="menu"
+								MenuItem={TopMenuButton}
+							/>
+						</Hidden>
+						<Hidden mdUp>
+							<TopMenuButton
+								color="primary"
+								Icon={MenuIcon}
+								onClick={toggleDrawer}
+							/>
+						</Hidden>
+					</Toolbar>
+				</React.Suspense>
 				{loading ? <LinearProgress/> : null}
 			</AppBar>
 
@@ -102,23 +105,27 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 					onClose={toggleDrawer}
 					open={drawerOpen}
 				>
-					<Menu
-						key="drawer-menu"
-						MenuItem={DrawerMenuButton}
-					/>
+					<React.Suspense fallback={<Loader size={128}/>}>
+						<Menu
+							key="drawer-menu"
+							MenuItem={DrawerMenuButton}
+						/>
+					</React.Suspense>
 				</Drawer>
 			</Hidden>
 			<Paper
 				className={classes.root}
 				elevation={0}
 			>
-				<Slide
-					direction="left"
-					in={true}
-					key={location.pathname.split('/')[1]}
-				>
-					<div className={classes.container}>{content}</div>
-				</Slide>
+				<React.Suspense fallback={<Loader size={128}/>}>
+					<Slide
+						direction="left"
+						in={true}
+						key={location.pathname.split('/')[1]}
+					>
+						<div className={classes.container}>{content}</div>
+					</Slide>
+				</React.Suspense>
 			</Paper>
 		</>
 	);

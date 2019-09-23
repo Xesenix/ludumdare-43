@@ -23,6 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import DrawerMenuButton from 'components/core/drawer-menu-button';
 import TopMenuButton from 'components/core/top-menu-button';
+import Loader from 'components/loader/loader';
 import { IMenuExternalProps } from 'components/menu/menu';
 
 import { useStyles } from './fullscreen-layout.styles';
@@ -79,21 +80,23 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 	return (
 		<>
 			<AppBar position="fixed">
-				<Toolbar>
-					<Hidden smDown>
-						<Menu
-							key="fullscreen-menu"
-							MenuItem={TopMenuButton}
-						/>
-					</Hidden>
-					<Hidden mdUp>
-						<TopMenuButton
-							color="primary"
-							onClick={toggleDrawer}
-							Icon={MenuIcon}
-						/>
-					</Hidden>
-				</Toolbar>
+				<React.Suspense fallback={<Loader size={32}/>}>
+					<Toolbar>
+						<Hidden smDown>
+							<Menu
+								key="fullscreen-menu"
+								MenuItem={TopMenuButton}
+							/>
+						</Hidden>
+						<Hidden mdUp>
+							<TopMenuButton
+								color="primary"
+								onClick={toggleDrawer}
+								Icon={MenuIcon}
+							/>
+						</Hidden>
+					</Toolbar>
+				</React.Suspense>
 				{loading ? <LinearProgress/> : null}
 			</AppBar>
 
@@ -113,13 +116,15 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 				className={classes.root}
 				elevation={0}
 			>
-				<Slide
-					direction="left"
-					in={true}
-					key={location.pathname.split('/')[1]}
-				>
-					<div className={classes.container}>{content}</div>
-				</Slide>
+				<React.Suspense fallback={<Loader size={128}/>}>
+					<Slide
+						direction="left"
+						in={true}
+						key={location.pathname.split('/')[1]}
+					>
+						<div className={classes.container}>{content}</div>
+					</Slide>
+				</React.Suspense>
 			</Paper>
 		</>
 	);
