@@ -3,6 +3,9 @@ import { hot } from 'react-hot-loader';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Link, Route, Switch } from 'react-router-dom';
 
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
@@ -43,16 +46,27 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	} = props;
 
 	const classes = useStyles();
+	const theme = useTheme();
+	const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
 	return (
 		<Container className={classes.root}>
 			<Tabs
-				scrollButtons="on"
+				scrollButtons={ matches ? 'on' : 'off' }
 				value={location.pathname}
 				variant="scrollable"
 			>
-				<Tab component={Link} label={__('Sound configuration')} value="/config" to="/config"/>
-				<Tab component={ConfigureUILink} label={__('User interface configuration')} value="/config/ui"/>
+				<Tab
+					component={Link}
+					label={__('Sound configuration')}
+					to="/config"
+					value="/config"
+				/>
+				<Tab
+					component={ConfigureUILink}
+					label={__('User interface configuration')}
+					value="/config/ui"
+				/>
 			</Tabs>
 
 			<Fade
