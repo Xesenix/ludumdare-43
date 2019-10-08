@@ -80,23 +80,21 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 	return (
 		<>
 			<AppBar position="fixed">
-				<React.Suspense fallback={<Loader size={32}/>}>
-					<Toolbar>
-						<Hidden smDown>
-							<Menu
-								key="fullscreen-menu"
-								MenuItem={TopMenuButton}
-							/>
-						</Hidden>
-						<Hidden mdUp>
-							<TopMenuButton
-								color="primary"
-								onClick={toggleDrawer}
-								Icon={MenuIcon}
-							/>
-						</Hidden>
-					</Toolbar>
-				</React.Suspense>
+				<Toolbar>
+					<Hidden smDown>
+						<Menu
+							key="fullscreen-menu"
+							MenuItem={TopMenuButton}
+						/>
+					</Hidden>
+					<Hidden mdUp>
+						<TopMenuButton
+							color="primary"
+							onClick={toggleDrawer}
+							Icon={MenuIcon}
+						/>
+					</Hidden>
+				</Toolbar>
 				{loading ? <LinearProgress/> : null}
 			</AppBar>
 
@@ -116,15 +114,13 @@ function FullscreenLayoutComponent(props: IFullscreenLayoutProps) {
 				className={classes.root}
 				elevation={0}
 			>
-				<React.Suspense fallback={<Loader size={128}/>}>
-					<Slide
-						direction="left"
-						in={true}
-						key={location.pathname.split('/')[1]}
-					>
-						<div className={classes.container}>{content}</div>
-					</Slide>
-				</React.Suspense>
+				<Slide
+					direction="left"
+					in={true}
+					key={location.pathname.split('/')[1]}
+				>
+					<div className={classes.container}>{content}</div>
+				</Slide>
 			</Paper>
 		</>
 	);

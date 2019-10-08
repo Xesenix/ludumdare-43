@@ -2,6 +2,7 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 
+import LazyLoaderFactory from 'lib/core/components/lazy-loader-factory';
 import { connectToInjector } from 'lib/di';
 import { II18nLanguagesState } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
@@ -14,18 +15,31 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
 import Loader from 'components/loader/loader';
+import LoaderErrorView from 'components/loader/loader-error-view';
+import { IMenuExternalProps } from 'components/menu/menu';
 
-const MenuComponent = React.lazy(
+const SmallLoader = () => <Loader size={48}/>;
+const BigLoader = () => <Loader size={128}/>;
+
+const MenuComponent = LazyLoaderFactory<IMenuExternalProps>(
 	() => import(/* webpackChunkName: "menu" */ 'components/menu/menu'),
+	SmallLoader,
+	LoaderErrorView,
 );
-const IntroView = React.lazy(
+const IntroView = LazyLoaderFactory(
 	() => import(/* webpackChunkName: "intro" */ 'components/views/intro-view/intro-view'),
+	BigLoader,
+	LoaderErrorView,
 );
-const GameView = React.lazy(
+const GameView = LazyLoaderFactory(
 	() => import(/* webpackChunkName: "game" */ 'components/views/game-view/game-view'),
+	BigLoader,
+	LoaderErrorView,
 );
-const ConfigurationView = React.lazy(
+const ConfigurationView = LazyLoaderFactory(
 	() => import(/* webpackChunkName: "config" */ 'components/views/configuration-view/configuration-view'),
+	BigLoader,
+	LoaderErrorView,
 );
 
 /** Component public properties required to be provided by parent component. */
@@ -58,7 +72,7 @@ const diDecorator = connectToInjector<IAppExternalProps, IAppInternalProps>({
 	getTheme: {
 		dependencies: ['theme:get-theme()'],
 	},
-}, { Preloader: () => <Loader isLoading={true}/>, });
+}, { Preloader: BigLoader, });
 
 function App(props: IAppProps) {
 	const { getTheme, bindToStore } = props;

@@ -80,23 +80,21 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 	return (
 		<>
 			<AppBar position="fixed">
-				<React.Suspense fallback={<Loader size={32}/>}>
-					<Toolbar>
-						<Hidden smDown>
-							<Menu
-								key="menu"
-								MenuItem={TopMenuButton}
-							/>
-						</Hidden>
-						<Hidden mdUp>
-							<TopMenuButton
-								color="primary"
-								Icon={MenuIcon}
-								onClick={toggleDrawer}
-							/>
-						</Hidden>
-					</Toolbar>
-				</React.Suspense>
+				<Toolbar>
+					<Hidden smDown>
+						<Menu
+							key="menu"
+							MenuItem={TopMenuButton}
+						/>
+					</Hidden>
+					<Hidden mdUp>
+						<TopMenuButton
+							color="primary"
+							Icon={MenuIcon}
+							onClick={toggleDrawer}
+						/>
+					</Hidden>
+				</Toolbar>
 				{loading ? <LinearProgress/> : null}
 			</AppBar>
 
@@ -105,27 +103,23 @@ function PrimaryLayoutComponent(props: IPrimaryLayoutProps) {
 					onClose={toggleDrawer}
 					open={drawerOpen}
 				>
-					<React.Suspense fallback={<Loader size={128}/>}>
-						<Menu
-							key="drawer-menu"
-							MenuItem={DrawerMenuButton}
-						/>
-					</React.Suspense>
+					<Menu
+						key="drawer-menu"
+						MenuItem={DrawerMenuButton}
+					/>
 				</Drawer>
 			</Hidden>
 			<Paper
 				className={classes.root}
 				elevation={0}
 			>
-				<React.Suspense fallback={<Loader size={128}/>}>
-					<Slide
-						direction="left"
-						in={true}
-						key={location.pathname.split('/')[1]}
-					>
-						<div className={classes.container}>{content}</div>
-					</Slide>
-				</React.Suspense>
+				<Slide
+					direction="left"
+					in={true}
+					key={location.pathname.split('/')[1]}
+				>
+					<div className={classes.container}>{content}</div>
+				</Slide>
 			</Paper>
 		</>
 	);
