@@ -19,7 +19,7 @@ import GameConfigurationComponent from './game/game-configuration';
 import SoundConfigurationComponent from './sound/sound-configuration';
 import UIConfigurationComponent from './ui/ui-configuration';
 
-import { ConfigureUILink } from 'components/core/navigation-links';
+import { ConfigureGameLink, ConfigureUILink } from 'components/core/navigation-links';
 import { useStyles } from './configuration-view.styles';
 
 /** Component public properties required to be provided by parent component. */
@@ -67,6 +67,11 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 					label={__('User interface configuration')}
 					value="/config/ui"
 				/>
+				<Tab
+					component={ConfigureGameLink}
+					label={__('Game configuration')}
+					value="/config/game"
+				/>
 			</Tabs>
 
 			<Fade
@@ -84,6 +89,11 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 							exact
 							path="/config/ui"
 							component={UIConfigurationComponent}
+						/>
+						<Route
+							exact
+							path="/config/game"
+							component={GameConfigurationComponent}
 						/>
 					</Switch>
 				</Container>

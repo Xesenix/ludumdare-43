@@ -24,6 +24,7 @@ export default class DataStoreModule {
 		});
 		app.bind<IDataStoreProvider<T, A>>('data-store:provider').toProvider(DataStoreProvider);
 
+		/** This should not be injected via useInjector */
 		app.bind<Promise<(keys: (keyof T)[]) => T>>('data-store:bind').toDynamicValue(async ({ container }: interfaces.Context) => {
 			const store = await container.get<IDataStoreProvider<T, A>>('data-store:provider')();
 			return (keys: (keyof T)[]) => useStore<T, A>(store, keys);

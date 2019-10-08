@@ -19,13 +19,12 @@ export default class PhaserGameModule {
 		app.bind<IPhaserGameProvider>('phaser:game-provider').toProvider(PhaserGameProvider);
 		app.bind('phaser:scene:intro:provider').toProvider(IntroSceneProvider);
 		app.bind('phaser:plugins')
-			.toProvider((context: interfaces.Context) => (config = { key: 'ui:manager', start: true }) =>
+			.toProvider((context: interfaces.Context) => () =>
 				import(/* webpackChunkName: "phaser" */ 'lib/phaser/ui-manager.plugin')
-					.then(
-						async ({ UIManagerPluginProvider }) => await UIManagerPluginProvider(context)(),
-					)
+					.then(async ({ UIManagerPluginProvider }) => await UIManagerPluginProvider(context)())
 					.then((UIManagerPlugin) => ({
-						...config,
+						key: 'ui:manager',
+						start: true,
 						plugin: UIManagerPlugin,
 					})),
 			);
