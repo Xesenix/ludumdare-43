@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { MemoryRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import LazyLoaderFactory from 'lib/core/components/lazy-loader-factory';
 import { connectToInjector } from 'lib/di';
 import { II18nLanguagesState } from 'lib/i18n';
 import { LanguageType } from 'lib/interfaces';
+import AuthenticationGuard from 'lib/user/components/authentication-guard';
 import { IAppTheme, ThemesNames } from 'theme';
 
 // elements
@@ -17,6 +18,7 @@ import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-la
 import Loader from 'components/loader/loader';
 import LoaderErrorView from 'components/loader/loader-error-view';
 import { IMenuExternalProps } from 'components/menu/menu';
+import LoginView from 'components/views/login-view/login-view';
 
 const SmallLoader = () => <Loader size={48}/>;
 const BigLoader = () => <Loader size={128}/>;
@@ -86,9 +88,18 @@ function App(props: IAppProps) {
 
 	const routing = (
 		<Switch>
+			<Route path="/login/:redirectPath+" component={LoginView} />
 			<Route exact path="/" component={IntroView} />
-			<Route path="/game" component={GameView} />
-			<Route path="/config" component={ConfigurationView} />
+			<Route path="/config" component={ConfigurationView}/>
+			<Route
+				path="/game"
+				children={(
+					<AuthenticationGuard
+						allowed={<GameView/>}
+						disallowed={<Redirect to="/login/game"/>}
+					/>
+				)}
+			/>
 		</Switch>
 	);
 

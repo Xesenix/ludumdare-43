@@ -78,6 +78,7 @@ export class AppModule extends Container implements IApplication {
 			import(/* webpackChunkName: "audio" */ 'lib/audio/audio-loader.module'),
 			import(/* webpackChunkName: "audio" */ 'lib/sound-scape/sound-scape.module'),
 			import(/* webpackChunkName: "audio" */ 'sound-director/sound-director.module'),
+			import(/* webpackChunkName: "user" */ 'lib/user/user.module'),
 		];
 		return Promise.all<{ default: { register: (app: IApplication) => void } }>(dependencies)
 			.then((modules) => modules.forEach(({ default: m }) => m.register(this)));
