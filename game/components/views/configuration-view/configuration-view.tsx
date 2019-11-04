@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { Link, Route, Switch } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
+import { Link, Route, Switch, useLocation } from 'react-router-dom';
 
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -42,9 +42,8 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	const {
 		// prettier-ignore
 		__,
-		location,
 	} = props;
-
+	const location = useLocation();
 	const classes = useStyles();
 	const theme = useTheme();
 	const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -102,4 +101,4 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 	);
 }
 
-export default hot(module)(withRouter(diDecorator(ConfigurationViewComponent)));
+export default hot(module)(diDecorator(ConfigurationViewComponent));
