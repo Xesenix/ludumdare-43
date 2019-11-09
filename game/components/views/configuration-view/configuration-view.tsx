@@ -6,12 +6,14 @@ import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import AclGuard from 'lib/acl/components/acl-guard';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
 // elements
 import Container from '@material-ui/core/Container';
 import Fade from '@material-ui/core/Fade';
+import Snackbar from '@material-ui/core/Snackbar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
@@ -92,7 +94,14 @@ export function ConfigurationViewComponent(props: IConfigurationViewProps) {
 						<Route
 							exact
 							path="/config/game"
-							component={GameConfigurationComponent}
+							children={(
+								<AclGuard
+									resource="game"
+									permissions="setup"
+									allowed={<GameConfigurationComponent/>}
+									disallowed={<Snackbar open={true} message={__(`You don't have access to this part`)}/>}
+								/>
+							)}
 						/>
 					</Switch>
 				</Container>

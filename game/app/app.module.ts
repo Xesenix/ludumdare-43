@@ -1,9 +1,9 @@
 import { Container } from 'inversify';
 
 // core
+import { AclService } from 'lib/acl/acl.service';
 import EventManagerModule from 'lib/core/event-manager.module';
 import DebugModule from 'lib/debug/debug.module';
-
 import {
 	IApplication,
 	IEventEmitter,
@@ -78,6 +78,7 @@ export class AppModule extends Container implements IApplication {
 			import(/* webpackChunkName: "audio" */ 'lib/audio/audio-loader.module'),
 			import(/* webpackChunkName: "audio" */ 'lib/sound-scape/sound-scape.module'),
 			import(/* webpackChunkName: "audio" */ 'sound-director/sound-director.module'),
+			import(/* webpackChunkName: "user" */ 'lib/acl/acl.module'),
 			import(/* webpackChunkName: "user" */ 'lib/user/user.module'),
 		];
 		return Promise.all<{ default: { register: (app: IApplication) => void } }>(dependencies)
@@ -88,6 +89,12 @@ export class AppModule extends Container implements IApplication {
 		const console = this.get<Console>('debug:console');
 		const providers = this.getAll<() => Promise<void>>('boot');
 		let progress = 0;
+
+		const acl = this.get<AclService>('acl');
+		acl.allow('guest', 'login', 'view');
+		acl.allow('player', 'game', 'view');
+		acl.allow('player', 'config', 'view');
+		acl.allow('player', 'game', 'setup');
 
 		return Promise.all(
 			providers.map((provider: any) => provider().then(() => {
