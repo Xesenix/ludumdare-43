@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme: Theme) => {
 			display: 'flex',
 			flexDirection: 'column',
 			padding: '24px 0px 36px',
-			margin: '0 auto 24px',
+			margin: '0 auto',
 			...appTheme.layout.container.wrapper,
 		},
 		title: {

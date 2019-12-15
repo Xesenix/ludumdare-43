@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import cloneDeep from 'lodash-es/cloneDeep';
 import merge from 'lodash-es/merge';
 
 // icons
@@ -22,9 +23,7 @@ export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 		},
 	};
 
-	let baseTheme = createMuiTheme({
-		...theme,
-	});
+	let baseTheme = createMuiTheme(cloneDeep(theme));
 
 	// setup defaults for all custom theme fields
 	// and common style overrides

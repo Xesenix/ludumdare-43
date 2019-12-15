@@ -7,7 +7,7 @@ export const styles = (theme: Theme) => {
 
 	return createStyles({
 		root: {
-			margin: '0 auto 24px',
+			margin: '0 auto',
 			padding: '16px',
 			...appTheme.layout.container.wrapper,
 		},
