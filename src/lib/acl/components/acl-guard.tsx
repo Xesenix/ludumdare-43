@@ -51,11 +51,12 @@ function AclGuard(props: IAclGuardProps): any {
 	React.useEffect(() => {
 		let connected = true;
 
-		aclGuard.isAllowed(user, resource, permissions).then((result: boolean) => {
-			if (connected) {
-				setAllowed(result);
-			}
-		});
+		aclGuard.isAllowed(user, resource, permissions)
+			.then((result: boolean) => {
+				if (connected) {
+					setAllowed(result);
+				}
+			});
 
 		return () => {
 			connected = false;

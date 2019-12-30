@@ -1,6 +1,6 @@
 export type RandomGeneratorFactory = (seed: string) => () => number;
 
-export interface IRandomGenerator<T> {
+export interface IRandomGenerator<T = any> {
 	/**
 	 * Used to initialize random generator.
 	 *

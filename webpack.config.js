@@ -93,6 +93,11 @@ const configureWebpack = (config) => {
 		};
 	}
 
+	config.module.rules.unshift({
+		test: /playfab-web-sdk\\src\\PlayFab\\PlayFabClientApi/,
+		use: 'exports-loader?PlayFab',
+	});
+
 	if (process.env.ENV === 'development') {
 		config.resolve.alias = {
 			'react-dom': '@hot-loader/react-dom',

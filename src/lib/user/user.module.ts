@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
-import { createSetUserAction } from './actions';
+import { createSetAuthenticationErrorAction, createSetUserAction } from './actions';
 import { reducer } from './reducers';
 import { SessionService } from './session.service';
 import { UserBootProvider } from './user-boot.provider';
@@ -15,6 +15,7 @@ export default class UserModule {
 
 		// redux action creators
 		app.bind<ICreateSetAction<IUser>>('user:action:create:set-user').toConstantValue(createSetUserAction);
+		app.bind<ICreateSetAction<any>>('user:action:create:set-authentication-error').toConstantValue(createSetAuthenticationErrorAction);
 
 		// TODO: research what we can persist from user state if anything at all
 		// // add data store keys that should be persisted between page refresh

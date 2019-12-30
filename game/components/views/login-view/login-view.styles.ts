@@ -9,5 +9,8 @@ export const useStyles = makeStyles((theme: Theme) => {
 		root: {
 			...appTheme.layout.container.wrapper,
 		},
+		formControl: {
+			margin: '4px',
+		},
 	});
 });

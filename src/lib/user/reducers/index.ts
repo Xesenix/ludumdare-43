@@ -5,6 +5,7 @@ import { IUser, IUserState } from '../user.interfaces';
 
 import {
 	// prettier-ignore
+	SET_AUTHENTICATION_ERROR,
 	SET_USER,
 } from '../actions';
 
@@ -22,6 +23,14 @@ export function reducer<S extends IUserState | undefined, A extends IValueAction
 			return {
 				...(state as any),
 				user: value,
+				authenticationError: null,
+			};
+		}
+		case SET_AUTHENTICATION_ERROR: {
+			const { value } = action as IValueAction<any>;
+			return {
+				...(state as any),
+				authenticationError: value,
 			};
 		}
 	}

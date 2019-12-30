@@ -80,6 +80,8 @@ export class AppModule extends Container implements IApplication {
 			import(/* webpackChunkName: "audio" */ 'sound-director/sound-director.module'),
 			import(/* webpackChunkName: "user" */ 'lib/acl/acl.module'),
 			import(/* webpackChunkName: "user" */ 'lib/user/user.module'),
+			import(/* webpackChunkName: "playfab" */ 'lib/playfab/playfab.module'),
+			import(/* webpackChunkName: "kongregate" */ 'lib/kongregate/kongregate.module'),
 		];
 		return Promise.all<{ default: { register: (app: IApplication) => void } }>(dependencies)
 			.then((modules) => modules.forEach(({ default: m }) => m.register(this)));

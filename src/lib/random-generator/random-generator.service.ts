@@ -5,7 +5,7 @@ import { IRandomGenerator } from './interface';
 	'random-generator:random-number-generator-factory',
 	'random-generator:default-seed',
 ])
-export class RandomGeneratorService implements IRandomGenerator {
+export class RandomGeneratorService implements IRandomGenerator<number> {
 	private currentValue: number = 0;
 	private randomGenerator: () => number = (() => 0);
 
@@ -16,7 +16,7 @@ export class RandomGeneratorService implements IRandomGenerator {
 		this.seed(seed);
 	}
 
-	public seed(seed: string) {
+	public seed(seed: string): void {
 		this.randomGenerator = this.randomGeneratorFactory(seed);
 		this.next();
 	}

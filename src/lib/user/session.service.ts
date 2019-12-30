@@ -4,16 +4,25 @@ import { IUser } from './user.interfaces';
 
 @inject([
 	{ type: 'user:actions', named: 'setUser' },
+	{ type: 'user:actions', named: 'setAuthenticationError' },
+	'authenticate',
 ])
 export class SessionService {
 	constructor(
 		private setUser: (user: IUser) => void,
+		private setAuthenticationError: (error: any) => void,
+		private authenticator: (credentials: { login: string }) => Promise<any>,
 	) {
 	}
 
-	public authenticate(credentials: any) {
+	public async authenticate(credentials: any) {
 		if (!!credentials) {
-			this.setUser({ id: 'some-user', roles: ['player']});
+			this.authenticator(credentials).then((u) => {
+				console.log('AUTHENTICATION', u, credentials);
+				this.setUser({ id: 'some-user', roles: ['player']});
+			}, (error) => {
+				this.setAuthenticationError(error);
+			});
 		}
 	}
 }

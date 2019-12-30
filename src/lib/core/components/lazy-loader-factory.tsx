@@ -20,5 +20,5 @@ export default function LazyLoaderFactory<T = any>(
 
 	(LazyLoader as any).displayName = `LazyLoader`;
 
-	return LazyLoader as React.ComponentType<any>;
+	return LazyLoader as React.ComponentType<T>;
 }

@@ -15,5 +15,10 @@ export function UserBootProvider({ container }: interfaces.Context) {
 			container.bind('user:actions')
 				.toConstantValue((value: boolean) => store.dispatch(createSetUserAction(value)))
 				.whenTargetNamed('setUser');
+
+			const createSetAuthenticationErrorAction = container.get<ICreateSetAction<boolean>>('user:action:create:set-authentication-error');
+			container.bind('user:actions')
+				.toConstantValue((value: boolean) => store.dispatch(createSetAuthenticationErrorAction(value)))
+				.whenTargetNamed('setAuthenticationError');
 		});
 }

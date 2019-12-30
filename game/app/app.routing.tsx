@@ -7,7 +7,6 @@ import LoaderErrorView from 'components/loader/loader-error-view';
 import LoginView from 'components/views/login-view/login-view';
 
 import LazyLoaderFactory from 'lib/core/components/lazy-loader-factory';
-import AuthenticationGuard from 'lib/user/components/authentication-guard';
 
 const BigLoader = () => <Loader size={128}/>;
 
@@ -31,19 +30,21 @@ function AppRouting(): React.ReactElement {
 	return (
 		<Switch>
 			<Route
-				path="/login/:redirectPath+"
 				component={LoginView}
+				path="/login/:redirectPath+"
 			/>
-			<Route exact path="/" component={IntroView} />
-			<Route path="/config" component={ConfigurationView}/>
 			<Route
+				component={IntroView}
+				exact
+				path="/"
+			/>
+			<Route
+				component={ConfigurationView}
+				path="/config"
+			/>
+			<Route
+				component={GameView}
 				path="/game"
-				children={(
-					<AuthenticationGuard
-						allowed={<GameView/>}
-						disallowed={<Redirect to="/login/game"/>}
-					/>
-				)}
 			/>
 		</Switch>
 	);
