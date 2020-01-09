@@ -361,7 +361,7 @@ Each one requires 1 resource per year to be operational if there are no enough r
 							variant="extended"
 						>
 							<ActionIcon />
-							{currentState.immunity ? __('Continue') : __('Defend yourself')}
+							{__('Defend yourself')}
 						</Fab>
 					</Grid>
 					<Grid item sm={6} xs={12}>

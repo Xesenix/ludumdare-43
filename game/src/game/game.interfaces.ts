@@ -88,7 +88,7 @@ export interface IGameState {
 	lose: boolean;
 
 	/** recalculate after each turn finishes */
-	event: 'sacrifice' | 'orcs';
+	event: 'orcs';
 
 	weakness: {
 		/** updated by action */
@@ -97,7 +97,4 @@ export interface IGameState {
 		/** initial configuration */
 		perLevelReduction: number;
 	};
-
-	/** false after each turn finish */
-	immunity: boolean;
 }

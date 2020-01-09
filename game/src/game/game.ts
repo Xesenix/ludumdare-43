@@ -35,7 +35,6 @@ import {
 	// prettier-ignore
 	makeUltimateSacrifice,
 	sacrificeIdlesForEnemiesWeakness,
-	sacrificeResourcesForImmunity,
 } from './systems/sacrifice';
 import { trainWorkersRule } from './systems/training';
 import {
@@ -64,10 +63,6 @@ export class Game {
 
 	public getState(): IGameState {
 		return produce(this.dataStore.getState(), () => {});
-	}
-
-	public sacrificeResourcesForImmunityAction = (): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), sacrificeResourcesForImmunity));
 	}
 
 	public sacrificeIdlesForEnemiesWeaknessAction = (): void => {
@@ -125,7 +120,6 @@ export class Game {
 		const draft = createDraft(state);
 
 		draft.event = 'orcs';
-		draft.immunity = false;
 
 		this.progress(draft);
 

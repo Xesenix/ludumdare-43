@@ -24,7 +24,6 @@ import {
 import {
 	// prettier-ignore
 	canSacraficeForEnemiesWeakness,
-	canSacraficeForImmunity,
 } from 'game/systems/sacrifice';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
@@ -73,7 +72,6 @@ function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
 	const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
 	const populationCost = getSacrificePopulationCost(currentState);
 	const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
-	const resourceCost = getSacrificeResourcesCost(currentState);
 	const sacrificeCount = getSacrificeCount(currentState);
 	const weaknessLevel = getWeaknessLevel(currentState);
 
@@ -100,28 +98,6 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 						variant="caption"
 					/>
 				)}
-			</Grid>
-			<Grid item xs={12}>
-				<Typography component="h4" variant="h6">
-					{__(`Immunity`)}
-				</Typography>
-				{compact ? null : (
-					<Typography component="p" variant="caption">
-						{__(`Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year.`, {
-							resourceCost,
-						})}
-					</Typography>
-				)}
-				<Button
-					// prettier-ignore
-					color="secondary"
-					disabled={disabled || !canSacraficeForImmunity(currentState)}
-					onClick={game.sacrificeResourcesForImmunityAction}
-					size="small"
-					variant="contained"
-				>
-					{__(`Sacrifice %{resourceCost}&nbsp;resources`, { resourceCost })}
-				</Button>
 			</Grid>
 
 			<Grid item xs={12}>

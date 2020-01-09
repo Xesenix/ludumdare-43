@@ -53,5 +53,4 @@ export const initialGameState: IGameState = {
 		level: 0,
 		perLevelReduction: 0.3,
 	},
-	immunity: false,
 };
