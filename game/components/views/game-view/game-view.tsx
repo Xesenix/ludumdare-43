@@ -7,36 +7,6 @@ import { hot } from 'react-hot-loader';
 import { Game, IGameState } from 'game';
 import { connectToInjector } from 'lib/di';
 
-import { getResourcesAmount } from 'game/models/resources/resources';
-import {
-	// prettier-ignore
-	getSacrificeCount,
-	getSacrificedPopulationInTotal,
-	getSacrificedResourcesInTotal,
-} from 'game/models/skills/sacrifice';
-import { getCurrentChildren } from 'game/models/units/children';
-import {
-	// prettier-ignore
-	getCurrentGuards,
-	getTrainedGuards,
-} from 'game/models/units/guards';
-import { getCurrentIdles } from 'game/models/units/idles';
-import {
-	// prettier-ignore
-	getCurrentPopulation,
-	getMaxPopulation,
-} from 'game/models/units/population';
-import {
-	// prettier-ignore
-	getCurrentWorkers,
-	getTrainedWorkers,
-} from 'game/models/units/workers';
-import { canMakeUltimateSacrifice } from 'game/systems/sacrifice';
-import {
-	// prettier-ignore
-	canTrainGuards,
-	canTrainWorkers,
-} from 'game/systems/training';
 import {
 	// prettier-ignore
 	II18nLanguagesState,
@@ -55,19 +25,32 @@ import {
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 // icons
 import ActionIcon from '@material-ui/icons/FlashOnRounded';
 import WinIcon from '@material-ui/icons/Star';
 
-import BuildingsWidgetComponent from 'components/buildings-widget/buildings-widget';
-import EventWidgetComponent from 'components/event-widget/event-widget';
-import PhaserViewComponent from 'components/phaser-view/phaser-view';
-import SacrificesWidgetComponent from 'components/sacrifices-widget/sacrifices-widget';
-import StatusWidgetComponent from 'components/status-widget/status-widget';
-import TrainWidgetComponent from 'components/train-widget/train-widget';
-// import TurnDetailsComponent from 'components/turn-details/turn-details';
-import UnitsWidgetComponent from 'components/units-widget/units-widget';
+// components
+import PhaserViewComponent from 'components/ui/phaser-view/phaser-view';
+
+import BuildingsWidgetComponent from 'game/components/buildings-widget/buildings-widget';
+import EventWidgetComponent from 'game/components/event-widget/event-widget';
+import SacrificesWidgetComponent from 'game/components/sacrifices-widget/sacrifices-widget';
+import StatusWidgetComponent from 'game/components/status-widget/status-widget';
+import TrainWidgetComponent from 'game/components/train-widget/train-widget';
+// import TurnDetailsComponent from 'game/components/turn-details/turn-details';
+import UnitsWidgetComponent from 'game/components/units-widget/units-widget';
+
+import { ChildrenSystem } from 'game/systems/children';
+import { GuardsSystem } from 'game/systems/guards';
+import { IdlesSystem } from 'game/systems/idles';
+import { PopulationSystem } from 'game/systems/population';
+import { ResourcesSystem } from 'game/systems/resources';
+import { SacrificesSystem } from 'game/systems/sacrifices';
+import { WorkersSystem } from 'game/systems/workers';
+
+import DefeatComponent from './scenes/defeat/defeat';
+import RestartComponent from './scenes/restart/restart';
+import VictoryComponent from './scenes/victory/victory';
 
 import { styles } from './game-view.styles';
 
@@ -80,9 +63,16 @@ export interface IGameViewExternalProps {
 interface IGameViewInternalProps extends IStoreComponentInternalProps<IGameViewState> {
 	__: II18nTranslation;
 	_$: II18nPluralTranslation;
+	children: ChildrenSystem;
 	di?: Container;
 	em: EventEmitter;
 	game: Game;
+	guards: GuardsSystem;
+	idles: IdlesSystem;
+	population: PopulationSystem;
+	resources: ResourcesSystem;
+	sacrifices: SacrificesSystem;
+	workers: WorkersSystem;
 }
 
 /** Internal component state. */
@@ -105,11 +95,32 @@ const diDecorator = connectToInjector<IGameViewProps, IGameViewInternalProps>({
 	_$: {
 		dependencies: ['i18n:translate_plural'],
 	},
+	children: {
+		dependencies: ['game:system:children'],
+	},
 	em: {
 		dependencies: ['event-manager'],
 	},
 	game: {
 		dependencies: ['game'],
+	},
+	guards: {
+		dependencies: ['game:system:guards'],
+	},
+	idles: {
+		dependencies: ['game:system:idles'],
+	},
+	population: {
+		dependencies: ['game:system:population'],
+	},
+	resources: {
+		dependencies: ['game:system:resources'],
+	},
+	sacrifices: {
+		dependencies: ['game:system:sacrifices'],
+	},
+	workers: {
+		dependencies: ['game:system:workers'],
 	},
 });
 
@@ -147,9 +158,15 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 		const {
 			// prettier-ignore
 			__,
-			_$,
+			children,
 			classes,
 			game,
+			guards,
+			idles,
+			population,
+			resources,
+			sacrifices,
+			workers,
 		} = this.props;
 		const {
 			// prettier-ignore
@@ -159,102 +176,6 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 		const blockNextTurn = false;
 		const currentState: IGameState = game.getState();
 		const consequences: IGameState = game.calculateConsequences();
-
-		const restartBlock = (
-			<Grid item style={{ padding: '24px', textAlign: 'center' }} xs={12}>
-				<Fab
-					// prettier-ignore
-					color="default"
-					disabled={blockNextTurn}
-					onClick={game.resetGame}
-					size="large"
-					variant="extended"
-				>
-					{__('Restart')}
-				</Fab>
-			</Grid>
-		);
-
-		const sacrificedResources = getSacrificedResourcesInTotal(currentState);
-		const sacrificedPopulation = getSacrificedPopulationInTotal(currentState);
-		const sacrificesCount = getSacrificeCount(currentState);
-
-		const winBlock = (
-			<Paper className={classes.root} elevation={0}>
-				<Grid alignItems="center" container spacing={0}>
-					<Grid item style={{ marginBottom: '12px' }} xs={12}>
-						<PhaserViewComponent keepInstanceOnRemove />
-					</Grid>
-					<Grid item xs={12}>
-						<Typography align="center" component="h3" variant="h4">
-							{__(`Your village is safe everybody are in heaven now.`)}
-						</Typography>
-						<Typography align="center" component="p" variant="subtitle1">
-							{_$(
-								// prettier-ignore
-								currentState.turn,
-								`Victory achieved in first year.`,
-								`Victory achieved in %{turn} years.`,
-								{
-									turn: currentState.turn,
-								},
-							)}
-							<br />
-							{_$(
-								// prettier-ignore
-								sacrificedResources,
-								`You have sacrificed one resource`,
-								`You have sacrificed %{sacrificedResources}&nbsp;resources`,
-								{
-									sacrificedResources,
-								},
-							)}{' '}
-							{_$(
-								// prettier-ignore
-								sacrificedPopulation,
-								`and one person`,
-								`and %{sacrificedPopulation}&nbsp;people`,
-								{
-									sacrificedPopulation,
-								},
-							)}{' '}
-							{_$(
-								// prettier-ignore
-								sacrificesCount,
-								`in one sacrifice.`,
-								`in %{sacrificesCount} sacrifices.`,
-								{
-									sacrificesCount,
-								},
-							)}
-						</Typography>
-					</Grid>
-				</Grid>
-				{restartBlock}
-			</Paper>
-		);
-
-		const loseBlock = (
-			<Paper className={classes.root} elevation={0}>
-				<Grid alignItems="center" container spacing={0}>
-					<Grid item style={{ marginBottom: '12px' }} xs={12}>
-						<PhaserViewComponent keepInstanceOnRemove />
-					</Grid>
-					<Grid item xs={12}>
-						<Typography align="center" component="h1" variant="h4">
-							{__(
-								// prettier-ignore
-								`Your village has perished after %{turn} years`,
-								{
-									turn: currentState.turn,
-								},
-							)}
-						</Typography>
-					</Grid>
-				</Grid>
-				{restartBlock}
-			</Paper>
-		);
 
 		const gameBlock = (
 			<Paper className={classes.root} elevation={0}>
@@ -272,13 +193,13 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 							// prettier-ignore
 							compact={compactMode}
 							population={{
-								current: getCurrentPopulation(currentState),
-								change: getCurrentPopulation(consequences) - getCurrentPopulation(currentState),
-								max: getMaxPopulation(currentState),
+								current: population.getCurrentAmount(),
+								change: population.getCurrentAmountDiff(consequences),
+								max: population.getMaxAmount(),
 							}}
 							resources={{
-								current: getResourcesAmount(currentState),
-								income: getResourcesAmount(consequences) - getResourcesAmount(currentState),
+								current: resources.getAmount(),
+								income: resources.getAmountDiff(consequences),
 							}}
 							turn={currentState.turn}
 						/>
@@ -286,8 +207,8 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							amount={getCurrentIdles(currentState)}
-							change={getCurrentIdles(consequences) - getCurrentIdles(currentState)}
+							amount={idles.getCurrentAmount()}
+							change={idles.getCurrentAmountDiff(consequences)}
 							compact={compactMode}
 							label={__('Idlers')}
 						>
@@ -297,8 +218,8 @@ class GameViewComponent extends StoreComponent<IGameViewProps, IGameViewState> {
 					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							amount={getCurrentChildren(currentState)}
-							change={getCurrentChildren(consequences) - getCurrentChildren(currentState)}
+							amount={children.getCurrentAmount()}
+							change={children.getCurrentAmountDiff(consequences)}
 							compact={compactMode}
 							label={__('Children')}
 						>
@@ -309,11 +230,11 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							amount={getCurrentWorkers(currentState)}
-							change={getCurrentWorkers(consequences) - getCurrentWorkers(currentState)}
+							amount={workers.getCurrentAmount()}
+							change={workers.getCurrentAmountDiff(consequences)}
 							compact={compactMode}
 							label={__('Workers')}
-							trained={getTrainedWorkers(currentState)}
+							trained={workers.getTrainedAmount()}
 						>
 							{__(`Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year.`)}
 						</UnitsWidgetComponent>
@@ -321,11 +242,11 @@ They are also most vulnerable for attacks and will die in first order if attacke
 					<Grid item sm={compactMode ? 3 : 6} xs={compactMode ? 6 : 12}>
 						<UnitsWidgetComponent
 							// prettier-ignore
-							amount={getCurrentGuards(currentState)}
-							change={getCurrentGuards(consequences) - getCurrentGuards(currentState)}
+							amount={guards.getCurrentAmount()}
+							change={guards.getCurrentAmountDiff(consequences)}
 							compact={compactMode}
 							label={__('Guards')}
-							trained={getTrainedGuards(currentState)}
+							trained={guards.getTrainedAmount()}
 						>
 							{__(`They will protect other units from being attacked and resources from being stolen.
 Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again.`)}
@@ -334,21 +255,21 @@ Each one requires 1 resource per year to be operational if there are no enough r
 					<Grid item sm={6} xs={12}>
 						<TrainWidgetComponent
 							// prettier-ignore
-							canTrain={canTrainWorkers(currentState)}
+							canTrain={workers.canTrain}
 							disabled={blockNextTurn}
 							label={__('train/release workers')}
-							train={game.trainWorkers}
-							trained={getTrainedWorkers(currentState)}
+							train={workers.scheduleTrainingAction}
+							trained={workers.getTrainedAmount()}
 						/>
 					</Grid>
 					<Grid item sm={6} xs={12}>
 						<TrainWidgetComponent
 							// prettier-ignore
-							canTrain={canTrainGuards(currentState)}
+							canTrain={guards.canTrain}
 							disabled={blockNextTurn}
 							label={__('train/release guards')}
-							train={game.trainGuards}
-							trained={getTrainedGuards(currentState)}
+							train={guards.scheduleTrainingAction}
+							trained={guards.getTrainedAmount()}
 						/>
 					</Grid>
 					<Grid className={classes.actionbar} container item justify="center" xs={12}>
@@ -382,15 +303,15 @@ Each one requires 1 resource per year to be operational if there are no enough r
 						<Fab
 							// prettier-ignore
 							color="primary"
-							disabled={blockNextTurn || !canMakeUltimateSacrifice(currentState)}
-							onClick={game.makeUltimateSacrificeAction}
+							disabled={blockNextTurn || !sacrifices.canMakeUltimateSacrifice()}
+							onClick={sacrifices.makeUltimateSacrificeAction}
 							size="large"
 							variant="extended"
 						>
 							<WinIcon />{' '}
 							{__(`Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)`, {
-								requiredPopulation: 1000,
-								requiredResources: 1000,
+								requiredPopulation: sacrifices.getSacrificeCost(),
+								requiredResources: sacrifices.getSacrificeCost(),
 							})}
 						</Fab>
 					</Grid>
@@ -399,12 +320,12 @@ Each one requires 1 resource per year to be operational if there are no enough r
 							{/* <TurnDetailsComponent consequences={consequences}/> */}
 						</Grid>
 					)}
-					{restartBlock}
+					<RestartComponent/>
 				</Grid>
 			</Paper>
 		);
 
-		return currentState.win ? winBlock : currentState.lose ? loseBlock : gameBlock;
+		return currentState.win ? <VictoryComponent/> : currentState.lose ? <DefeatComponent/> : gameBlock;
 	}
 
 	private progressToNextTurn = () => {

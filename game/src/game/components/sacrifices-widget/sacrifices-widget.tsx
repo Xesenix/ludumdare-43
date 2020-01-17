@@ -1,4 +1,3 @@
-import produce from 'immer';
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
@@ -8,23 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import { Game } from 'game/game';
-import {
-	// prettier-ignore
-	getSacrificeCount,
-	getSacrificePopulationCost,
-	getSacrificeResourcesCost,
-} from 'game/models/skills/sacrifice';
-import {
-	// prettier-ignore
-	changeAmountOfWeaknessLevel,
-	getWeaknessDamageReduction,
-	getWeaknessLevel,
-	getWeaknessPerLevelReduction,
-} from 'game/models/skills/weakness';
-import {
-	// prettier-ignore
-	canSacraficeForEnemiesWeakness,
-} from 'game/systems/sacrifice';
+import { StatsSystem } from 'game/systems/stats';
+import { WeaknessSystem } from 'game/systems/weakness';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
@@ -40,6 +24,8 @@ export interface ISacrificesWidgetExternalProps {
 interface ISacrificesWidgetInternalProps {
 	__: II18nTranslation;
 	game: Game;
+	stats: StatsSystem;
+	weakness: WeaknessSystem;
 }
 
 type ISacrificesWidgetProps = ISacrificesWidgetExternalProps & ISacrificesWidgetInternalProps;
@@ -51,6 +37,12 @@ const diDecorator = connectToInjector<ISacrificesWidgetExternalProps, ISacrifice
 	game: {
 		dependencies: ['game'],
 	},
+	stats: {
+		dependencies: ['game:system:statistics'],
+	},
+	weakness: {
+		dependencies: ['game:system:weakness'],
+	},
 });
 
 function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
@@ -60,20 +52,21 @@ function SacrificesWidgetComponent(props: ISacrificesWidgetProps) {
 		compact,
 		disabled,
 		game,
+		stats,
+		weakness,
 	} = props;
 
 	const classes = useStyles();
 
 	const currentState = game.getState();
 
-	const turn = currentState.turn;
-	const futureResourceCost = getSacrificeResourcesCost({ ...currentState, turn: turn + 1 });
-	const nextLevelWeaknessReduction = (getWeaknessDamageReduction(produce(currentState, changeAmountOfWeaknessLevel(1))) * 100).toFixed(2);
-	const perLevelWeaknessReduction = (getWeaknessPerLevelReduction(currentState) * 100).toFixed(2);
-	const populationCost = getSacrificePopulationCost(currentState);
-	const powerReduction = (getWeaknessDamageReduction(currentState) * 100).toFixed(2);
-	const sacrificeCount = getSacrificeCount(currentState);
-	const weaknessLevel = getWeaknessLevel(currentState);
+	const futureResourceCost = weakness.getNextLevelResourceCost();
+	const nextLevelWeaknessReduction = (weakness.getNextLevelDamageReduction() * 100).toFixed(2);
+	const perLevelWeaknessReduction = (weakness.getPerLevelReduction() * 100).toFixed(2);
+	const populationCost = weakness.getPopulationCost(currentState);
+	const powerReduction = (weakness.getDamageReduction() * 100).toFixed(2);
+	const sacrificeCount = stats.getSacrificeCount(currentState);
+	const weaknessLevel = weakness.getLevel();
 
 	return (
 		<Grid className={classes.root} container spacing={8}>
@@ -126,8 +119,8 @@ Next turn cost will increase to&nbsp;<strong>%{futureResourceCost}</strong>`,
 				/>
 				<Button
 					color="secondary"
-					disabled={disabled || !canSacraficeForEnemiesWeakness(currentState)}
-					onClick={game.sacrificeIdlesForEnemiesWeaknessAction}
+					disabled={disabled || !weakness.canLevelUp()}
+					onClick={game.levelUpWeaknessAction}
 					size="small"
 					variant="contained"
 				>

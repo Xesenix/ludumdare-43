@@ -7,22 +7,13 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import { IGameState } from 'game';
-import { getResourcesStolenInLastTurn } from 'game/models/resources/resources';
-import {
-	// prettier-ignore
-	getAttackPower,
-	getBaseAttackPower,
-} from 'game/models/skills/attack';
-import {
-	// prettier-ignore
-	getWeaknessDamageReduction,
-	getWeaknessLevel,
-} from 'game/models/skills/weakness';
-import { getPopulationKilledInLastTurn } from 'game/models/units/population';
+import { BattleSystem } from 'game/systems/battle';
+import { StatsSystem } from 'game/systems/stats';
+import { WallsSystem } from 'game/systems/walls';
+import { WeaknessSystem } from 'game/systems/weakness';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { getWallsLevel, getWallsReduction } from 'game/models/buildings/walls';
 import { useStyles } from './event-widget.styles';
 
 /** Component public properties required to be provided by parent component. */
@@ -34,6 +25,10 @@ export interface IEventWidgetExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface IEventWidgetInternalProps {
 	__: II18nTranslation;
+	battle: BattleSystem;
+	statistics: StatsSystem;
+	walls: WallsSystem;
+	weakness: WeaknessSystem;
 }
 
 type IEventWidgetProps = IEventWidgetExternalProps & IEventWidgetInternalProps;
@@ -41,6 +36,18 @@ type IEventWidgetProps = IEventWidgetExternalProps & IEventWidgetInternalProps;
 const diDecorator = connectToInjector<IEventWidgetExternalProps, IEventWidgetInternalProps>({
 	__: {
 		dependencies: ['i18n:translate'],
+	},
+	battle: {
+		dependencies: ['game:system:battle'],
+	},
+	statistics: {
+		dependencies: ['game:system:statistics'],
+	},
+	walls: {
+		dependencies: ['game:system:walls'],
+	},
+	weakness: {
+		dependencies: ['game:system:weakness'],
 	},
 });
 
@@ -50,6 +57,10 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 		__,
 		consequences,
 		currentState,
+		walls,
+		weakness,
+		statistics,
+		battle,
 	} = props;
 
 	const classes = useStyles();
@@ -70,7 +81,7 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 			>
 				{__(`%{event} attack power %{attackPower}`, {
 					event,
-					attackPower: Math.floor(getAttackPower(currentState)),
+					attackPower: Math.floor(battle.getAttackPower(currentState)),
 				})}
 			</Typography>
 			<Paper
@@ -93,7 +104,7 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 							variant="subtitle1"
 						>
 							{__(`Original power %{baseAttackPower}`, {
-								baseAttackPower: Math.floor(getBaseAttackPower(currentState)),
+								baseAttackPower: Math.floor(battle.getBaseAttackPower(currentState)),
 							})}
 						</Typography>
 						<Typography
@@ -103,8 +114,8 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 							variant="caption"
 						>
 							{__(`weakness lvl %{weaknessLvl} reduced it by %{weaknessDamageReduction}%`, {
-								weaknessDamageReduction: (getWeaknessDamageReduction(currentState) * 100).toFixed(2),
-								weaknessLvl: getWeaknessLevel(currentState),
+								weaknessDamageReduction: (weakness.getDamageReduction() * 100).toFixed(2),
+								weaknessLvl: weakness.getLevel(),
 							})}
 						</Typography>
 						<Typography
@@ -114,8 +125,8 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 							variant="caption"
 						>
 							{__(`wall lvl %{weaknessLvl} reduced it by %{wallsReduction}`, {
-								wallsReduction: getWallsReduction(currentState),
-								weaknessLvl: getWallsLevel(currentState),
+								wallsReduction: walls.getWallsReduction(),
+								weaknessLvl: walls.getLevel(),
 							})}
 						</Typography>
 					</Grid>
@@ -144,7 +155,7 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 								component="p"
 								variant="h5"
 							>
-								{getPopulationKilledInLastTurn(consequences)}
+								{statistics.getPopulationKilledInLastTurn(consequences)}
 							</Typography>
 							<Typography
 								// prettier-ignore
@@ -162,7 +173,7 @@ function EventWidgetComponent(props: IEventWidgetProps): any {
 								component="p"
 								variant="h5"
 							>
-								{getResourcesStolenInLastTurn(consequences)}
+								{statistics.getResourcesStolenInLastTurn(consequences)}
 							</Typography>
 							<Typography
 								// prettier-ignore

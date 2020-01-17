@@ -9,8 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 
-import LanguageSelectorComponent from 'components/language/language-selector/language-selector';
-import ThemeSelectorComponent from 'components/theme/theme-selector/theme-selector';
+import LanguageSelectorComponent from 'components/ui/language/language-selector/language-selector';
+import ThemeSelectorComponent from 'components/ui/theme/theme-selector/theme-selector';
 
 import { useStyles } from '../configuration-view.styles';
 

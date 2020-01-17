@@ -8,23 +8,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import { Game } from 'game';
-import {
-	// prettier-ignore
-	getCottagesBuildCost,
-	getCottagesLevel,
-} from 'game/models/buildings/cottages';
-import {
-	// prettier-ignore
-	getWallsBuildCost,
-	getWallsLevel,
-	getWallsReduction,
-} from 'game/models/buildings/walls';
-import {
-	// prettier-ignore
-	canBuildCottages,
-	canBuildWalls,
-} from 'game/systems/build';
+import { CottagesSystem } from 'game/systems/cottages';
+import { WallsSystem } from 'game/systems/walls';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
@@ -39,8 +24,9 @@ export interface IBuildingsWidgetExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface IBuildingsWidgetInternalProps {
 	__: II18nTranslation;
+	cottages: CottagesSystem;
+	walls: WallsSystem;
 	di?: Container;
-	game: Game;
 	store?: Store<any, any>;
 }
 
@@ -50,8 +36,11 @@ const diDecorator = connectToInjector<IBuildingsWidgetExternalProps, IBuildingsW
 	__: {
 		dependencies: ['i18n:translate'],
 	},
-	game: {
-		dependencies: ['game'],
+	cottages: {
+		dependencies: ['game:system:cottages'],
+	},
+	walls: {
+		dependencies: ['game:system:walls'],
 	},
 });
 
@@ -61,25 +50,25 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 		__,
 		compact,
 		disabled,
-		game,
+		cottages,
+		walls,
 	} = props;
 
 	const classes = useStyles();
 
 	const buildWall = React.useCallback(() => {
-		game.buildWalls(1);
-	}, [game]);
+		walls.commitBuild();
+	}, [walls]);
 
 	const buildCottage = React.useCallback(() => {
-		game.buildCottages(1);
-	}, [game]);
+		cottages.commitBuild();
+	}, [cottages]);
 
-	const currentState = game.getState();
-	const cottagesBuildCost = getCottagesBuildCost(currentState)(1);
-	const cottagesLevel = getCottagesLevel(currentState);
-	const wallLevel = getWallsLevel(currentState);
-	const wallsBuildCost = getWallsBuildCost(currentState)(1);
-	const wallsReduction = getWallsReduction(currentState);
+	const cottagesBuildCost = cottages.getBuildCost();
+	const cottagesLevel = cottages.getLevel();
+	const wallLevel = walls.getLevel();
+	const wallsBuildCost = walls.getBuildCost();
+	const wallsReduction = walls.getWallsReduction();
 
 	return (
 		<Grid className={classes.root} container spacing={8}>
@@ -103,7 +92,7 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 				<Button
 					// prettier-ignore
 					color="secondary"
-					disabled={disabled || !canBuildWalls(currentState)(1)}
+					disabled={disabled || !walls.canBuild(1)}
 					onClick={buildWall}
 					variant="contained"
 				>
@@ -126,7 +115,7 @@ function BuildingsWidgetComponent(props: IBuildingsWidgetProps) {
 				<Button
 					// prettier-ignore
 					color="secondary"
-					disabled={disabled || !canBuildCottages(currentState)(1)}
+					disabled={disabled || !cottages.canBuild(1)}
 					onClick={buildCottage}
 					variant="contained"
 				>

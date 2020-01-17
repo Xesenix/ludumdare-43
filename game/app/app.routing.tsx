@@ -2,8 +2,8 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import Loader from 'components/loader/loader';
-import LoaderErrorView from 'components/loader/loader-error-view';
+import Loader from 'components/ui/loader/loader';
+import LoaderErrorView from 'components/ui/loader/loader-error-view';
 import LoginView from 'components/views/login-view/login-view';
 
 import LazyLoaderFactory from 'lib/core/components/lazy-loader-factory';

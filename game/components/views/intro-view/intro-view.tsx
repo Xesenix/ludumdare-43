@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 
-import { GameLink } from 'components/core/navigation-links';
+import { GameLink } from 'components/ui/core/navigation-links';
 
 import { useStyles } from './intro-view.styles';
 

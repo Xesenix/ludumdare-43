@@ -21,7 +21,7 @@ import GameConfigurationComponent from './game/game-configuration';
 import SoundConfigurationComponent from './sound/sound-configuration';
 import UIConfigurationComponent from './ui/ui-configuration';
 
-import { ConfigureGameLink, ConfigureUILink } from 'components/core/navigation-links';
+import { ConfigureGameLink, ConfigureUILink } from 'components/ui/core/navigation-links';
 import { useStyles } from './configuration-view.styles';
 
 /** Component public properties required to be provided by parent component. */

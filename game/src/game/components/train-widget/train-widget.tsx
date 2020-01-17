@@ -33,7 +33,7 @@ const diDecorator = connectToInjector<ITrainUnitsWidgetExternalProps, ITrainUnit
 	},
 });
 
-function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
+function TrainWidgetComponent(props: ITrainUnitsWidgetProps) {
 	const [ step, setStep ] = React.useState(1);
 
 	const {
@@ -135,4 +135,4 @@ function TrainUnitsWidgetComponent(props: ITrainUnitsWidgetProps) {
 	);
 }
 
-export default hot(module)(diDecorator(TrainUnitsWidgetComponent));
+export default hot(module)(diDecorator(TrainWidgetComponent));

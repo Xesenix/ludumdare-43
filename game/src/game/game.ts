@@ -21,28 +21,12 @@ import { setIdlesKilledInLastTurn } from './models/units/idles';
 import { getCurrentPopulation } from './models/units/population';
 import { setWorkersKilledInLastTurn } from './models/units/workers';
 import { eventRule } from './rules/turn/event.rule';
-import { gatherResourcesRule } from './rules/turn/gather-resources';
-import { guardsUpkeepRule } from './rules/turn/guards-upkeep';
-import { populationIncreaseRule } from './rules/turn/population-increase';
-import { populationLimitRule } from './rules/turn/population-limit';
 import { DataStore } from './store';
-import {
-	// prettier-ignore
-	buildCottages,
-	buildWalls,
-} from './systems/build';
-import {
-	// prettier-ignore
-	makeUltimateSacrifice,
-	sacrificeIdlesForEnemiesWeakness,
-} from './systems/sacrifice';
-import { trainWorkersRule } from './systems/training';
-import {
-	// prettier-ignore
-	scheduleTrainingGuards,
-	scheduleTrainingWorkers,
-	trainGuardsRule,
-} from './systems/training';
+import { GuardsSystem } from './systems/guards';
+import { PopulationSystem } from './systems/population';
+import { ResourcesSystem } from './systems/resources';
+import { WeaknessSystem } from './systems/weakness';
+import { WorkersSystem } from './systems/workers';
 
 // prepare constant modifiers instead of recreating them with each method call
 
@@ -50,6 +34,12 @@ import {
 	'game:initial-state',
 	'game:data-store',
 	'game:rng-service',
+	'game:system:guards',
+	'game:system:workers',
+	'game:system:population',
+	'game:system:resources',
+	'game:system:weakness',
+	'game:system:sacrifices',
 ])
 export class Game {
 	constructor(
@@ -57,6 +47,11 @@ export class Game {
 		private initialState: IGameState,
 		private dataStore: DataStore<IGameState>,
 		private rngService: IRandomGenerator<number>,
+		private guards: GuardsSystem,
+		private workers: WorkersSystem,
+		private population: PopulationSystem,
+		private resources: ResourcesSystem,
+		private weakness: WeaknessSystem,
 	) {
 		this.resetGame();
 	}
@@ -65,28 +60,8 @@ export class Game {
 		return produce(this.dataStore.getState(), () => {});
 	}
 
-	public sacrificeIdlesForEnemiesWeaknessAction = (): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), sacrificeIdlesForEnemiesWeakness));
-	}
-
-	public makeUltimateSacrificeAction = (): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), makeUltimateSacrifice));
-	}
-
-	public trainWorkers = (amount: number): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), scheduleTrainingWorkers(amount)));
-	}
-
-	public trainGuards = (amount: number): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), scheduleTrainingGuards(amount)));
-	}
-
-	public buildWalls = (amount: number = 1): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), buildWalls(amount)));
-	}
-
-	public buildCottages = (amount: number = 1): void => {
-		this.dataStore.setState(produce(this.dataStore.getState(), buildCottages(amount)));
+	public levelUpWeaknessAction = (): void => {
+		this.dataStore.setState(finishDraft(this.weakness.buyLevel(1)));
 	}
 
 	public resetGame = (): void => {
@@ -95,27 +70,27 @@ export class Game {
 	}
 
 	public commitNextTurn(): void {
-		this.dataStore.setState(produce(this.dataStore.getState(), this.prepareNextTurn.bind(this)));
+		this.dataStore.setState(produce(this.dataStore.getState(), this.prepareNextTurn));
 	}
 
 	public calculateConsequences(): IGameState {
 		return produce(this.getState(), this.progress);
 	}
 
-	private progress(state: IGameState): IGameState {
-		guardsUpkeepRule(state);
-		populationIncreaseRule(state);
-		trainGuardsRule(state);
-		trainWorkersRule(state);
-		populationLimitRule(state);
+	private progress = (state: IGameState): IGameState => {
+		this.guards.upkeepRule(state);
+		this.population.populationIncreaseRule(state);
+		this.guards.trainRule(state);
+		this.workers.trainRule(state);
+		this.population.populationLimitRule(state);
 		eventRule(state);
-		gatherResourcesRule(state);
+		this.resources.gatherResourcesRule(state);
 		state.turn ++;
 		state.lose = getCurrentPopulation(state) === 0;
 		return state;
 	}
 
-	private prepareNextTurn(state: IGameState): IGameState {
+	private prepareNextTurn = (state: IGameState): IGameState => {
 		// prettier-ignore
 		const draft = createDraft(state);
 

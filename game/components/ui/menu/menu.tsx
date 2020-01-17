@@ -15,7 +15,7 @@ import {
 import { IAppTheme } from 'theme';
 
 // elements
-import { ConfigLink, GameLink } from 'components/core/navigation-links';
+import { ConfigLink, GameLink } from 'components/ui/core/navigation-links';
 
 import LanguageSelectorComponent from './language-selector/language-selector';
 

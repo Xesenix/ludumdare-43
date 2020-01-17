@@ -21,10 +21,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 // icons
 import MenuIcon from '@material-ui/icons/Menu';
 
-import DrawerMenuButton from 'components/core/drawer-menu-button';
-import TopMenuButton from 'components/core/top-menu-button';
-import Loader from 'components/loader/loader';
-import { IMenuExternalProps } from 'components/menu/menu';
+import DrawerMenuButton from 'components/ui/core/drawer-menu-button';
+import TopMenuButton from 'components/ui/core/top-menu-button';
+import { IMenuExternalProps } from 'components/ui/menu/menu';
 
 import { useStyles } from './primary-layout.styles';
 

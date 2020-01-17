@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 
-import { ILanguageSelectorViewProps, languageDIDecorator } from 'components/language/decorator';
+import { ILanguageSelectorViewProps, languageDIDecorator } from 'components/ui/language/decorator';
 import { ILanguageDescriptor } from 'lib/i18n';
 
 import { IMenuItemExternalProps } from '../menu';

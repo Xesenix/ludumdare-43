@@ -5,15 +5,27 @@ import { hot } from 'react-hot-loader';
 // elements
 import Fab from '@material-ui/core/Fab';
 
-import { IMenuItemExternalProps } from 'components/menu/menu';
+import { IMenuItemExternalProps } from 'components/ui/menu/menu';
 
 export const useStyles = makeStyles((theme: Theme) => {
 	return createStyles({
-		root: {},
+		root: {
+			'& svg': {
+				width: '32px',
+				fontSize: 'xx-large',
+			},
+		},
+		label: {
+			display: 'flex',
+			justifyContent: 'stretch',
+		},
+		primary: {},
+		secondary: {},
+		focusVisible: {},
 	});
-}, { name: 'DrawerMenuButton' });
+}, { name: 'TopMenuButton' });
 
-const DrawerMenuButton = React.forwardRef((props: IMenuItemExternalProps, ref: any) => {
+const TopMenuButton = React.forwardRef<any, any>((props: IMenuItemExternalProps, ref: any) => {
 	const Icon = props.active && props.ActiveIcon ? props.ActiveIcon : props.Icon ? props.Icon : null;
 
 	const classes = useStyles();
@@ -25,11 +37,12 @@ const DrawerMenuButton = React.forwardRef((props: IMenuItemExternalProps, ref: a
 			component={props.component as any}
 			onClick={props.onClick}
 			variant="extended"
+			innerRef={ref}
 		>
 			{Icon ? <Icon /> : null}
-			{props.label}
+			{props.label || ''}
 		</Fab>
 	);
 });
 
-export default hot(module)(DrawerMenuButton);
+export default hot(module)(TopMenuButton);

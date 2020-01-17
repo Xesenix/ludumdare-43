@@ -14,9 +14,9 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import FullscreenLayoutComponent from 'components/layouts/fullscreen-layout/fullscreen-layout';
 import PrimaryLayoutComponent from 'components/layouts/primary-layout/primary-layout';
-import Loader from 'components/loader/loader';
-import LoaderErrorView from 'components/loader/loader-error-view';
-import { IMenuExternalProps } from 'components/menu/menu';
+import Loader from 'components/ui/loader/loader';
+import LoaderErrorView from 'components/ui/loader/loader-error-view';
+import { IMenuExternalProps } from 'components/ui/menu/menu';
 
 import AppRouting from './app.routing';
 
@@ -24,7 +24,7 @@ const SmallLoader = () => <Loader size={48}/>;
 const BigLoader = () => <Loader size={128}/>;
 
 const MenuComponent = LazyLoaderFactory<IMenuExternalProps>(
-	() => import(/* webpackChunkName: "menu" */ 'components/menu/menu'),
+	() => import(/* webpackChunkName: "menu" */ 'components/ui/menu/menu'),
 	SmallLoader,
 	LoaderErrorView,
 );
