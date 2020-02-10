@@ -99,7 +99,7 @@ export class GuardsSystem {
 		return state;
 	}
 
-	public scheduleTrainingAction = () => {
-		this.dataStore.setState(finishDraft(this.scheduleTraining(1)));
+	public scheduleTrainingAction = (amount: number ) => {
+		this.dataStore.setState(finishDraft(this.scheduleTraining(amount)));
 	}
 }
