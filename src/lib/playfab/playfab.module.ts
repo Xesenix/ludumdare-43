@@ -14,6 +14,6 @@ export default class PlayfabModule {
 
 		app.bind<PlayFab>('playfab').toConstantValue(PlayFab);
 
-		app.bind('kongregate:authenticate:provider').toProvider(({ container }) => Promise.resolve(container.get('playfab').ClientApi.LoginWithKongregate));
+		app.bind('kongregate:authenticate:provider').toProvider(({ container }) => () => Promise.resolve(container.get<any>('playfab').ClientApi.LoginWithKongregate));
 	}
 }

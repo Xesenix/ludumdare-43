@@ -5,4 +5,5 @@ export interface IUser {
 
 export interface IUserState {
 	user: IUser | null;
+	authenticationError: any;
 }

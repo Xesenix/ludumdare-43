@@ -11,6 +11,7 @@ import {
 
 export const defaultUIState: IUserState = {
 	user: { roles: ['guest'] },
+	authenticationError: null,
 };
 
 export function reducer<S extends IUserState | undefined, A extends IValueAction<any>>(state: S = defaultUIState as S, action: A): S {

@@ -1,4 +1,4 @@
-import { createDraft, finishDraft, produce } from 'immer';
+import { createDraft, finishDraft } from 'immer';
 
 import { changeAmountOfResources } from 'game/models/resources/resources';
 import { getFreeResourcesAmount } from 'game/models/resources/resources';

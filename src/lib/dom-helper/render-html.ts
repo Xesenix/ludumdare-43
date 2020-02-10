@@ -6,11 +6,11 @@ interface IElementDescriptor {
 	tag: string;
 	key?: string;
 	attributes?: { [key: string]: string };
-	children?: (IElementDescriptor | string)[];
+	children?: (IElementDescriptor | string | null)[];
 }
 
 export function renderHtml({ tag, key, attributes = {}, children = [] }: IElementDescriptor) {
-	const nodes = children.filter(Boolean);
+	const nodes = children.filter((child) => child !== null) as (IElementDescriptor | string)[];
 	const cacheKey = JSON.stringify({
 		tag,
 		key,
@@ -44,7 +44,7 @@ export function renderHtml({ tag, key, attributes = {}, children = [] }: IElemen
 				} else {
 					const newNode = renderHtml(child);
 					if (newNode !== node) {
-						el.replaceChild(renderHtml(child), node);
+						el.replaceChild(newNode, node);
 					}
 				}
 			}

@@ -15,6 +15,7 @@ import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
 import AuthenticationGuard from 'lib/user/components/authentication-guard';
 import { SessionService } from 'lib/user/session.service';
+import { IUserState } from 'lib/user/user.interfaces';
 
 import { useStyles } from './login-view.styles';
 
@@ -25,7 +26,7 @@ export interface ILoginViewExternalProps {
 /** Internal component properties include properties injected via dependency injection. */
 interface ILoginViewInternalProps {
 	__: II18nTranslation;
-	bindToStore: (keys: (keyof IAppState)[]) => IAppState;
+	bindToStore: (keys: (keyof IUserState)[]) => IUserState;
 	sessionService: SessionService;
 }
 
@@ -55,8 +56,8 @@ function LoginViewComponent(props: ILoginViewProps): any {
 		'authenticationError',
 	]);
 	const { redirectPath } = useParams();
-	const loginRef = useRef(null);
-	const passwordRef = useRef(null);
+	const loginRef = useRef<HTMLTextAreaElement>(null);
+	const passwordRef = useRef<HTMLInputElement>(null);
 	const onAuthenticate = React.useCallback(() => {
 		sessionService.authenticate({
 			method: 'kongregate',

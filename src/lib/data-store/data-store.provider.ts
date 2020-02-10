@@ -50,7 +50,7 @@ export function DataStoreProvider<T, A extends Action>({ container }: interfaces
 					namespace,
 					preloadedState: initialState,
 					states,
-				}),
+				}) as any,
 				composeEnhancers(debugRedux ? applyMiddleware(logger, thunk, persist) : applyMiddleware(thunk, persist)),
 			);
 

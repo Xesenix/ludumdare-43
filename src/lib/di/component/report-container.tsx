@@ -9,8 +9,8 @@ function ReportContainerComponent({ app }) {
 	).sort(([a], [b]) => a > b ? 1 : -1);
 	const phraseRef = React.useRef<HTMLInputElement>(null);
 	const typeRef = React.useRef<HTMLInputElement>(null);
-	const [ phrase = '', setPhrase ] = React.useState('');
-	const [ type = '', setType ] = React.useState('');
+	const [ phrase = '', setPhrase ] = React.useState<string>('');
+	const [ type = '', setType ] = React.useState<string>('');
 	const search = React.useCallback(() => {
 		setPhrase((phraseRef && phraseRef.current ? phraseRef.current.value || '' : '').toLowerCase());
 		setType((typeRef && typeRef.current ? typeRef.current.value || '' : '').toLowerCase());
