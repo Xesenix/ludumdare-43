@@ -77,11 +77,19 @@ typings/
 # FuseBox cache
 .fusebox/
 
-#DynamoDB Local files 
-.dynamodb/ 
+#DynamoDB Local files
+.dynamodb/
 
 # xes-bdf build directory
 dist/
-
 .vscode
-.env.game
+
+# Environmental configuration files that should not be part of repository
+production.env
+development.env
+game.env
+game.production.env
+game.development.env
+benchmarks.env
+benchmarks.production.env
+benchmarks.development.env
