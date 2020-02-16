@@ -1,6 +1,6 @@
 import { injectable } from 'lib/di';
 
-import { IUser } from './acl.interfaces';
+import { IUser } from './interfaces';
 
 @injectable()
 export class AclService {

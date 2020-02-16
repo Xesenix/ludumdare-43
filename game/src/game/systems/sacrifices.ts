@@ -15,14 +15,14 @@ import {
 import { changeAmountOfCurrentIdles, getFreeIdles } from 'game/models/units/idles';
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import {
 	// prettier-ignore
 	getSacrificeCount,
 	getSacrificedPopulationInTotal,
 	getSacrificedResourcesInTotal,
 } from '../models/skills/sacrifice';
-import { DataStore } from './../store';
+import { DataStore } from '../store';
 
 @inject([
 	'game:data-store',

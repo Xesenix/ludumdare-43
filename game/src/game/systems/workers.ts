@@ -16,7 +16,7 @@ import {
 } from 'game/models/units/workers';
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([
@@ -42,7 +42,6 @@ export class WorkersSystem {
 	public canTrain = (amount: number, state: IGameState = this.dataStore.getState()): boolean => {
 		const available = getFreeIdles(state);
 		const availableWorkers = getTrainedWorkers(state) + getCurrentWorkers(state);
-		console.log('canTrain', available >= amount && availableWorkers >= -amount);
 
 		return available >= amount && availableWorkers >= -amount;
 	}

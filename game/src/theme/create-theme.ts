@@ -14,7 +14,7 @@ import BackIcon from '@material-ui/icons/Undo';
 import MuteOnIcon from '@material-ui/icons/VolumeOff';
 import MuteOffIcon from '@material-ui/icons/VolumeUp';
 
-import { IAppTheme, IAppThemeOptions } from './theme.interfaces';
+import { IAppTheme, IAppThemeOptions } from './interfaces';
 
 export const createAppTheme = (theme: IAppThemeOptions): IAppTheme => {
 	const MuiDrawer = {

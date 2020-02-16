@@ -13,9 +13,9 @@ import TextField from '@material-ui/core/TextField';
 
 import { connectToInjector } from 'lib/di';
 import { II18nTranslation } from 'lib/i18n';
+import { IUserState } from 'lib/interfaces';
 import AuthenticationGuard from 'lib/user/components/authentication-guard';
 import { SessionService } from 'lib/user/session.service';
-import { IUserState } from 'lib/user/user.interfaces';
 
 import { useStyles } from './login-view.styles';
 

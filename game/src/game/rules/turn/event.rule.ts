@@ -1,4 +1,4 @@
-import { IGameState } from 'game/game.interfaces';
+import { IGameState } from 'game/interfaces';
 import { handleOrcAttack } from 'game/systems/orc-attack';
 
 export const eventRule = (state: IGameState) => {

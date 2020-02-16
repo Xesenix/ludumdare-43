@@ -36,6 +36,66 @@
     "benchmarks:build:prod": "cross-env APP=benchmarks npm run build:prod",
     "benchmarks:serve:expose": "cross-env EXPOSE=ngrok npm run benchmarks:serve"
   },
+  "apps": {
+    "game": {
+      "rootDir": "game",
+      "outDir": "dist/game",
+      "main": [
+        "main.ts"
+      ],
+      "moduleImportPaths": [
+        "src"
+      ],
+      "test": "main.test.ts",
+      "templateData": {
+        "title": "The greatest sacrifice",
+        "author": "Xesenix",
+        "themeColor": "#ffffff"
+      },
+      "assets": [
+        "assets"
+      ],
+      "template": "templates/index.html",
+      "styles": [
+        "styles/main.scss"
+      ],
+      "stylesImportPaths": [
+        "game/styles",
+        "styles"
+      ],
+      "vendor": []
+    },
+    "benchmarks": {
+      "rootDir": "benchmarks",
+      "outDir": "dist/benchmarks",
+      "main": [
+        "main.ts"
+      ],
+      "moduleImportPaths": [
+        "games/src",
+        "src"
+      ],
+      "test": "main.test.ts",
+      "templateData": {
+        "title": "Benchmarks",
+        "author": "Xesenix",
+        "themeColor": "#ffffff"
+      },
+      "assets": [
+        "assets"
+      ],
+      "template": "templates/index.html",
+      "styles": [
+        "styles/main.scss"
+      ],
+      "stylesImportPaths": [
+        "benchmark/styles",
+        "game/styles",
+        "styles"
+      ],
+      "vendor": []
+    }
+  },
   "dependencies": {
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
@@ -110,66 +170,6 @@
     "webpack-pwa-manifest": "^4.0.0",
     "workbox-webpack-plugin": "^4.3.1",
     "xes-webpack-core": "^0.10.0"
-  },
-  "apps": {
-    "game": {
-      "rootDir": "game",
-      "outDir": "dist/game",
-      "main": [
-        "main.ts"
-      ],
-      "moduleImportPaths": [
-        "src"
-      ],
-      "test": "main.test.ts",
-      "templateData": {
-        "title": "The greatest sacrifice",
-        "author": "Xesenix",
-        "themeColor": "#ffffff"
-      },
-      "assets": [
-        "assets"
-      ],
-      "template": "templates/index.html",
-      "styles": [
-        "styles/main.scss"
-      ],
-      "stylesImportPaths": [
-        "game/styles",
-        "styles"
-      ],
-      "vendor": []
-    },
-    "benchmarks": {
-      "rootDir": "benchmarks",
-      "outDir": "dist/benchmarks",
-      "main": [
-        "main.ts"
-      ],
-      "moduleImportPaths": [
-        "games/src",
-        "src"
-      ],
-      "test": "main.test.ts",
-      "templateData": {
-        "title": "Benchmarks",
-        "author": "Xesenix",
-        "themeColor": "#ffffff"
-      },
-      "assets": [
-        "assets"
-      ],
-      "template": "templates/index.html",
-      "styles": [
-        "styles/main.scss"
-      ],
-      "stylesImportPaths": [
-        "benchmark/styles",
-        "game/styles",
-        "styles"
-      ],
-      "vendor": []
-    }
   },
   "devDependencies": {
     "@types/benchmark": "^1.0.31",

@@ -1,3 +1,3 @@
-export * from './game.interfaces';
 export * from './game';
+export * from './interfaces';
 export * from './store';

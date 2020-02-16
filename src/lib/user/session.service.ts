@@ -1,6 +1,6 @@
 import { inject } from 'lib/di';
 
-import { IUser } from './user.interfaces';
+import { IUser } from './interfaces';
 
 @inject([
 	{ type: 'user:actions', named: 'setUser' },

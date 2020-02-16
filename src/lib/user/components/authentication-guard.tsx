@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 
 import { connectToInjector } from 'lib/di';
 
-import { IUserState } from '../user.interfaces';
+import { IUserState } from '../interfaces';
 
 /** Component public properties required to be provided by parent component. */
 export interface IAuthenticationGuardExternalProps {

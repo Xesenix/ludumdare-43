@@ -22,7 +22,7 @@ import {
 	// prettier-ignore
 	II18nPluralTranslation,
 	II18nTranslation,
-} from './i18n.interfaces';
+} from './interfaces';
 import { reducer } from './reducers/index';
 
 export default class I18nModule {

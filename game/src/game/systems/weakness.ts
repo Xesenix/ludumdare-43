@@ -5,7 +5,7 @@ import { getWeaknessLevel, getWeaknessPerLevelReduction } from 'game/models/skil
 import { getCurrentIdles } from 'game/models/units/idles';
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import {
 	// prettier-ignore
 	changeAmountOfSacrificeCount,

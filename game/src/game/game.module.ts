@@ -6,7 +6,7 @@ import { initialGameState } from '../../data/initial-state';
 
 import { createSetGameStateAction } from './actions';
 import { GameBootProvider } from './game-boot.provider';
-import { IGameState } from './game.interfaces';
+import { IGameState } from './interfaces';
 import { reducer } from './reducers';
 
 export default class GameModule {

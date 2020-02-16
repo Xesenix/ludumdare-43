@@ -6,8 +6,6 @@ import { II18nTranslation } from 'lib/i18n';
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
 import { createSetThemeAction } from './actions';
-import { reducer } from './reducers';
-import { ThemeBootProvider } from './theme-boot.provider';
 import {
 	// prettier-ignore
 	IAppTheme,
@@ -17,7 +15,9 @@ import {
 	IThemeProvider,
 	IThemeState,
 	ThemesNames,
-} from './theme.interfaces';
+} from './interfaces';
+import { reducer } from './reducers';
+import { ThemeBootProvider } from './theme-boot.provider';
 
 export default class ThemeModule {
 	public static register(app: IApplication) {

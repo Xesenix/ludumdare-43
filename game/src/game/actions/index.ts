@@ -1,6 +1,6 @@
 import { IValueAction } from 'lib/interfaces';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 
 export const GAME_STATE_UPDATE = 'GAME_STATE_UPDATE';
 

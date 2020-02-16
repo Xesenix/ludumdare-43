@@ -2,7 +2,7 @@ import { inject } from 'lib/di';
 
 import { getCurrentIdles } from 'game/models/units/idles';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([

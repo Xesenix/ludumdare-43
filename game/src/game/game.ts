@@ -3,7 +3,7 @@ import produce, { createDraft, finishDraft } from 'immer';
 import { inject } from 'lib/di';
 import { IRandomGenerator } from 'lib/random-generator';
 
-import { IGameState } from './game.interfaces';
+import { IGameState } from './interfaces';
 import { setResourcesReserved } from './models/resources/resources';
 import {
 	// prettier-ignore

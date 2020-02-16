@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 
 import { connectToInjector } from 'lib/di';
 
-import { IACLGuard, IUser } from '../acl.interfaces';
+import { IACLGuard, IUser } from '../interfaces';
 
 /** Component public properties required to be provided by parent component. */
 export interface IAclGuardExternalProps {

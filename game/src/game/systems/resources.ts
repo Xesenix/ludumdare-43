@@ -4,7 +4,7 @@ import { getResourcesAmount } from 'game/models/resources/resources';
 import { changeAmountOfResources } from 'game/models/resources/resources';
 import { getCurrentWorkers } from 'game/models/units/workers';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([

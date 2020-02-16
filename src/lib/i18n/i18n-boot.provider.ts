@@ -6,7 +6,7 @@ import { ICreateSetAction, LanguageType } from 'lib/interfaces';
 
 import { ICreateSetLanguageReadyAction } from './actions';
 import { i18n } from './i18n';
-import { II18nTranslation, ILanguageDescriptor } from './i18n.interfaces';
+import { II18nTranslation, ILanguageDescriptor } from './interfaces';
 
 export type SetLanguageReadyActionType = (locale: LanguageType, value: boolean) => void;
 

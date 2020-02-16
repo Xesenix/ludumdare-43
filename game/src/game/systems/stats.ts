@@ -1,6 +1,6 @@
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { getResourcesStolenInLastTurn } from '../models/resources/resources';
 import { getSacrificeCount } from '../models/skills/sacrifice';
 import { getPopulationKilledInLastTurn } from '../models/units/population';

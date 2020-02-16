@@ -1,6 +1,6 @@
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { getAttackPower, getBaseAttackPower } from '../models/skills/attack';
 import { DataStore } from '../store';
 

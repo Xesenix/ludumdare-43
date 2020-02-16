@@ -19,7 +19,7 @@ import {
 } from 'game/models/units/population';
 import { getCurrentWorkers } from 'game/models/units/workers';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([

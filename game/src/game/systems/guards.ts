@@ -25,7 +25,7 @@ import {
 } from 'game/models/units/idles';
 import { inject } from 'lib/di';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([

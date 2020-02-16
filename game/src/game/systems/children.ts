@@ -8,7 +8,7 @@ import {
 	changeAmountOfChildrenKilledInTotal,
 } from 'game/models/units/children';
 
-import { IGameState } from '../game.interfaces';
+import { IGameState } from '../interfaces';
 import { DataStore } from '../store';
 
 @inject([

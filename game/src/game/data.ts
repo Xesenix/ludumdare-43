@@ -2,7 +2,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 import lodashGet from 'lodash-es/get';
 import lodashSet from 'lodash-es/set';
 
-import { IGameState } from './game.interfaces';
+import { IGameState } from './interfaces';
 
 // === BASE
 

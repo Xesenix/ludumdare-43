@@ -3,10 +3,10 @@ import { Reducer } from 'redux';
 import { IApplication, ICreateSetAction } from 'lib/interfaces';
 
 import { createSetAuthenticationErrorAction, createSetUserAction } from './actions';
+import { IUser } from './interfaces';
 import { reducer } from './reducers';
 import { SessionService } from './session.service';
 import { UserBootProvider } from './user-boot.provider';
-import { IUser } from './user.interfaces';
 
 export default class UserModule {
 	public static register(app: IApplication) {
