@@ -37,9 +37,6 @@ const configureWebpack = (config) => {
 	config.devServer.historyApiFallback = true;
 
 	// TODO: move to xes-webpack-core
-	config.plugins.push(new webpackBase.ProgressPlugin());
-
-	// TODO: move to xes-webpack-core
 	if (process.env.ENV !== 'test') {
 		// this option doesn't work well with tests
 		// for some reason it mismatches files so karma doesn't see spec files
