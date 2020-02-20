@@ -2,82 +2,82 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: game/components/event-widget/event-widget.tsx:85
+#: game/src/game/components/event-widget/event-widget.tsx:82
 msgid "%{event} attack power %{attackPower}"
 msgstr ""
 
-#: game/components/train-widget/train-widget.tsx:120
+#: game/src/game/components/train-widget/train-widget.tsx:120
 msgid "+/-%{step} hold ctrl/alt"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:212
+#: game/components/views/game-view/scenes/victory/victory.tsx:101
 msgid "and one person"
 msgid_plural "and %{sacrificedPopulation}&nbsp;people"
 msgstr[0] ""
 msgstr[1] ""
 
-#: game/components/event-widget/event-widget.tsx:151
+#: game/src/game/components/event-widget/event-widget.tsx:148
 msgid "Attack consequences"
 msgstr ""
 
-#: game/components/menu/menu.tsx:131
+#: game/components/views/login-view/login-view.tsx:74
+msgid "Authenticate"
+msgstr ""
+
+#: game/components/ui/menu/menu.tsx:131
 msgid "Back"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:111
+#: game/src/game/components/turn-details/turn-details.tsx:109
 msgid "born"
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:120
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:109
 msgid "Build cottage (%{cottagesLevel}) (+20 max population cost %{cottagesBuildCost} resources)"
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:133
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:122
 msgid "Build cottage %{cottagesBuildCost} resources"
 msgstr ""
 
-#: game/components/status-widget/status-widget.tsx:88
+#: game/src/game/components/status-widget/status-widget.tsx:88
 msgid "Build more cottages to increase max population."
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:97
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:86
 msgid "Build wall (current reduction: %{wallsReduction}) (+30 enemy power reduction cost %{wallsBuildCost} resources)"
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:110
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:99
 msgid "Build wall %{wallsBuildCost} resources"
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:88
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:77
 msgid "Buildings"
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:169
+#: game/src/game/components/event-widget/event-widget.tsx:166
 msgid "casualties"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:108
-#: game/components/views/game-view/game-view.tsx:303
+#: game/components/views/game-view/game-view.tsx:224
+#: game/src/game/components/turn-details/turn-details.tsx:106
 msgid "Children"
 msgstr ""
 
-#: game/components/menu/menu.tsx:160
+#: game/components/ui/menu/menu.tsx:160
 msgid "Compact"
 msgstr ""
 
-#: game/components/menu/menu.tsx:120
+#: game/components/ui/menu/menu.tsx:120
 msgid "Configuration"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:364
-msgid "Continue"
-msgstr ""
-
-#: game/components/buildings-widget/buildings-widget.tsx:116
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:105
 msgid "Cottage lvl %{cottagesLevel}"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:144
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:114
 msgid "Current enemy power reduction <strong>%{powerReduction}%</strong>"
 msgstr ""
 
@@ -93,15 +93,15 @@ msgstr ""
 msgid "default-theme-light"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:364
+#: game/components/views/game-view/game-view.tsx:285
 msgid "Defend yourself"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:318
+#: game/components/views/game-view/game-view.tsx:239
 msgid "Each one will collect 1 resource per turn. Newly trained workers will start collecting resources in next year."
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:89
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:81
 msgid ""
 "Each sacrifice made increases cost of next sacrifices by&nbsp;<strong>5</strong> every turn increases cost by&nbsp;<strong>1</strong>\n"
 "and every 5th by additional&nbsp;<strong>5</strong>.<br/>\n"
@@ -116,15 +116,19 @@ msgstr ""
 msgid "english"
 msgstr ""
 
-#: game/components/menu/menu.tsx:142
+#: game/components/ui/menu/menu.tsx:142
 msgid "Fullscreen"
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:132
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:131
 msgid "fx mute"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:125
+#: game/components/views/configuration-view/configuration-view.tsx:73
+msgid "Game configuration"
+msgstr ""
+
+#: game/src/game/components/turn-details/turn-details.tsx:123
 msgid "gathered"
 msgstr ""
 
@@ -136,41 +140,37 @@ msgstr ""
 msgid "Go to ludumdare 43 game page"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:128
+#: game/src/game/components/turn-details/turn-details.tsx:126
 msgid "guard salary"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:77
-#: game/components/views/game-view/game-view.tsx:327
+#: game/components/views/game-view/game-view.tsx:248
+#: game/src/game/components/turn-details/turn-details.tsx:75
 msgid "Guards"
 msgstr ""
 
-#: game/components/status-widget/status-widget.tsx:69
+#: game/src/game/components/status-widget/status-widget.tsx:69
 msgid "Hire more workers to collect more resources."
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:91
+#: game/src/game/components/turn-details/turn-details.tsx:89
 msgid "Idle"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:292
+#: game/components/views/game-view/game-view.tsx:213
 msgid "Idlers"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:105
-msgid "Immunity"
-msgstr ""
-
-#: game/components/views/game-view/game-view.tsx:221
+#: game/components/views/game-view/scenes/victory/victory.tsx:110
 msgid "in one sacrifice."
 msgid_plural "in %{sacrificesCount} sacrifices."
 msgstr[0] ""
 msgstr[1] ""
 
-#: game/components/turn-details/turn-details.tsx:103
-#: game/components/turn-details/turn-details.tsx:117
-#: game/components/turn-details/turn-details.tsx:72
-#: game/components/turn-details/turn-details.tsx:86
+#: game/src/game/components/turn-details/turn-details.tsx:101
+#: game/src/game/components/turn-details/turn-details.tsx:115
+#: game/src/game/components/turn-details/turn-details.tsx:70
+#: game/src/game/components/turn-details/turn-details.tsx:84
 msgid "killed"
 msgstr ""
 
@@ -178,19 +178,23 @@ msgstr ""
 msgid "language"
 msgstr ""
 
-#: game/components/loader/loader.tsx:16
+#: game/components/ui/loader/loader-error-view.tsx:13
 msgid "Loading error"
+msgstr ""
+
+#: game/components/views/login-view/login-view.tsx:83
+msgid "login"
+msgstr ""
+
+#: game/components/views/login-view/login-view.tsx:110
+msgid "Login"
 msgstr ""
 
 #: game/components/views/intro-view/intro-view.tsx:44
 msgid "Ludumdare 43 edition"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:109
-msgid "Make sacrifice for one turn immunity (%{resourceCost}&nbsp;resources). Enemies will ignore you in this year."
-msgstr ""
-
-#: game/components/views/game-view/game-view.tsx:391
+#: game/components/views/game-view/game-view.tsx:312
 msgid "Make ultimate sacrifice to save everybody (%{requiredPopulation}&nbsp;idle population and %{requiredResources}&nbsp;resources)"
 msgstr ""
 
@@ -198,11 +202,11 @@ msgstr ""
 msgid "Manage your villagers assign them to work so they can gather resources for sacrifices or village development."
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:118
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:117
 msgid "master mute"
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:140
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:139
 msgid "master volume"
 msgstr ""
 
@@ -230,23 +234,23 @@ msgstr ""
 msgid "modern-theme-light-1"
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:125
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:124
 msgid "music mute"
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:152
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:151
 msgid "music volume"
 msgstr ""
 
-#: game/components/menu/menu.tsx:152
+#: game/components/ui/menu/menu.tsx:152
 msgid "Mute"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:94
+#: game/src/game/components/turn-details/turn-details.tsx:92
 msgid "new adults"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:47
+#: game/src/game/components/turn-details/turn-details.tsx:45
 msgid "Next turn result details"
 msgstr ""
 
@@ -254,8 +258,12 @@ msgstr ""
 msgid "or leave them idle so they can multiply and sacrifice them to permanently weaken creatures disturbing this world."
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:109
+#: game/src/game/components/event-widget/event-widget.tsx:106
 msgid "Original power %{baseAttackPower}"
+msgstr ""
+
+#: game/components/views/login-view/login-view.tsx:96
+msgid "password"
 msgstr ""
 
 #: game/src/i18n/i18n.module.ts:17
@@ -270,54 +278,58 @@ msgstr ""
 msgid "polish"
 msgstr ""
 
-#: game/components/status-widget/status-widget.tsx:75
+#: game/src/game/components/status-widget/status-widget.tsx:75
 msgid "Population"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:294
+#: game/components/views/game-view/game-view.tsx:215
 msgid "Population without occupation will produce children in rate 1 child per every 2 idle persons."
 msgstr ""
 
-#: game/components/status-widget/status-widget.tsx:56
-#: game/components/turn-details/turn-details.tsx:122
+#: game/src/game/components/status-widget/status-widget.tsx:56
+#: game/src/game/components/turn-details/turn-details.tsx:120
 msgid "Resources"
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:187
-#: game/components/turn-details/turn-details.tsx:58
+#: game/src/game/components/event-widget/event-widget.tsx:184
+#: game/src/game/components/turn-details/turn-details.tsx:56
 msgid "resources stolen"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:173
+#: game/components/views/game-view/scenes/restart/restart.tsx:52
 msgid "Restart"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:97
+#: game/src/game/components/setup/save-state.tsx:65
+msgid "Restore"
+msgstr ""
+
+#: game/src/game/components/turn-details/turn-details.tsx:95
 msgid "retrained"
 msgstr ""
 
-#: game/components/loader/loader.tsx:18
+#: game/components/ui/loader/loader-error-view.tsx:15
 msgid "Retry"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:157
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:127
 msgid "Sacrifice %{populationCost}&nbsp;idle population (next level %{nextLevelWeaknessReduction}%)"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:122
-msgid "Sacrifice %{resourceCost}&nbsp;resources"
-msgstr ""
-
-#: game/components/turn-details/turn-details.tsx:100
-#: game/components/turn-details/turn-details.tsx:114
-#: game/components/turn-details/turn-details.tsx:131
-#: game/components/turn-details/turn-details.tsx:69
-#: game/components/turn-details/turn-details.tsx:83
+#: game/src/game/components/turn-details/turn-details.tsx:112
+#: game/src/game/components/turn-details/turn-details.tsx:129
+#: game/src/game/components/turn-details/turn-details.tsx:67
+#: game/src/game/components/turn-details/turn-details.tsx:81
+#: game/src/game/components/turn-details/turn-details.tsx:98
 msgid "sacrificed"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:83
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:75
 msgid "Sacrifices made %{count}"
+msgstr ""
+
+#: game/src/game/components/setup/save-state.tsx:53
+msgid "save data"
 msgstr ""
 
 #: game/src/themes/sharp/sharp-theme.module.ts:22
@@ -328,19 +340,19 @@ msgstr ""
 msgid "sharp-theme-light"
 msgstr ""
 
-#: game/components/loader/loader.tsx:17
+#: game/components/ui/loader/loader-error-view.tsx:14
 msgid "Something went wrong while loading module try again later."
 msgstr ""
 
-#: game/components/views/configuration-view/configuration-view.tsx:41
+#: game/components/views/configuration-view/configuration-view.tsx:62
 msgid "Sound configuration"
 msgstr ""
 
-#: game/components/views/configuration-view/sound/sound-configuration.tsx:164
+#: game/components/views/configuration-view/sound/sound-configuration.tsx:163
 msgid "sound volume"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:134
+#: game/src/game/components/turn-details/turn-details.tsx:132
 msgid "stolen"
 msgstr ""
 
@@ -352,75 +364,75 @@ msgstr ""
 msgid "theme"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:330
+#: game/components/views/game-view/game-view.tsx:251
 msgid ""
 "They will protect other units from being attacked and resources from being stolen.\n"
 "Each one requires 1 resource per year to be operational if there are no enough resources they will become idle population once again."
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:134
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:104
 msgid "This sacrifice permanently weakness enemies by -%{perLevelWeaknessReduction}% multiplicative for every level."
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:305
+#: game/components/views/game-view/game-view.tsx:226
 msgid ""
 "Those young villagers will become idle population in next year (if they survive next year attack).\n"
 "They are also most vulnerable for attacks and will die in first order if attackers wont fins enough resources to pillage."
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:55
+#: game/src/game/components/turn-details/turn-details.tsx:53
 msgid "totall killed"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:349
+#: game/components/views/game-view/game-view.tsx:270
 msgid "train/release guards"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:339
+#: game/components/views/game-view/game-view.tsx:260
 msgid "train/release workers"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:66
-#: game/components/turn-details/turn-details.tsx:80
+#: game/src/game/components/turn-details/turn-details.tsx:64
+#: game/src/game/components/turn-details/turn-details.tsx:78
 msgid "trained"
 msgstr ""
 
-#: game/components/views/configuration-view/configuration-view.tsx:45
+#: game/components/views/configuration-view/configuration-view.tsx:68
 msgid "User interface configuration"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:193
+#: game/components/views/game-view/scenes/victory/victory.tsx:82
 msgid "Victory achieved in first year."
 msgid_plural "Victory achieved in %{turn} years."
 msgstr[0] ""
 msgstr[1] ""
 
-#: game/components/turn-details/turn-details.tsx:52
+#: game/src/game/components/turn-details/turn-details.tsx:50
 msgid "Villagers"
 msgstr ""
 
-#: game/components/buildings-widget/buildings-widget.tsx:93
+#: game/src/game/components/buildings-widget/buildings-widget.tsx:82
 msgid "Wall lvl %{wallLevel}"
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:130
+#: game/src/game/components/event-widget/event-widget.tsx:127
 msgid "wall lvl %{weaknessLvl} reduced it by %{wallsReduction}"
 msgstr ""
 
-#: game/components/sacrifices-widget/sacrifices-widget.tsx:128
+#: game/src/game/components/sacrifices-widget/sacrifices-widget.tsx:98
 msgid "Weakness lvl %{weaknessLevel}"
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:119
+#: game/src/game/components/event-widget/event-widget.tsx:116
 msgid "weakness lvl %{weaknessLvl} reduced it by %{weaknessDamageReduction}%"
 msgstr ""
 
-#: game/components/turn-details/turn-details.tsx:63
-#: game/components/views/game-view/game-view.tsx:315
+#: game/components/views/game-view/game-view.tsx:236
+#: game/src/game/components/turn-details/turn-details.tsx:61
 msgid "Workers"
 msgstr ""
 
-#: game/components/status-widget/status-widget.tsx:72
+#: game/src/game/components/status-widget/status-widget.tsx:72
 msgid "Year one"
 msgid_plural "Year %{turn}"
 msgstr[0] ""
@@ -430,11 +442,11 @@ msgstr[1] ""
 msgid "You are the leader of a small village in this very hostile world."
 msgstr ""
 
-#: game/components/event-widget/event-widget.tsx:72
-msgid "You have prevented attack with resource sacrifice."
+#: game/components/views/configuration-view/configuration-view.tsx:102
+msgid "You don't have access to this part"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:203
+#: game/components/views/game-view/scenes/victory/victory.tsx:92
 msgid "You have sacrificed one resource"
 msgid_plural "You have sacrificed %{sacrificedResources}&nbsp;resources"
 msgstr[0] ""
@@ -444,10 +456,10 @@ msgstr[1] ""
 msgid "You must decide whether you will offer sacrifices to the gods or face the dangers that plague this world on your own."
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:245
+#: game/components/views/game-view/scenes/defeat/defeat.tsx:66
 msgid "Your village has perished after %{turn} years"
 msgstr ""
 
-#: game/components/views/game-view/game-view.tsx:190
+#: game/components/views/game-view/scenes/victory/victory.tsx:79
 msgid "Your village is safe everybody are in heaven now."
 msgstr ""
