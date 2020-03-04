@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title><%= htmlWebpackPlugin.options.data.title %></title>
+
+	<meta name="description" content="<%= htmlWebpackPlugin.options.packageConfig.description %>"/>
+	<meta name="theme-color" content="<%= htmlWebpackPlugin.options.data.themeColor %>"/>
+
+	<meta property="og:type" content="game">
+	<meta property="og:title" content="<%= htmlWebpackPlugin.options.data.title %>">
+	<meta property="og:site_name" content="<%= htmlWebpackPlugin.options.data.title %>">
+	<meta property="og:description" content="<%= htmlWebpackPlugin.options.data.description %>">
+	<meta property="og:url" content="<%= htmlWebpackPlugin.options.data.url %>">
+	<meta property="og:image" content="<%= htmlWebpackPlugin.options.data.url %>/assets/thumb.png">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=0">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+</head>
+<body>
+	<div class="container">
+		<div id="app" class="app">
+			<h1><%= htmlWebpackPlugin.options.data.title %></h1>
+			<p><%= htmlWebpackPlugin.options.data.description %></p>
+			<h3>Loading...</h3>
+		</div>
+	</div>
+
+	<div class="footer">
+		&copy; <%= htmlWebpackPlugin.options.packageConfig.author %>, build version: <%= htmlWebpackPlugin.options.packageConfig.version %>
+	</div>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.data.env.GTM_ID %>"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', '<%= htmlWebpackPlugin.options.data.env.GTM_ID %>');
+	</script>
+</body>
+</html>

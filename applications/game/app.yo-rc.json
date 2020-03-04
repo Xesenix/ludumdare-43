@@ -1,0 +1,10 @@
+{
+  "appName": "game",
+  "appTitle": "xxx",
+  "appDescription": "Ludum Dare 43 Theme: Sacrifices must be made - village survival simulator manage resources and population of your village.",
+  "appUrl": "http://ld43.xesenix.pl/",
+  "addRouting": "yes",
+  "addLayout": "yes",
+  "useSound": "yes",
+  "useReact": "yes"
+}

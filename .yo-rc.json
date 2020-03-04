@@ -14,7 +14,16 @@
       "initGitIgnore": "yes",
       "npmInstall": "yes",
       "appName": "game",
-      "title": "Ludumdare 43"
+      "title": "Ludumdare 43",
+      "appTitle": "Ludumdare-43",
+      "appDescription": "Ludum Dare 43 Theme: Sacrifices must be made - village survival simulator manage resources and population of your village.",
+      "appUrl": "http://ld43.xesenix.pl/",
+      "addRouting": "yes",
+      "addLayout": "yes",
+      "useSound": "yes",
+      "useReact": "yes",
+      "usePixi": "no",
+      "useWorker": "no"
     }
   }
 }
