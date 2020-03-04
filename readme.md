@@ -133,11 +133,11 @@ This solution requires to create own server that can add those additional data o
 - [x] Configuration view component handling configuration of audio and theming
 - [ ] [Large-Allocation header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation)
 - [ ] connect react router history to redux store
-- [ ] separate audio from phaser or init phaser in compact mode
+- [x] separate audio from phaser or init phaser in compact mode
 - [ ] add about view
 - [ ] work on phaser states
 - [ ] analytics with [gtag](https://developers.google.com/analytics/devguides/collection/gtagjs/migration) vs [google tag manager](https://support.google.com/tagmanager/answer/6107124)
 - [ ] research [open id](https://openid.net/connect/)
 - [ ] connect playfab
-- [ ] use immer
+- [x] use immer
 - [ ] [web monetization](https://webmonetization.org/)
