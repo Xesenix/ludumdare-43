@@ -131,7 +131,7 @@
     "hoist-non-react-statics": "^3.3.2",
     "html-decoder": "^1.0.2",
     "husky": "^1.3.1",
-    "immer": "^3.3.0",
+    "immer": "^8.0.1",
     "inspectpack": "^4.2.2",
     "inversify": "^5.0.1",
     "istanbul": "github:Xesenix/istanbul",
